@@ -6,6 +6,7 @@ Academic Hub is a modern, all-in-one dashboard designed to help students and sel
 
 
 
+
 ## Project Overview
 
 This project is built with a modern architecture, separating the client-side and server-side logic into two distinct parts within this repository:
@@ -66,7 +67,7 @@ To get the full application running on your local machine, you will need to star
 
 1.  **Clone the repository:**
     ```sh
-    git clone [https://github.com/UNKEETT/academic-hub.git]
+    git clone [https://github.com/unkeett/academic-hub.git]
     cd academic-hub
     ```
 
