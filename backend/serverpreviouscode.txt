@@ -1,0 +1,220 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const axios = require('axios');
+
+const app = express();
+const PORT = 5000;
+
+// --- Middleware ---
+app.use(cors());
+app.use(express.json());
+
+// --- MongoDB Connection ---
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Successfully connected to MongoDB.'))
+    .catch(err => console.error('MongoDB connection error:', err));
+
+// --- Mongoose Schemas & Models ---
+const subjectSchema = new mongoose.Schema({ name: String, topics: Number, progress: Number });
+const goalSchema = new mongoose.Schema({ text: String, completed: Boolean });
+const ideaSchema = new mongoose.Schema({ text: String });
+const tutorialSchema = new mongoose.Schema({
+    videoId: { type: String, required: true, unique: true },
+    url: { type: String, required: true },
+    title: { type: String, required: true },
+    channelName: { type: String, required: true },
+    durationInMinutes: { type: Number, required: true },
+    progressInMinutes: { type: Number, default: 0 },
+    status: { type: String, enum: ['Not Started', 'In Progress', 'Completed'], default: 'Not Started' }
+}, { timestamps: true });
+
+const Subject = mongoose.model('Subject', subjectSchema);
+const Goal = mongoose.model('Goal', goalSchema);
+const Idea = mongoose.model('Idea', ideaSchema);
+const Tutorial = mongoose.model('Tutorial', tutorialSchema);
+
+
+// --- API Endpoints ---
+
+// --- Subjects ---
+app.get('/api/subjects', async (req, res) => res.json(await Subject.find()));
+app.post('/api/subjects', async (req, res) => res.status(201).json(await new Subject(req.body).save()));
+
+// NEW: DELETE a subject
+app.delete('/api/subjects/:id', async (req, res) => {
+    try {
+        const result = await Subject.findByIdAndDelete(req.params.id);
+        if (!result) return res.status(404).json({ message: 'Subject not found' });
+        res.status(200).json({ message: 'Subject deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting subject', error });
+    }
+});
+
+// NEW: UPDATE a subject
+app.put('/api/subjects/:id', async (req, res) => {
+    try {
+        const updatedSubject = await Subject.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedSubject) return res.status(404).json({ message: 'Subject not found' });
+        res.json(updatedSubject);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating subject', error });
+    }
+});
+
+
+// --- Goals ---
+app.get('/api/goals', async (req, res) => res.json(await Goal.find()));
+app.post('/api/goals', async (req, res) => res.status(201).json(await new Goal({ ...req.body, completed: false }).save()));
+
+// MODIFIED: UPDATE a goal (now handles text updates and toggling completion)
+app.put('/api/goals/:id', async (req, res) => {
+    const { text, completed } = req.body;
+    try {
+        const goal = await Goal.findById(req.params.id);
+        if (!goal) return res.status(404).json({ message: 'Goal not found' });
+
+        // If 'completed' is explicitly sent, use its value. Otherwise, toggle the existing value.
+        goal.completed = (typeof completed === 'boolean') ? completed : !goal.completed;
+
+        // If new text is provided, update the text.
+        if (text) {
+            goal.text = text;
+        }
+
+        await goal.save();
+        res.json(goal);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating goal', error });
+    }
+});
+
+// NEW: DELETE a goal
+app.delete('/api/goals/:id', async (req, res) => {
+    try {
+        const result = await Goal.findByIdAndDelete(req.params.id);
+        if (!result) return res.status(404).json({ message: 'Goal not found' });
+        res.status(200).json({ message: 'Goal deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting goal', error });
+    }
+});
+
+
+// --- Ideas ---
+app.get('/api/ideas', async (req, res) => res.json(await Idea.find()));
+app.post('/api/ideas', async (req, res) => res.status(201).json(await new Idea(req.body).save()));
+
+// NEW: DELETE an idea
+app.delete('/api/ideas/:id', async (req, res) => {
+    try {
+        const result = await Idea.findByIdAndDelete(req.params.id);
+        if (!result) return res.status(404).json({ message: 'Idea not found' });
+        res.status(200).json({ message: 'Idea deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting idea', error });
+    }
+});
+
+// NEW: UPDATE an idea
+app.put('/api/ideas/:id', async (req, res) => {
+    try {
+        const updatedIdea = await Idea.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedIdea) return res.status(404).json({ message: 'Idea not found' });
+        res.json(updatedIdea);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating idea', error });
+    }
+});
+
+
+// --- Tutorials (Existing) ---
+app.get('/api/tutorials', async (req, res) => {
+    try {
+        const tutorials = await Tutorial.find().sort({ createdAt: -1 });
+        res.json(tutorials);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching tutorials', error });
+    }
+});
+app.post('/api/tutorials', async (req, res) => {
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ message: 'YouTube URL is required' });
+
+    try {
+        const videoId = new URL(url).searchParams.get('v');
+        if (!videoId) return res.status(400).json({ message: 'Invalid YouTube URL' });
+
+        const existingTutorial = await Tutorial.findOne({ videoId });
+        if (existingTutorial) return res.status(409).json({ message: 'This tutorial has already been added' });
+
+        const YOUTUBE_API_URL = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,contentDetails&key=${process.env.YOUTUBE_API_KEY}`;
+        const response = await axios.get(YOUTUBE_API_URL);
+        const videoData = response.data.items[0];
+        
+        if (!videoData) return res.status(404).json({ message: 'Video not found on YouTube' });
+
+        const duration = videoData.contentDetails.duration;
+        const durationRegex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+        const matches = duration.match(durationRegex);
+        const hours = parseInt(matches[1] || 0);
+        const minutes = parseInt(matches[2] || 0);
+        const seconds = parseInt(matches[3] || 0);
+        const totalMinutes = Math.ceil(hours * 60 + minutes + seconds / 60);
+
+        const newTutorial = new Tutorial({
+            videoId,
+            url,
+            title: videoData.snippet.title,
+            channelName: videoData.snippet.channelTitle,
+            durationInMinutes: totalMinutes,
+        });
+
+        await newTutorial.save();
+        res.status(201).json(newTutorial);
+
+    } catch (error) {
+        console.error('Error adding tutorial:', error.response ? error.response.data : error.message);
+        res.status(500).json({ message: 'Failed to add tutorial' });
+    }
+});
+app.put('/api/tutorials/:id', async (req, res) => {
+    try {
+        const { progressInMinutes } = req.body;
+        const tutorial = await Tutorial.findById(req.params.id);
+        
+        if (!tutorial) return res.status(404).json({ message: 'Tutorial not found' });
+
+        tutorial.progressInMinutes = progressInMinutes;
+        if (progressInMinutes >= tutorial.durationInMinutes) {
+            tutorial.status = 'Completed';
+        } else if (progressInMinutes > 0) {
+            tutorial.status = 'In Progress';
+        } else {
+            tutorial.status = 'Not Started';
+        }
+
+        await tutorial.save();
+        res.json(tutorial);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating progress', error });
+    }
+});
+app.delete('/api/tutorials/:id', async (req, res) => {
+    try {
+        const result = await Tutorial.findByIdAndDelete(req.params.id);
+        if (!result) return res.status(404).json({ message: 'Tutorial not found' });
+        res.status(200).json({ message: 'Tutorial deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting tutorial', error });
+    }
+});
+
+
+// --- Start Server ---
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+
