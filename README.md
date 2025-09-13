@@ -4,8 +4,6 @@
 
 Academic Hub is a modern, all-in-one dashboard designed to help students and self-learners organize their studies, track progress, and manage goals in a beautiful and intuitive interface. This is a full-stack MERN (MongoDB, Express, React, Node.js) application.
 
-**[Live Demo](https://your-live-demo-url.vercel.app)** *(<- Replace with your Vercel deployment link after you deploy!)*
-
 
 
 ## Project Overview
@@ -68,7 +66,7 @@ To get the full application running on your local machine, you will need to star
 
 1.  **Clone the repository:**
     ```sh
-    git clone [https://github.com/your-username/academic-hub.git](https://github.com/your-username/academic-hub.git)
+    git clone [https://github.com/UNKEETT/academic-hub.git]
     cd academic-hub
     ```
 
