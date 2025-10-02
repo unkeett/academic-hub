@@ -111,3 +111,68 @@ To get the full application running on your local machine, you will need to star
     -   Keep this second terminal running. Your application should open automatically at `http://localhost:3000`.
 
 You should now have the full-stack application running and connected locally!
+
+## 🤝 Contributing
+
+We love contributions from everyone! 💖  
+
+### 🚩 Before You Start  
+⭐ **First, star the repository** — show some love to the project!  
+🍴 Then, fork it and start contributing 🚀  
+
+### Steps to Contribute  
+
+1. **Star** this repository ⭐  
+2. **Fork** the repo  
+3. Create a feature branch  
+   ```bash
+   git checkout -b feature-xyz
+   ```  
+4. Commit your changes  
+   ```bash
+   git commit -m "feat: add new xyz"
+   ```  
+5. Push to your fork  
+   ```bash
+   git push origin feature-xyz
+   ```  
+6. Open a Pull Request 🚀  
+
+📌 Please read our [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before contributing.
+
+---
+
+## 🎯 Hacktoberfest 2025
+
+This project is part of **Hacktoberfest 2025**! 🌍✨
+
+* Submit 6 PRs to win official swag 🎉
+
+-----
+
+
+    👤 **Main Maintainersr**
+
+**Ankit kumar singh** – Creator & Maintainer 🚀  
+
+🔗 Connect With Me
+[🔗 Follow on GitHub](https://github.com/unkeett) | [Connect on LinkedIn](https://www.linkedin.com/in/unkeet/)
+-----
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## ⭐ Support
+
+If you like this project:
+
+* ⭐ Star the repo
+* 🍴 Fork it
+* 📢 Share it with friends
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/unkeett">unkeett</a> & Contributors
+</p>
