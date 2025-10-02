@@ -60,35 +60,48 @@ Go to GitHub → your fork → Compare & pull request → pick the upstream main
 Follow these steps to set up and run the project on your local machine.
 
 1. Backend Server
+
 The backend is a Node.js/Express API that connects to MongoDB.
+
 Navigate to the backend directory:
 
 cd backend
+
 Install dependencies:
+
 pnpm install      # or npm install
 
 Create environment file: Create a new file named .env in the /backend directory. Add your secret keys as shown below. This file should not be committed to Git.
 
 Code snippet
 
-# backend/.env
+backend/.env.example
+
 MONGO_URI=<yourmongodburl>
 YOUTUBE_API_KEY=YOUR_YOUTUBE_API_KEY_HERE
 
 Start the dev server:
+
 node server.js
+
 The API will now be running at http://localhost:5000.
 
 2. Frontend Application
+
 The frontend is a React application created with Create React App.
+
 Navigate to the frontend directory:
 
 cd frontend
+
 Install dependencies:
 
 pnpm install      # or npm install
+
 Start the dev server:
+
 pnpm start        # or npm start
+
 The application will open in your browser at http://localhost:3000.
 
 ## 4️⃣ Additional Notes for Forkers
