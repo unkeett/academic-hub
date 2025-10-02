@@ -1,14 +1,14 @@
-🤝 Contributing Guide
+# 🤝 Contributing Guide
 Thank you for your interest in improving Academic Hub! Your help is valued — whether you contribute code, documentation, designs, or ideas. This guide explains how to get started, what we expect from contributors, and how to make your first PR successful.
 
-🧭 Quick overview
+## 🧭 Quick overview
 Fork the repo, create a branch, make small focused changes, and open a PR.
 
 See GOOD_FIRST_ISSUES.md for bite-sized tasks.
 
 Read our CODE_OF_CONDUCT.md and follow it.
 
-🍴 How to contribute (step-by-step)
+## 🍴 How to contribute (step-by-step)
 1) Fork the repository
 Click the Fork button in the top-right of the repository page.
 
@@ -56,7 +56,50 @@ Bash
 git push -u origin feat/short-description
 Go to GitHub → your fork → Compare & pull request → pick the upstream main as the base and write a clear description.
 
-✅ Pull request checklist (what we expect in a good PR)
+## 🚀 Getting Started
+Follow these steps to set up and run the project on your local machine.
+
+1. Backend Server
+The backend is a Node.js/Express API that connects to MongoDB.
+Navigate to the backend directory:
+
+cd backend
+Install dependencies:
+pnpm install      # or npm install
+
+Create environment file: Create a new file named .env in the /backend directory. Add your secret keys as shown below. This file should not be committed to Git.
+
+Code snippet
+
+# backend/.env
+MONGO_URI=<yourmongodburl>
+YOUTUBE_API_KEY=YOUR_YOUTUBE_API_KEY_HERE
+
+Start the dev server:
+node server.js
+The API will now be running at http://localhost:5000.
+
+2. Frontend Application
+The frontend is a React application created with Create React App.
+Navigate to the frontend directory:
+
+cd frontend
+Install dependencies:
+
+pnpm install      # or npm install
+Start the dev server:
+pnpm start        # or npm start
+The application will open in your browser at http://localhost:3000.
+
+## 4️⃣ Additional Notes for Forkers
+
+MongoDB: Either install locally or use Atlas. Make sure MONGO_URI in .env points to the right DB.
+
+YouTube API: Required for tutorial tracking; add YOUTUBE_API_KEY in .env.
+
+Ports: Backend defaults to 5000, frontend defaults to 3000.
+
+## ✅ Pull request checklist (what we expect in a good PR)
 [ ] PR has a clear title and description explaining why the change is needed.
 
 [ ] Changes are small and focused.
@@ -69,7 +112,7 @@ Go to GitHub → your fork → Compare & pull request → pick the upstream main
 
 [ ] No sensitive information (API keys, passwords) committed.
 
-💡 What you can work on (ideas & good first issues)
+## 💡 What you can work on (ideas & good first issues)
 Add a new resource (e.g., a link, a PDF, or notes) to an existing subject.
 
 Improve the UI for displaying course materials.
@@ -82,7 +125,7 @@ Improve landing page accessibility (ARIA, alt text).
 
 Check GOOD_FIRST_ISSUES.md for more specific tasks with file pointers.
 
-🧾 Issue & PR templates (examples)
+## 🧾 Issue & PR templates (examples)
 Issue template (short)
 
 Title: [bug|feature] Short description
@@ -113,10 +156,6 @@ Steps to verify the change.
 - [ ] I followed the contributing guide
 - [ ] Tests added (if applicable)
 - [ ] Documentation updated
-🧰 Development setup (recommended)
-Install dependencies: pnpm install (or npm install).
-
-Create .env.local from .env.example and fill secrets (do not commit).
 
 Start dev server: pnpm dev (or npm run dev).
 
