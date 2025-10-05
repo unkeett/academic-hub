@@ -1,6 +1,7 @@
 # Ignore dependencies in frontend and backend
 /academic-hub-frontend/node_modules
 /academic-hub-backend/node_modules
+/academic-hub-backend/package-lock.json
 
 # Ignore environment variables
 /academic-hub-backend/.env
