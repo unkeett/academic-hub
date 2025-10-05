@@ -1,0 +1,12 @@
+/* src/App.css */
+.content {
+  padding: 2rem;
+  padding-top: calc(60px + 2rem); /* Add space for the fixed navbar */
+  margin-left: 0; /* Default margin when sidebar is closed */
+  transition: margin-left 0.3s ease-in-out; /* Smooth transition for content shift */
+}
+
+/* When the content area has the 'sidebar-open' class, push it to the right */
+.content.sidebar-open {
+  margin-left: 250px; /* The width of the sidebar */
+}

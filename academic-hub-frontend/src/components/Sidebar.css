@@ -1,0 +1,38 @@
+/* src/components/Sidebar.css */
+.sidebar {
+  position: fixed;
+  top: 60px; /* Position it below the navbar */
+  left: 0;
+  width: 250px; /* Fixed width */
+  height: calc(100vh - 60px); /* Full height minus navbar */
+  background-color: #f8f9fa;
+  border-right: 1px solid #ddd;
+  padding: 1.5rem 0;
+  transform: translateX(-100%); /* Start off-screen */
+  transition: transform 0.3s ease-in-out; /* Smooth sliding transition */
+  z-index: 900;
+}
+
+/* This class is added when the sidebar should be visible */
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li a {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.sidebar-menu li a:hover {
+  background-color: #e9ecef;
+}
