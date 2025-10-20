@@ -1,23 +1,24 @@
 // src/components/DashboardSubjects.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './DashboardSubjects.css'; // We'll create this file next
+import { Link } from 'react-router-dom';
+import api from '../utils/axiosConfig';
+import './DashboardSubjects.css';
 
 const DashboardSubjects = () => {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSubjects = async () => {
-      try {
-        const response = await axios.get('http://localhost:5001/api/subjects');
-        setSubjects(response.data);
-      } catch (error) {
-        console.error('Error fetching subjects:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchSubjects = async () => {
+    try {
+      const response = await api.get('/api/subjects');
+      setSubjects(response.data.data);
+    } catch (error) {
+      console.error('Error fetching subjects:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
     fetchSubjects();
   }, []);
 
@@ -34,10 +35,13 @@ const DashboardSubjects = () => {
 
   return (
     <div className="subjects-widget card">
-      <h3>Subjects in Progress</h3>
+      <div className="widget-header">
+        <h3>Subjects in Progress</h3>
+        <Link to="/subjects" className="view-all-link">View All</Link>
+      </div>
       {subjects.length > 0 ? (
         <ul className="subjects-list">
-          {subjects.map((subject) => (
+          {subjects.slice(0, 3).map((subject) => (
             <li key={subject._id} className="subject-item">
               <div className="subject-info">
                 <span className="subject-name">{subject.name}</span>
@@ -46,14 +50,27 @@ const DashboardSubjects = () => {
               <div className="progress-bar-container">
                 <div 
                   className="progress-bar" 
-                  style={{ width: `${calculateProgress(subject)}%` }}
+                  style={{ 
+                    width: `${calculateProgress(subject)}%`,
+                    backgroundColor: subject.color || '#3B82F6'
+                  }}
                 ></div>
               </div>
             </li>
           ))}
+          {subjects.length > 3 && (
+            <li className="more-subjects">
+              <Link to="/subjects">
+                +{subjects.length - 3} more subjects
+              </Link>
+            </li>
+          )}
         </ul>
       ) : (
-        <p>No subjects added yet. Add one to get started!</p>
+        <div className="empty-state">
+          <p>No subjects added yet. Add one to get started!</p>
+          <Link to="/subjects" className="btn btn-primary">Add Subject</Link>
+        </div>
       )}
     </div>
   );

@@ -1,13 +1,19 @@
 // src/App.js
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 
 import Navbar from './components/Navbar';
-import Sidebar from './components/Sidebar'; // Import the new Sidebar component
+import Sidebar from './components/Sidebar';
 import HomePage from './pages/HomePage';
+import SubjectsPage from './pages/SubjectsPage';
+import GoalsPage from './pages/GoalsPage';
+import TutorialsPage from './pages/TutorialsPage';
+import IdeasPage from './pages/IdeasPage';
+
 import './App.css'; 
 
-function App() {
+const AppContent = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -15,21 +21,34 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="App">
-        <Navbar toggleSidebar={toggleSidebar} />
-        <Sidebar isOpen={isSidebarOpen} />
-        
-        {/* Add a class to the main content based on sidebar state */}
-        <main className={`content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/goals" element={<h1>My Goals</h1>} />
-            <Route path="/subjects" element={<h1>My Subjects</h1>} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <div className="App">
+      <Navbar toggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={isSidebarOpen} />
+      
+      <main className={`content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+        <Routes>
+          {/* All routes are now public */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/subjects" element={<SubjectsPage />} />
+          <Route path="/goals" element={<GoalsPage />} />
+          <Route path="/tutorials" element={<TutorialsPage />} />
+          <Route path="/ideas" element={<IdeasPage />} />
+          
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </main>
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
   );
 }
 

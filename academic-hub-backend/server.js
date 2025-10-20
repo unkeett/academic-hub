@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const errorHandler = require('./middleware/error');
 require('dotenv').config();
 
 const app = express();
@@ -12,9 +13,22 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
-app.use('/api/test', (req, res) => res.json({ message: 'Hello!' }));
+app.use('/api/test', (req, res) => res.json({ message: 'Academic Hub API is running!' }));
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/subjects', require('./routes/subjects'));
 app.use('/api/goals', require('./routes/goals'));
+app.use('/api/tutorials', require('./routes/tutorials'));
+app.use('/api/ideas', require('./routes/ideas'));
+
+// Error handling middleware (must be after routes)
+app.use(errorHandler);
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err, promise) => {
+  console.log(`❌ Unhandled Rejection: ${err.message}`);
+  // Close server & exit process
+  process.exit(1);
+});
 
 // --- START: IMPROVED CONNECTION LOGIC ---
 
@@ -32,6 +46,7 @@ const connectDB = async () => {
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`✅ Server is running on http://localhost:${PORT}`);
+    console.log(`📚 Academic Hub API ready for requests`);
   });
 });
 

@@ -1,48 +1,94 @@
 // src/components/DashboardGoals.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
+import api from '../utils/axiosConfig';
 import './DashboardGoals.css';
 
 const DashboardGoals = () => {
   const [goals, setGoals] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchGoals();
   }, []);
 
   const fetchGoals = async () => {
-    const response = await axios.get('http://localhost:5001/api/goals');
-    // Sort goals to show incomplete ones first
-    const sortedGoals = response.data.sort((a, b) => a.completed - b.completed);
-    setGoals(sortedGoals);
+    try {
+      const response = await api.get('/api/goals');
+      // Sort goals to show incomplete ones first
+      const sortedGoals = response.data.data.sort((a, b) => a.completed - b.completed);
+      setGoals(sortedGoals);
+    } catch (error) {
+      console.error('Error fetching goals:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleComplete = async (id, currentStatus) => {
-    await axios.put(`http://localhost:5001/api/goals/${id}`, {
-      completed: !currentStatus,
-    });
-    // Refetch goals to update the UI
-    fetchGoals();
+    try {
+      await api.put(`/api/goals/${id}/toggle`);
+      // Refetch goals to update the UI
+      fetchGoals();
+    } catch (error) {
+      console.error('Error toggling goal:', error);
+    }
   };
+
+  if (loading) {
+    return <div className="goals-widget card"><h3>Today's Goals</h3><p>Loading...</p></div>;
+  }
+
+  const pendingGoals = goals.filter(goal => !goal.completed);
+  const completedGoals = goals.filter(goal => goal.completed);
 
   return (
     <div className="goals-widget card">
-      <h3>Today's Goals</h3>
+      <div className="widget-header">
+        <h3>Today's Goals</h3>
+        <Link to="/goals" className="view-all-link">View All</Link>
+      </div>
+      
       {goals.length > 0 ? (
-        <ul className="goals-list">
-          {goals.map((goal) => (
-            <li key={goal._id} className={goal.completed ? 'completed' : ''}>
-              <input
-                type="checkbox"
-                checked={goal.completed}
-                onChange={() => toggleComplete(goal._id, goal.completed)}
-              />
-              <span>{goal.text}</span>
-            </li>
-          ))}
-        </ul>
+        <div className="goals-content">
+          <div className="goals-stats">
+            <span className="stat">
+              {completedGoals.length} of {goals.length} completed
+            </span>
+            <div className="progress-bar">
+              <div 
+                className="progress-fill"
+                style={{ width: `${(completedGoals.length / goals.length) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+          
+          <ul className="goals-list">
+            {pendingGoals.slice(0, 3).map((goal) => (
+              <li key={goal._id} className="goal-item">
+                <input
+                  type="checkbox"
+                  checked={goal.completed}
+                  onChange={() => toggleComplete(goal._id, goal.completed)}
+                />
+                <span className="goal-text">{goal.text}</span>
+                {goal.priority === 'high' && <span className="priority-high">!</span>}
+              </li>
+            ))}
+            {pendingGoals.length > 3 && (
+              <li className="more-goals">
+                <Link to="/goals">
+                  +{pendingGoals.length - 3} more pending goals
+                </Link>
+              </li>
+            )}
+          </ul>
+        </div>
       ) : (
-        <p>No goals set for today. Add one!</p>
+        <div className="empty-state">
+          <p>No goals set for today. Add one!</p>
+          <Link to="/goals" className="btn btn-primary">Add Goal</Link>
+        </div>
       )}
     </div>
   );
