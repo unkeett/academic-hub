@@ -12,6 +12,7 @@ import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage';
 
 import './App.css'; 
+import Login from './components/Login';
 
 const AppContent = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -33,6 +34,7 @@ const AppContent = () => {
           <Route path="/goals" element={<GoalsPage />} />
           <Route path="/tutorials" element={<TutorialsPage />} />
           <Route path="/ideas" element={<IdeasPage />} />
+          <Route path="/login" element={<Login />} />
           
           {/* Catch all route */}
           <Route path="*" element={<Navigate to="/" />} />
