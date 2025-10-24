@@ -1,6 +1,56 @@
 # Academic Hub
 
 A comprehensive MERN stack application for students to manage their academic journey, including subjects, goals, tutorials, and ideas.
+---
+## 🧭 Table of Contents
+
+- [File Structure](#file-structure)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+  - [Backend](#backend)
+  - [Frontend](#frontend)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [API Endpoints](#api-endpoints)
+  - [Authentication](#authentication)
+  - [Subjects](#subjects)
+  - [Goals](#goals)
+  - [Tutorials](#tutorials)
+  - [Ideas](#ideas)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
+- [🔝 Back to Top](#academic-hub)
+
+---
+## File Structure
+```bash
+academic-hub/
+├── academic-hub-backend/
+│   ├── controllers/           
+│   ├── middleware/           
+│   ├── models/           
+│   └── routes/   
+├── academic-hub-frontend/
+│   ├── public/           
+│   └── src/   
+│   │   ├── components/           
+│   │   ├── context/           
+│   │   ├── pages/           
+│   │   ├── utils/                          
+├── .gitignore                      
+├── CODE_OF_CONDUCT.md                      
+├── CONTRIBUTING.md    
+├── Contributors.json                                         
+├── README.md                      
+├── SECURITY.md            
+└── setup-instruction.md                  
+
+```
+---
 
 ## Features
 
@@ -11,6 +61,9 @@ A comprehensive MERN stack application for students to manage their academic jou
 - **Idea Capture**: Store and organize academic ideas and notes
 - **Responsive Design**: Modern, mobile-friendly interface
 - **Real-time Updates**: Live progress tracking and status updates
+
+
+---
 
 ## Tech Stack
 
@@ -86,6 +139,8 @@ REACT_APP_API_URL=http://localhost:5001
 npm start
 ```
 
+---
+
 ## API Endpoints
 
 ### Authentication
@@ -128,6 +183,10 @@ npm start
 - `GET /api/ideas/category/:category` - Get ideas by category
 - `GET /api/ideas/search/:searchTerm` - Search ideas
 
+
+---
+
+
 ## Usage
 
 1. **Register/Login**: Create an account or login to access the application
@@ -137,6 +196,8 @@ npm start
 5. **Tutorials**: Save YouTube tutorials by pasting URLs
 6. **Ideas**: Capture and organize academic ideas and notes
 
+---
+
 ## Contributing
 
 1. Fork the repository
@@ -145,10 +206,16 @@ npm start
 4. Push to the branch
 5. Create a Pull Request
 
+---
+
 ## License
 
 This project is licensed under the MIT License.
 
+---
+
 ## Support
 
 For support, email support@academichub.com or create an issue in the repository.
+
+- [🔝 Back to Top](#academic-hub)
