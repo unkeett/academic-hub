@@ -20,7 +20,7 @@ const Login = () => {
       navigate('/');
     }
     return () => clearError();
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, clearError]);
 
   const onChange = (e) => {
     setFormData({
