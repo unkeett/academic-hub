@@ -23,7 +23,6 @@ A comprehensive MERN stack application for students to manage their academic jou
 - [Contributing](#contributing)
 - [License](#license)
 - [Support](#support)
-- [🔝 Back to Top](#academic-hub)
 
 ---
 ## File Structure
