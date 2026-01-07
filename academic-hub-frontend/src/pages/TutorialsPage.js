@@ -17,11 +17,19 @@ const TutorialsPage = () => {
   }, []);
 
   const fetchTutorials = async () => {
+    // Check if user is authenticated before making API call
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await api.get('/api/tutorials');
-      setTutorials(response.data.data);
+      setTutorials(response.data.data || []);
     } catch (error) {
       console.error('Error fetching tutorials:', error);
+      setTutorials([]);
     } finally {
       setLoading(false);
     }

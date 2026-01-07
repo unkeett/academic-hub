@@ -13,13 +13,22 @@ const DashboardGoals = () => {
   }, []);
 
   const fetchGoals = async () => {
+    // Check if user is authenticated before making API call
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await api.get('/api/goals');
       // Sort goals to show incomplete ones first
-      const sortedGoals = response.data.data.sort((a, b) => a.completed - b.completed);
+      const sortedGoals = (response.data.data || []).sort((a, b) => a.completed - b.completed);
       setGoals(sortedGoals);
     } catch (error) {
       console.error('Error fetching goals:', error);
+      // Don't redirect if we're already handling the error
+      setGoals([]);
     } finally {
       setLoading(false);
     }

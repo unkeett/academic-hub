@@ -9,16 +9,25 @@ const DashboardSubjects = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const fetchSubjects = async () => {
-    try {
-      const response = await api.get('/api/subjects');
-      setSubjects(response.data.data);
-    } catch (error) {
-      console.error('Error fetching subjects:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchSubjects = async () => {
+      // Check if user is authenticated before making API call
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await api.get('/api/subjects');
+        setSubjects(response.data.data || []);
+      } catch (error) {
+        console.error('Error fetching subjects:', error);
+        // Don't redirect if we're already handling the error
+        setSubjects([]);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchSubjects();
   }, []);
 

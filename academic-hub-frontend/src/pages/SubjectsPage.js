@@ -16,11 +16,19 @@ const SubjectsPage = () => {
   }, []);
 
   const fetchSubjects = async () => {
+    // Check if user is authenticated before making API call
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await api.get('/api/subjects');
-      setSubjects(response.data.data);
+      setSubjects(response.data.data || []);
     } catch (error) {
       console.error('Error fetching subjects:', error);
+      setSubjects([]);
     } finally {
       setLoading(false);
     }

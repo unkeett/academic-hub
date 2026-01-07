@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
-app.use('/api/test', (req, res) => res.json({ message: 'Academic Hub API is running!' }));
+app.get('/api/test', (req, res) => res.json({ message: 'Academic Hub API is running!' }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/subjects', require('./routes/subjects'));
 app.use('/api/goals', require('./routes/goals'));

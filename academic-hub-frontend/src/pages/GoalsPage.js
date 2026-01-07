@@ -17,11 +17,19 @@ const GoalsPage = () => {
   }, []);
 
   const fetchGoals = async () => {
+    // Check if user is authenticated before making API call
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await api.get('/api/goals');
-      setGoals(response.data.data);
+      setGoals(response.data.data || []);
     } catch (error) {
       console.error('Error fetching goals:', error);
+      setGoals([]);
     } finally {
       setLoading(false);
     }

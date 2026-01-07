@@ -13,7 +13,6 @@ const Sidebar = ({ isOpen }) => {
         <li><Link to="/goals">Goals</Link></li>
         <li><Link to="/tutorials">Tutorials</Link></li>
         <li><Link to="/ideas">Ideas</Link></li>
-        <li><Link to="/settings">Settings</Link></li>
       </ul>
     </aside>
   );

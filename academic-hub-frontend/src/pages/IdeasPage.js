@@ -26,6 +26,13 @@ const IdeasPage = () => {
   }, [filter, searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchIdeas = async () => {
+    // Check if user is authenticated before making API call
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
       let url = '/api/ideas';
       const params = new URLSearchParams();
@@ -43,9 +50,10 @@ const IdeasPage = () => {
       }
       
       const response = await api.get(url);
-      setIdeas(response.data.data);
+      setIdeas(response.data.data || []);
     } catch (error) {
       console.error('Error fetching ideas:', error);
+      setIdeas([]);
     } finally {
       setLoading(false);
     }

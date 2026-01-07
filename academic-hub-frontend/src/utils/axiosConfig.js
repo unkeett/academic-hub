@@ -32,8 +32,31 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token expired or invalid
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      const token = localStorage.getItem('token');
+      const currentPath = window.location.pathname;
+      const publicRoutes = ['/login', '/register'];
+      
+      // Only redirect if:
+      // 1. We had a token (meaning it expired/invalid, not just missing)
+      // 2. We're not already on a public route
+      // 3. The error wasn't from a login/register attempt
+      if (token && !publicRoutes.includes(currentPath)) {
+        // Check if this is an auth endpoint (login/register) - don't redirect on those
+        const isAuthEndpoint = error.config?.url?.includes('/api/auth/login') || 
+                              error.config?.url?.includes('/api/auth/register');
+        
+        if (!isAuthEndpoint) {
+          localStorage.removeItem('token');
+          // Use a small delay to prevent redirect loops
+          setTimeout(() => {
+            const stillOnPublicRoute = publicRoutes.includes(window.location.pathname);
+            if (!stillOnPublicRoute) {
+              window.location.href = '/login';
+            }
+          }, 100);
+        }
+      }
+      // If no token, just let the error pass through (component will handle it)
     }
     return Promise.reject(error);
   }

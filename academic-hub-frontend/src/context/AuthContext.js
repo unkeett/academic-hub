@@ -74,7 +74,10 @@ export const AuthProvider = ({ children }) => {
     if (state.token) {
       loadUser();
     } else {
-      dispatch({ type: 'AUTH_FAIL' });
+      dispatch({ 
+        type: 'AUTH_FAIL',
+        payload: null
+      });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -101,7 +104,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', res.data.token);
       dispatch({
         type: 'AUTH_SUCCESS',
-        payload: res.data
+        payload: {
+          user: res.data.data,
+          token: res.data.token
+        }
       });
       return { success: true };
     } catch (error) {
@@ -121,7 +127,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', res.data.token);
       dispatch({
         type: 'AUTH_SUCCESS',
-        payload: res.data
+        payload: {
+          user: res.data.data,
+          token: res.data.token
+        }
       });
       return { success: true };
     } catch (error) {
@@ -134,7 +143,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    // Clear token from localStorage
     localStorage.removeItem('token');
+    // Clear axios default headers
+    delete api.defaults.headers.common['Authorization'];
+    // Dispatch logout action to update state
     dispatch({ type: 'LOGOUT' });
   };
 

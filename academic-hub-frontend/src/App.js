@@ -13,6 +13,7 @@ import IdeasPage from './pages/IdeasPage';
 
 import './App.css'; 
 import Login from './components/Login';
+import Register from './components/Register';
 
 const AppContent = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -35,6 +36,7 @@ const AppContent = () => {
           <Route path="/tutorials" element={<TutorialsPage />} />
           <Route path="/ideas" element={<IdeasPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           
           {/* Catch all route */}
           <Route path="*" element={<Navigate to="/" />} />
