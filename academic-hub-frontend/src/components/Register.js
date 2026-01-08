@@ -11,7 +11,7 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-
+  const [localError, setLocalError] = useState('');
   const { register, isAuthenticated, error, clearError } = useAuth();
   const navigate = useNavigate();
 
@@ -35,9 +35,10 @@ const Register = () => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
+      setLocalError('Passwords do not match');
       return;
     }
-
+    setLocalError('');
     const result = await register({ name, email, password });
     if (result.success) {
       navigate('/');
@@ -57,6 +58,12 @@ const Register = () => {
             {error}
           </div>
         )}
+        {localError && (
+          <div className="error-message">
+            {localError}
+          </div>
+        )} 
+
 
         <form onSubmit={onSubmit} className="auth-form">
           <div className="form-group">
