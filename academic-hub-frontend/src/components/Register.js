@@ -12,6 +12,9 @@ const Register = () => {
     confirmPassword: ''
   });
   const [localError, setLocalError] = useState('');
+  const [formErrors, setFormErrors] = useState({
+    email: ''
+  });
   const { register, isAuthenticated, error, clearError } = useAuth();
   const navigate = useNavigate();
 
@@ -24,21 +27,81 @@ const Register = () => {
     return () => clearError();
   }, [isAuthenticated, navigate, clearError]);
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    
+    // Email validation
+    if (email && !validateEmail(email)) {
+      errors.email = 'Please enter a valid email address';
+    }
+    
+    // Password confirmation validation
+    if (password && confirmPassword && password !== confirmPassword) {
+      setLocalError('Passwords do not match');
+    } else {
+      setLocalError('');
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const onChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+    
+    // Validate email in real-time as user types
+    if (name === 'email' && value.trim() !== '') {
+      if (!validateEmail(value)) {
+        setFormErrors({
+          ...formErrors,
+          email: 'Please enter a valid email address'
+        });
+      } else {
+        setFormErrors({
+          ...formErrors,
+          email: ''
+        });
+      }
+    }
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     
+    // Clear previous errors
+    setLocalError('');
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      // If there are form errors, don't proceed
+      if (formErrors.email) {
+        return;
+      }
+    }
+    
     if (password !== confirmPassword) {
       setLocalError('Passwords do not match');
       return;
     }
-    setLocalError('');
+    
+    // Validate email format
+    if (!validateEmail(email)) {
+      setFormErrors({
+        ...formErrors,
+        email: 'Please enter a valid email address'
+      });
+      return;
+    }
+    
     const result = await register({ name, email, password });
     if (result.success) {
       navigate('/');
@@ -62,10 +125,9 @@ const Register = () => {
           <div className="error-message">
             {localError}
           </div>
-        )} 
+        )}
 
-
-        <form onSubmit={onSubmit} className="auth-form">
+        <form onSubmit={onSubmit} className="auth-form" noValidate>
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
             <input
@@ -89,7 +151,13 @@ const Register = () => {
               onChange={onChange}
               required
               placeholder="Enter your email"
+              className={formErrors.email ? 'input-error' : ''}
             />
+            {formErrors.email && (
+              <div className="field-error-message">
+                {formErrors.email}
+              </div>
+            )}
           </div>
 
           <div className="form-group">
