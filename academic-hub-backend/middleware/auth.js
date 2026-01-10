@@ -1,6 +1,7 @@
 // middleware/auth.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const logger = require('../config/logger');
 
 // Protect routes
 exports.protect = async (req, res, next) => {
@@ -26,7 +27,7 @@ exports.protect = async (req, res, next) => {
 
       next();
     } catch (error) {
-      console.error('Token verification error:', error);
+      logger.error(`Token verification error: ${error.message}`);
       return res.status(401).json({
         success: false,
         message: 'Not authorized, token failed'

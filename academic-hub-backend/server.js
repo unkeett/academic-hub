@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const errorHandler = require('./middleware/error');
+const logger = require('./config/logger');
 require('dotenv').config();
 
 const app = express();
@@ -25,7 +26,7 @@ app.use(errorHandler);
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
-  console.log(`❌ Unhandled Rejection: ${err.message}`);
+  logger.error(`Unhandled Rejection: ${err.message}`);
   // Close server & exit process
   process.exit(1);
 });
@@ -35,9 +36,9 @@ process.on('unhandledRejection', (err, promise) => {
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    logger.info(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`❌ MongoDB Connection Error: ${error.message}`);
+    logger.error(`MongoDB Connection Error: ${error.message}`);
     process.exit(1); // Exit process with failure
   }
 };
@@ -45,8 +46,8 @@ const connectDB = async () => {
 // Connect to DB and then start server
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`✅ Server is running on http://localhost:${PORT}`);
-    console.log(`📚 Academic Hub API ready for requests`);
+    logger.info(`Server is running on http://localhost:${PORT}`);
+    logger.info(`Academic Hub API ready for requests`);
   });
 });
 
