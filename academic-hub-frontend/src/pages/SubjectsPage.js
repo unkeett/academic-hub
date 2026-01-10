@@ -68,17 +68,34 @@ const SubjectsPage = () => {
   };
 
   const handleUpdateProgress = async (id, completedTopics) => {
+    if (
+      completedTopics === undefined ||
+      completedTopics === null ||
+      Number.isNaN(completedTopics)
+    ) {
+      alert('Please enter a valid number');
+      return;
+    }
+
+    if (completedTopics < 0) {
+      alert('Completed topics cannot be negative');
+      return;
+    }
+
     try {
-      const response = await api.put(`/api/subjects/${id}/progress`, {
-        completedTopics
-      });
-      setSubjects(subjects.map(subject => 
-        subject._id === id ? response.data.data : subject
-      ));
+    const response = await api.put(`/api/subjects/${id}/progress`, {
+      completedTopics
+    });
+
+    setSubjects(subjects.map(subject =>
+      subject._id === id ? response.data.data : subject
+    ));
     } catch (error) {
       console.error('Error updating progress:', error);
+      alert(error.response?.data?.message || 'Failed to update progress');
     }
   };
+
 
   if (loading) {
     return (
