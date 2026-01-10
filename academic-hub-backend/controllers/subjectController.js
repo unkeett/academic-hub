@@ -140,6 +140,31 @@ const deleteSubject = async (req, res, next) => {
 // @access  Private
 const updateSubjectProgress = async (req, res, next) => {
   try {
+    const { completedTopics } = req.body;
+
+    // 1️. Early validation (NO DB access yet)
+    if (completedTopics === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: 'completedTopics is required'
+      });
+    }
+
+    if (typeof completedTopics !== 'number' || Number.isNaN(completedTopics)) {
+      return res.status(400).json({
+        success: false,
+        message: 'completedTopics must be a valid number'
+      });
+    }
+
+    if (completedTopics < 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'completedTopics cannot be negative'
+      });
+    }
+
+    // 2. Now fetch subject
     const subject = await Subject.findById(req.params.id);
 
     if (!subject) {
@@ -149,7 +174,7 @@ const updateSubjectProgress = async (req, res, next) => {
       });
     }
 
-    // Make sure user owns subject
+    // 3. Ownership check
     if (subject.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,
@@ -157,12 +182,11 @@ const updateSubjectProgress = async (req, res, next) => {
       });
     }
 
-    const { completedTopics } = req.body;
-    
-    if (completedTopics < 0 || completedTopics > subject.topics.length) {
+    // 4. Final logical validation
+    if (completedTopics > subject.topics.length) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid completed topics count'
+        message: 'completedTopics cannot exceed total topics'
       });
     }
 
@@ -177,6 +201,7 @@ const updateSubjectProgress = async (req, res, next) => {
     next(error);
   }
 };
+
 
 module.exports = {
   getSubjects,
