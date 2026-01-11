@@ -76,5 +76,4 @@ LOG_LEVEL=debug # Development
 ✅ Production-ready logging solution
 ✅ Separate error tracking
 ✅ Configurable log levels
-✅ Rotating log files support
 ✅ Better error debugging in production
