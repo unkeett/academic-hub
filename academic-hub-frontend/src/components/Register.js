@@ -43,6 +43,7 @@ const Register = () => {
     // Password confirmation validation
     if (password && confirmPassword && password !== confirmPassword) {
       setLocalError('Passwords do not match');
+      return false;
     } else {
       setLocalError('');
     }
@@ -82,23 +83,21 @@ const Register = () => {
     
     // Validate form before submission
     if (!validateForm()) {
-      // If there are form errors, don't proceed
-      if (formErrors.email) {
-        return;
-      }
-    }
-    
-    if (password !== confirmPassword) {
-      setLocalError('Passwords do not match');
       return;
     }
     
-    // Validate email format
+    // Validate email format (redundant but kept for clarity)
     if (!validateEmail(email)) {
       setFormErrors({
         ...formErrors,
         email: 'Please enter a valid email address'
       });
+      return;
+    }
+    
+    // Check that all required fields are filled
+    if (!name || !email || !password || !confirmPassword) {
+      setLocalError('Please fill in all fields');
       return;
     }
     
