@@ -47,7 +47,7 @@ const SubjectsPage = () => {
   const handleUpdateSubject = async (id, subjectData) => {
     try {
       const response = await api.put(`/api/subjects/${id}`, subjectData);
-      setSubjects(subjects.map(subject => 
+      setSubjects(subjects.map(subject =>
         subject._id === id ? response.data.data : subject
       ));
       setEditingSubject(null);
@@ -68,17 +68,42 @@ const SubjectsPage = () => {
   };
 
   const handleUpdateProgress = async (id, completedTopics) => {
+    const subject = subjects.find(s => s._id === id);
+    if (!subject) return;
+
+    if (
+      completedTopics === undefined ||
+      completedTopics === null ||
+      Number.isNaN(completedTopics)
+    ) {
+      alert('Please enter a valid number');
+      return;
+    }
+
+    if (completedTopics < 0) {
+      alert('Completed topics cannot be negative');
+      return;
+    }
+
+    if (subject.topics && completedTopics > subject.topics.length) {
+      alert(`Completed topics cannot exceed total topics (${subject.topics.length})`);
+      return;
+    }
+
     try {
       const response = await api.put(`/api/subjects/${id}/progress`, {
         completedTopics
       });
-      setSubjects(subjects.map(subject => 
+
+      setSubjects(subjects.map(subject =>
         subject._id === id ? response.data.data : subject
       ));
     } catch (error) {
       console.error('Error updating progress:', error);
+      alert(error.response?.data?.message || 'Failed to update progress');
     }
   };
+
 
   if (loading) {
     return (
@@ -92,7 +117,7 @@ const SubjectsPage = () => {
     <div className="subjects-page">
       <div className="page-header">
         <h1>My Subjects</h1>
-        <button 
+        <button
           className="btn btn-primary"
           onClick={() => setShowForm(true)}
         >
@@ -130,7 +155,7 @@ const SubjectsPage = () => {
           <div className="empty-state">
             <h3>No subjects yet</h3>
             <p>Add your first subject to get started with tracking your academic progress.</p>
-            <button 
+            <button
               className="btn btn-primary"
               onClick={() => setShowForm(true)}
             >
