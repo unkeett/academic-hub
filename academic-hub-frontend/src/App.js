@@ -10,6 +10,8 @@ import SubjectsPage from './pages/SubjectsPage';
 import GoalsPage from './pages/GoalsPage';
 import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage';
+import Footer from './components/Footer';
+
 
 import './App.css'; 
 import Login from './components/Login';
@@ -42,6 +44,7 @@ const AppContent = () => {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 };
