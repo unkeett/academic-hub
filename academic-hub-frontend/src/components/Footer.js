@@ -54,12 +54,7 @@ const Footer = () => {
         <div className="footer-bottom-links">
           <a href="#" >Privacy Policy</a>
           <a href="#" >Terms of Service</a>
-          <button
-            className="back-to-top"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          >
-            Back to Top
-          </button>
+          
         </div>
       </div>
     </footer>

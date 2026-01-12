@@ -104,16 +104,3 @@
   color: #6b5cff;
 }
 
-.back-to-top {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px; 
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.back-to-top:hover {
-  background: #5848d6;
-}
