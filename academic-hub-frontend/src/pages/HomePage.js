@@ -72,10 +72,27 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      <div className="page-header">
-        <h1>Welcome to Academic Hub</h1>
-        <p>Your personal academic organization center</p>
-      </div>
+        <section className="hero-section">
+          <div className="hero-content">
+            <h1>
+              Welcome to <span>Academic Hub</span>
+            </h1>
+            <p>
+              Organize your subjects, track goals, save tutorials,
+              and turn ideas into academic success.
+            </p>
+
+            <div className="hero-actions">
+              <Link to="/subjects" className="hero-btn primary">
+                Explore Subjects
+              </Link>
+              <Link to="/register" className="hero-btn secondary">
+                Get Started
+              </Link>
+            </div>
+          </div>
+        </section>
+
 
       <div className="stats-grid">
         <div className="stat-card">
