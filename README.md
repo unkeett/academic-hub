@@ -1,4 +1,34 @@
-# Academic Hub
+<h1 align="center">
+  Academic Hub
+</h1> 
+
+<table align="center">
+    <thead align="center">
+        <tr>
+            <td><b>🌟 Stars</b></td>
+            <td><b>🍴 Forks</b></td>
+            <td><b>🐛 Issues</b></td>
+            <td><b>🔔 Open PRs</b></td>
+            <td><b>🔕 Closed PRs</b></td>
+            <td><b>🛠️ Languages</b></td>
+            <td><b>👥 Contributors</b></td>
+        </tr>
+     </thead>
+    <tbody>
+         <tr>
+            <td><img alt="Stars" src="https://img.shields.io/github/stars/unkeett/academic-hub?style=flat&logo=github"/></td>
+            <td><img alt="Forks" src="https://img.shields.io/github/forks/unkeett/academic-hub?style=flat&logo=github"/></td>
+            <td><img alt="Issues" src="https://img.shields.io/github/issues/unkeett/academic-hub?style=flat&logo=github"/></td>
+            <td><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/unkeett/academic-hub?style=flat&logo=github"/></td>
+            <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/unkeett/academic-hub?style=flat&color=critical&logo=github"/></td>
+            <td><img alt="Languages Count" src="https://img.shields.io/github/languages/count/unkeett/academic-hub?style=flat&color=green&logo=github"></td>
+            <td><img alt="Contributors Count" src="https://img.shields.io/github/contributors/unkeett/academic-hub?style=flat&color=blue&logo=github"/></td>
+        </tr>
+    </tbody>
+</table>
+
+# 🚀 Academic Hub — Student Productivity Dashboard
+
 
 A full-stack MERN application for students to organize and track their academic journey. Manage subjects, set goals, save tutorials, and capture ideas—all in one place.
 
