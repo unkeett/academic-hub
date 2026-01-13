@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/axiosConfig';
 import IdeaCard from '../components/IdeaCard';
 import IdeaForm from '../components/IdeaForm';
+import { FaPlus, FaSearch } from 'react-icons/fa';
 import './IdeasPage.css';
 
 const IdeasPage = () => {
@@ -104,25 +105,25 @@ const IdeasPage = () => {
 
   return (
     <div className="ideas-page">
-      <div className="page-header">
+      <header className="page-header">
         <h1>My Ideas</h1>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setShowForm(true)}
-        >
-          Add New Idea
-        </button>
-      </div>
+        <div className="page-stats">
+          <span>{ideas.length} {ideas.length === 1 ? 'idea' : 'ideas'} total</span>
+        </div>
+      </header>
 
       <div className="ideas-controls">
         <div className="search-box">
-          <input
-            type="text"
-            placeholder="Search ideas..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="search-input"
-          />
+          <div className="search-input-wrapper">
+            <FaSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search ideas..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="search-input"
+            />
+          </div>
         </div>
         
         <div className="category-filters">
@@ -183,6 +184,14 @@ const IdeasPage = () => {
           </div>
         )}
       </div>
+
+      <button 
+        className="fab" 
+        onClick={() => setShowForm(true)}
+        title="Add New Idea"
+      >
+        <FaPlus />
+      </button>
     </div>
   );
 };

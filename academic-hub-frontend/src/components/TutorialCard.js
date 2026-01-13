@@ -1,5 +1,6 @@
 // src/components/TutorialCard.js
 import React from 'react';
+import { FaEdit, FaTrash, FaYoutube, FaTv, FaEye, FaCheck } from 'react-icons/fa';
 import './TutorialCard.css';
 
 const TutorialCard = ({ tutorial, onEdit, onDelete, onToggleWatched }) => {
@@ -31,60 +32,63 @@ const TutorialCard = ({ tutorial, onEdit, onDelete, onToggleWatched }) => {
             target="_blank" 
             rel="noopener noreferrer"
             className="play-button"
+            title="Play Video"
           >
-            ▶️
+            <FaYoutube />
           </a>
         </div>
         <div className="duration-badge">
           {formatDuration(tutorial.duration)}
         </div>
         {tutorial.watched && (
-          <div className="watched-badge">
-            ✓ Watched
+          <div className="watched-status-badge">
+            <FaCheck /> <span>Watched</span>
           </div>
         )}
       </div>
 
       <div className="tutorial-content">
         <div className="card-header">
-          <h3 className="tutorial-title">{tutorial.title}</h3>
+          <h3 className="tutorial-title" title={tutorial.title}>{tutorial.title}</h3>
           <div className="card-actions">
             <button 
               className="action-btn edit-btn"
               onClick={() => onEdit(tutorial)}
               title="Edit tutorial"
             >
-              ✏️
+              <FaEdit />
             </button>
             <button 
               className="action-btn delete-btn"
               onClick={() => onDelete(tutorial._id)}
               title="Delete tutorial"
             >
-              🗑️
+              <FaTrash />
             </button>
           </div>
         </div>
 
         <div className="tutorial-meta">
           <div className="channel-info">
-            <span className="channel-name">📺 {tutorial.channel}</span>
+            <FaTv className="meta-icon" />
+            <span className="channel-name">{tutorial.channel}</span>
           </div>
           
           <button 
             className={`watch-status-btn ${tutorial.watched ? 'watched' : 'unwatched'}`}
             onClick={() => onToggleWatched(tutorial._id)}
           >
-            {tutorial.watched ? '✓ Watched' : '👁️ Mark as Watched'}
+            {tutorial.watched ? (
+              <><FaCheck /> <span>Watched</span></>
+            ) : (
+              <><FaEye /> <span>Mark Watched</span></>
+            )}
           </button>
         </div>
 
         {tutorial.description && (
           <p className="tutorial-description">
-            {tutorial.description.length > 150 
-              ? `${tutorial.description.substring(0, 150)}...` 
-              : tutorial.description
-            }
+            {tutorial.description}
           </p>
         )}
 
@@ -95,11 +99,8 @@ const TutorialCard = ({ tutorial, onEdit, onDelete, onToggleWatched }) => {
             rel="noopener noreferrer"
             className="watch-link"
           >
-            Watch on YouTube →
+            Watch on YouTube
           </a>
-          <span className="created-date">
-            Added {new Date(tutorial.createdAt).toLocaleDateString()}
-          </span>
         </div>
       </div>
     </div>

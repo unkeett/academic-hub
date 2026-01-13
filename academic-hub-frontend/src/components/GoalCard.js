@@ -1,16 +1,19 @@
 // src/components/GoalCard.js
 import React from 'react';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import './GoalCard.css';
 
 const GoalCard = ({ goal, onEdit, onDelete, onToggle }) => {
-  const getPriorityColor = (priority) => {
+  const getPriorityStyles = (priority) => {
     switch (priority) {
-      case 'high': return '#EF4444';
-      case 'medium': return '#F59E0B';
-      case 'low': return '#10B981';
-      default: return '#6B7280';
+      case 'high': return { color: 'var(--danger)', bg: '#fef2f2', border: '#fecaca' };
+      case 'medium': return { color: 'var(--warning)', bg: '#fffbeb', border: '#fef3c7' };
+      case 'low': return { color: 'var(--success)', bg: 'var(--success-light)', border: '#d1fae5' };
+      default: return { color: 'var(--secondary)', bg: 'var(--background)', border: 'var(--border)' };
     }
   };
+
+  const styles = getPriorityStyles(goal.priority);
 
   const formatDueDate = (dueDate) => {
     if (!dueDate) return null;
@@ -39,12 +42,16 @@ const GoalCard = ({ goal, onEdit, onDelete, onToggle }) => {
       <div className="card-header">
         <div className="goal-info">
           <div className="goal-title-section">
-            <input
-              type="checkbox"
-              checked={goal.completed}
-              onChange={() => onToggle(goal._id)}
-              className="goal-checkbox"
-            />
+            <div className="checkbox-wrapper">
+              <input
+                type="checkbox"
+                checked={goal.completed}
+                onChange={() => onToggle(goal._id)}
+                className="goal-checkbox"
+                id={`goal-${goal._id}`}
+              />
+              <label htmlFor={`goal-${goal._id}`} className="checkbox-label"></label>
+            </div>
             <h3 className={`goal-title ${goal.completed ? 'strikethrough' : ''}`}>
               {goal.text}
             </h3>
@@ -59,30 +66,34 @@ const GoalCard = ({ goal, onEdit, onDelete, onToggle }) => {
             onClick={() => onEdit(goal)}
             title="Edit goal"
           >
-            ✏️
+            <FaEdit />
           </button>
           <button 
             className="action-btn delete-btn"
             onClick={() => onDelete(goal._id)}
             title="Delete goal"
           >
-            🗑️
+            <FaTrash />
           </button>
         </div>
       </div>
 
       <div className="goal-meta">
-        <div className="priority-badge">
-          <span 
-            className="priority-dot"
-            style={{ backgroundColor: getPriorityColor(goal.priority) }}
-          ></span>
+        <div 
+          className="priority-badge"
+          style={{ 
+            color: styles.color, 
+            backgroundColor: styles.bg,
+            borderColor: styles.border
+          }}
+        >
           <span className="priority-text">{goal.priority}</span>
         </div>
         
         {dueDateInfo && (
           <div className={`due-date ${dueDateInfo.className}`}>
-            📅 {dueDateInfo.text}
+            <span className="due-icon">📅</span>
+            <span className="due-text">{dueDateInfo.text}</span>
           </div>
         )}
       </div>

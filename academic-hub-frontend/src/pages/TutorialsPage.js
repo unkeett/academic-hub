@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/axiosConfig';
 import TutorialCard from '../components/TutorialCard';
 import TutorialForm from '../components/TutorialForm';
+import { FaPlus } from 'react-icons/fa';
 import './TutorialsPage.css';
 
 const TutorialsPage = () => {
@@ -99,28 +100,23 @@ const TutorialsPage = () => {
 
   return (
     <div className="tutorials-page">
-      <div className="page-header">
-        <div className="header-content">
-          <h1>My Tutorials</h1>
-          <div className="tutorials-stats">
-            <span className="stat">
-              {watchedCount} of {totalCount} watched
-            </span>
-            <div className="progress-bar">
-              <div 
-                className="progress-fill"
-                style={{ width: totalCount > 0 ? `${(watchedCount / totalCount) * 100}%` : '0%' }}
-              ></div>
-            </div>
+      <header className="page-header">
+        <h1>My Tutorials</h1>
+        <div className="page-stats">
+          <span>
+            {watchedCount} of {totalCount} watched
+          </span>
+          <div className="mini-progress-bar">
+            <div 
+              className="mini-progress-fill"
+              style={{ 
+                width: totalCount > 0 ? `${(watchedCount / totalCount) * 100}%` : '0%',
+                backgroundColor: 'var(--secondary)'
+              }}
+            ></div>
           </div>
         </div>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setShowForm(true)}
-        >
-          Add New Tutorial
-        </button>
-      </div>
+      </header>
 
       <div className="tutorials-filters">
         <button 
@@ -189,6 +185,14 @@ const TutorialsPage = () => {
           </div>
         )}
       </div>
+
+      <button 
+        className="fab" 
+        onClick={() => setShowForm(true)}
+        title="Add New Tutorial"
+      >
+        <FaPlus />
+      </button>
     </div>
   );
 };

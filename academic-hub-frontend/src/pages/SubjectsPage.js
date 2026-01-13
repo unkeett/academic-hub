@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/axiosConfig';
 import SubjectCard from '../components/SubjectCard';
 import SubjectForm from '../components/SubjectForm';
+import { FaPlus } from 'react-icons/fa';
 import './SubjectsPage.css';
 
 const SubjectsPage = () => {
@@ -115,15 +116,12 @@ const SubjectsPage = () => {
 
   return (
     <div className="subjects-page">
-      <div className="page-header">
+      <header className="page-header">
         <h1>My Subjects</h1>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowForm(true)}
-        >
-          Add New Subject
-        </button>
-      </div>
+        <div className="page-stats">
+          <span>{subjects.length} {subjects.length === 1 ? 'subject' : 'subjects'} enrolled</span>
+        </div>
+      </header>
 
       {showForm && (
         <SubjectForm
@@ -164,6 +162,14 @@ const SubjectsPage = () => {
           </div>
         )}
       </div>
+
+      <button 
+        className="fab" 
+        onClick={() => setShowForm(true)}
+        title="Add New Subject"
+      >
+        <FaPlus />
+      </button>
     </div>
   );
 };
