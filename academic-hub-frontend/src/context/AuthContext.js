@@ -60,14 +60,8 @@ const authReducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Set axios default header
-  useEffect(() => {
-    if (state.token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
-    } else {
-      delete api.defaults.headers.common['Authorization'];
-    }
-  }, [state.token]);
+  // Removed redundant useEffect for axios headers. 
+  // Relying on axiosConfig interceptor for dynamic token injection from localStorage.
 
   // Load user on app start
   useEffect(() => {
@@ -81,23 +75,24 @@ export const AuthProvider = ({ children }) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const loadUser = async () => {
+  const loadUser = React.useCallback(async () => {
     try {
       const res = await api.get('/api/auth/me');
       dispatch({
         type: 'AUTH_SUCCESS',
         payload: {
           user: res.data.data,
-          token: state.token
+          // Use the token from the response if refreshed, or fallback to current state/localStorage
+          token: localStorage.getItem('token')
         }
       });
     } catch (error) {
       localStorage.removeItem('token');
       dispatch({ type: 'AUTH_FAIL' });
     }
-  };
+  }, []); // api and dispatch are stable, so deps are empty (or minimal)
 
-  const register = async (userData) => {
+  const register = React.useCallback(async (userData) => {
     try {
       dispatch({ type: 'AUTH_START' });
       const res = await api.post('/api/auth/register', userData);
@@ -118,9 +113,9 @@ export const AuthProvider = ({ children }) => {
       });
       return { success: false, error: error.response?.data?.message || 'Registration failed' };
     }
-  };
+  }, []);
 
-  const login = async (userData) => {
+  const login = React.useCallback(async (userData) => {
     try {
       dispatch({ type: 'AUTH_START' });
       const res = await api.post('/api/auth/login', userData);
@@ -141,29 +136,25 @@ export const AuthProvider = ({ children }) => {
       });
       return { success: false, error: error.response?.data?.message || 'Login failed' };
     }
-  };
+  }, []);
 
-  const logout = () => {
-    // Clear token from localStorage
+  const logout = React.useCallback(() => {
     localStorage.removeItem('token');
-    // Clear axios default headers
-    delete api.defaults.headers.common['Authorization'];
-    // Dispatch logout action to update state
     dispatch({ type: 'LOGOUT' });
-  };
+  }, []);
 
-  const clearError = () => {
+  const clearError = React.useCallback(() => {
     dispatch({ type: 'CLEAR_ERROR' });
-  };
+  }, []);
 
-  const value = {
+  const value = React.useMemo(() => ({
     ...state,
     register,
     login,
     logout,
     clearError,
     loadUser
-  };
+  }), [state, register, login, logout, clearError, loadUser]);
 
   return (
     <AuthContext.Provider value={value}>
