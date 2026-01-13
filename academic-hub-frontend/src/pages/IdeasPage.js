@@ -13,6 +13,9 @@ const IdeasPage = () => {
   const [editingIdea, setEditingIdea] = useState(null);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [createLoading, setCreateLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [buttonClicked, setButtonClicked] = useState(false);
 
   const categories = [
     { value: 'all', label: 'All Ideas' },
@@ -59,12 +62,19 @@ const IdeasPage = () => {
   };
 
   const handleCreateIdea = async (ideaData) => {
+    setCreateLoading(true);
+    setError(null);
+    
     try {
       const response = await api.post('/api/ideas', ideaData);
       setIdeas([response.data.data, ...ideas]);
       setShowForm(false);
     } catch (error) {
       console.error('Error creating idea:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to create idea. Please try again.';
+      setError(errorMessage);
+    } finally {
+      setCreateLoading(false);
     }
   };
 
@@ -89,6 +99,13 @@ const IdeasPage = () => {
         console.error('Error deleting idea:', error);
       }
     }
+  };
+
+  const handleAddIdea = () => {
+    console.log('🔥 Add New Idea button clicked!');
+    setButtonClicked(true);
+    setShowForm(true);
+    setTimeout(() => setButtonClicked(false), 1000);
   };
 
   const handleSearch = (e) => {
@@ -142,7 +159,12 @@ const IdeasPage = () => {
       {showForm && (
         <IdeaForm
           onSubmit={handleCreateIdea}
-          onCancel={() => setShowForm(false)}
+          onCancel={() => {
+            setShowForm(false);
+            setError(null);
+          }}
+          loading={createLoading}
+          error={error}
         />
       )}
 
@@ -176,7 +198,7 @@ const IdeasPage = () => {
             {!searchTerm && filter === 'all' && (
               <button 
                 className="btn btn-primary"
-                onClick={() => setShowForm(true)}
+                onClick={handleAddIdea}
               >
                 Add Your First Idea
               </button>
