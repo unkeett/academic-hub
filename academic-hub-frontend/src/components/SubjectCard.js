@@ -1,5 +1,6 @@
 // src/components/SubjectCard.js
 import React, { useState } from 'react';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import './SubjectCard.css';
 
 const SubjectCard = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
@@ -20,7 +21,8 @@ const SubjectCard = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
   const progress = calculateProgress();
 
   return (
-    <div className="subject-card" style={{ borderLeftColor: subject.color }}>
+    <div className="subject-card">
+      <div className="card-accent" style={{ backgroundColor: subject.color }}></div>
       <div className="card-header">
         <div className="subject-info">
           <h3 className="subject-name">{subject.name}</h3>
@@ -34,14 +36,14 @@ const SubjectCard = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
             onClick={() => onEdit(subject)}
             title="Edit subject"
           >
-            ✏️
+            <FaEdit />
           </button>
           <button 
             className="action-btn delete-btn"
             onClick={() => onDelete(subject._id)}
             title="Delete subject"
           >
-            🗑️
+            <FaTrash />
           </button>
         </div>
       </div>
@@ -49,29 +51,35 @@ const SubjectCard = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
       <div className="progress-section">
         <div className="progress-header">
           <span className="progress-label">Progress</span>
-          <span className="progress-percentage">{progress}%</span>
+          <span className="progress-percentage" style={{ color: subject.color }}>{progress}%</span>
         </div>
-        <div className="progress-bar">
-          <div 
-            className="progress-fill"
-            style={{ 
-              width: `${progress}%`,
-              backgroundColor: subject.color
-            }}
-          ></div>
+        <div className="progress-bar-container">
+          <div className="progress-bar-bg">
+            <div 
+              className="progress-fill"
+              style={{ 
+                width: `${progress}%`,
+                backgroundColor: subject.color,
+                boxShadow: `0 0 10px ${subject.color}40`
+              }}
+            ></div>
+          </div>
         </div>
         <div className="progress-stats">
-          <span>{subject.completedTopics || 0} of {subject.topics?.length || 0} topics completed</span>
+          <span className="stats-text">
+            <strong>{subject.completedTopics || 0}</strong> of <strong>{subject.topics?.length || 0}</strong> topics completed
+          </span>
         </div>
       </div>
 
       {subject.topics && subject.topics.length > 0 && (
         <div className="topics-section">
           <button 
-            className="topics-toggle"
+            className={`topics-toggle ${showTopics ? 'active' : ''}`}
             onClick={() => setShowTopics(!showTopics)}
           >
-            {showTopics ? 'Hide Topics' : 'Show Topics'} ({subject.topics.length})
+            <span className="toggle-text">{showTopics ? 'Hide Topics' : 'Show Topics'}</span>
+            <span className="toggle-count">{subject.topics.length}</span>
           </button>
           
           {showTopics && (
@@ -81,10 +89,14 @@ const SubjectCard = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
                   key={index} 
                   className={`topic-item ${index < (subject.completedTopics || 0) ? 'completed' : ''}`}
                 >
+                  <div className="topic-indicator">
+                    {index < (subject.completedTopics || 0) ? (
+                      <span className="completed-icon" style={{ color: subject.color }}>✓</span>
+                    ) : (
+                      <span className="pending-icon"></span>
+                    )}
+                  </div>
                   <span className="topic-text">{topic}</span>
-                  {index < (subject.completedTopics || 0) && (
-                    <span className="completed-icon">✓</span>
-                  )}
                 </div>
               ))}
             </div>
