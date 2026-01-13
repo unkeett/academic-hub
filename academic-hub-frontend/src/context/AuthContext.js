@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
     if (state.token) {
       loadUser();
     } else {
-      dispatch({ 
+      dispatch({
         type: 'AUTH_FAIL',
         payload: null
       });
@@ -92,6 +92,7 @@ export const AuthProvider = ({ children }) => {
         }
       });
     } catch (error) {
+      localStorage.removeItem('token');
       dispatch({ type: 'AUTH_FAIL' });
     }
   };
@@ -100,7 +101,7 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: 'AUTH_START' });
       const res = await api.post('/api/auth/register', userData);
-      
+
       localStorage.setItem('token', res.data.token);
       dispatch({
         type: 'AUTH_SUCCESS',
@@ -123,7 +124,7 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: 'AUTH_START' });
       const res = await api.post('/api/auth/login', userData);
-      
+
       localStorage.setItem('token', res.data.token);
       dispatch({
         type: 'AUTH_SUCCESS',
