@@ -1,6 +1,6 @@
 // src/components/Login.js
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
@@ -10,18 +10,17 @@ const Login = () => {
     password: ''
   });
 
-  const { login, isAuthenticated, error } = useAuth();
+  const { login, isAuthenticated, error, clearError } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { email, password } = formData;
 
   useEffect(() => {
-    // Only redirect if we're on the login page and user is authenticated
-    if (isAuthenticated && location.pathname === '/login') {
+    if (isAuthenticated) {
       navigate('/');
     }
-  }, [isAuthenticated, navigate, location.pathname]);
+    return () => clearError();
+  }, [isAuthenticated, navigate, clearError]);
 
   const onChange = (e) => {
     setFormData({
