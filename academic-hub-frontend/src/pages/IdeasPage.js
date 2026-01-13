@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/axiosConfig';
 import IdeaCard from '../components/IdeaCard';
 import IdeaForm from '../components/IdeaForm';
+import { FaPlus, FaSearch } from 'react-icons/fa';
 import './IdeasPage.css';
 
 const IdeasPage = () => {
@@ -12,6 +13,9 @@ const IdeasPage = () => {
   const [editingIdea, setEditingIdea] = useState(null);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [createLoading, setCreateLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [buttonClicked, setButtonClicked] = useState(false);
 
   const categories = [
     { value: 'all', label: 'All Ideas' },
@@ -58,12 +62,19 @@ const IdeasPage = () => {
   };
 
   const handleCreateIdea = async (ideaData) => {
+    setCreateLoading(true);
+    setError(null);
+    
     try {
       const response = await api.post('/api/ideas', ideaData);
       setIdeas([response.data.data, ...ideas]);
       setShowForm(false);
     } catch (error) {
       console.error('Error creating idea:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to create idea. Please try again.';
+      setError(errorMessage);
+    } finally {
+      setCreateLoading(false);
     }
   };
 
@@ -90,6 +101,13 @@ const IdeasPage = () => {
     }
   };
 
+  const handleAddIdea = () => {
+    console.log('🔥 Add New Idea button clicked!');
+    setButtonClicked(true);
+    setShowForm(true);
+    setTimeout(() => setButtonClicked(false), 1000);
+  };
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -104,25 +122,25 @@ const IdeasPage = () => {
 
   return (
     <div className="ideas-page">
-      <div className="page-header">
+      <header className="page-header">
         <h1>My Ideas</h1>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setShowForm(true)}
-        >
-          Add New Idea
-        </button>
-      </div>
+        <div className="page-stats">
+          <span>{ideas.length} {ideas.length === 1 ? 'idea' : 'ideas'} total</span>
+        </div>
+      </header>
 
       <div className="ideas-controls">
         <div className="search-box">
-          <input
-            type="text"
-            placeholder="Search ideas..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="search-input"
-          />
+          <div className="search-input-wrapper">
+            <FaSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search ideas..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="search-input"
+            />
+          </div>
         </div>
         
         <div className="category-filters">
@@ -141,7 +159,12 @@ const IdeasPage = () => {
       {showForm && (
         <IdeaForm
           onSubmit={handleCreateIdea}
-          onCancel={() => setShowForm(false)}
+          onCancel={() => {
+            setShowForm(false);
+            setError(null);
+          }}
+          loading={createLoading}
+          error={error}
         />
       )}
 
@@ -175,7 +198,7 @@ const IdeasPage = () => {
             {!searchTerm && filter === 'all' && (
               <button 
                 className="btn btn-primary"
-                onClick={() => setShowForm(true)}
+                onClick={handleAddIdea}
               >
                 Add Your First Idea
               </button>
@@ -183,6 +206,14 @@ const IdeasPage = () => {
           </div>
         )}
       </div>
+
+      <button 
+        className="fab" 
+        onClick={() => setShowForm(true)}
+        title="Add New Idea"
+      >
+        <FaPlus />
+      </button>
     </div>
   );
 };

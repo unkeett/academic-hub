@@ -1,10 +1,10 @@
 // src/components/Navbar.js
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaBars, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
-import './Navbar.css'; 
+import './Navbar.css';
 
-// Accept toggleSidebar as a prop
 const Navbar = ({ toggleSidebar }) => {
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -17,20 +17,26 @@ const Navbar = ({ toggleSidebar }) => {
   return (
     <nav className="navbar">
       <div className="navbar-content">
-        {/* Menu button to toggle the sidebar */}
-        <button className="menu-btn" onClick={toggleSidebar}>
-          ☰
-        </button>
-        <Link to="/" className="nav-brand">Academic Hub</Link>
+        <div className="navbar-left">
+          <button className="menu-btn" onClick={toggleSidebar} title="Toggle Sidebar">
+            <FaBars />
+          </button>
+          <Link to="/" className="nav-brand">
+            ACADEMIC HUB
+          </Link>
+        </div>
         
         <div className="navbar-right">
           {isAuthenticated && user ? (
-            <>
-              <span className="user-greeting">Welcome, {user.name}</span>
-              <button className="logout-btn" onClick={handleLogout}>
-                Logout
+            <div className="user-profile">
+              <div className="user-info">
+                <FaUserCircle className="user-icon" />
+                <span className="user-name">{user.name}</span>
+              </div>
+              <button className="logout-icon-btn" onClick={handleLogout} title="Logout">
+                <FaSignOutAlt />
               </button>
-            </>
+            </div>
           ) : (
             <Link to="/login" className="login-link">
               Login
