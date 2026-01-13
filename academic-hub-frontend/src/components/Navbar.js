@@ -16,18 +16,33 @@ const Navbar = ({ toggleSidebar }) => {
 
   return (
     <nav className="navbar">
-      <div className="navbar-content">
-        {/* Menu button to toggle the sidebar */}
-        <button className="menu-btn" onClick={toggleSidebar}>
+       <div className="navbar-content">
+
+        {/* Sidebar Toggle */}
+        <button
+          className="menu-btn"
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+        >
           ☰
         </button>
-        <Link to="/" className="nav-brand">Academic Hub</Link>
-        
+
+        {/* Brand */}
+        <Link to="/" className="nav-brand">
+          Academic Hub
+        </Link>
+
+        {/* Right Section */}
         <div className="navbar-right">
           {isAuthenticated && user ? (
             <>
-              <span className="user-greeting">Welcome, {user.name}</span>
-              <button className="logout-btn" onClick={handleLogout}>
+              <span className="user-greeting">
+                Hi, <strong>{user.name}</strong>
+              </span>
+              <button
+                className="logout-btn"
+                onClick={handleLogout}
+              >
                 Logout
               </button>
             </>
