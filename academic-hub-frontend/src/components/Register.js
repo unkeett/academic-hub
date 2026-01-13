@@ -1,6 +1,6 @@
 // src/components/Register.js
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
@@ -15,18 +15,17 @@ const Register = () => {
   const [formErrors, setFormErrors] = useState({
     email: ''
   });
-  const { register, isAuthenticated, error } = useAuth();
+  const { register, isAuthenticated, error, clearError } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { name, email, password, confirmPassword } = formData;
 
   useEffect(() => {
-    // Only redirect if we're on the register page and user is authenticated
-    if (isAuthenticated && location.pathname === '/register') {
+    if (isAuthenticated) {
       navigate('/');
     }
-  }, [isAuthenticated, navigate, location.pathname]);
+    return () => clearError();
+  }, [isAuthenticated, navigate, clearError]);
 
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
