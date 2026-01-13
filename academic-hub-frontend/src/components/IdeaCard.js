@@ -1,27 +1,30 @@
 // src/components/IdeaCard.js
 import React from 'react';
+import { FaEdit, FaTrash, FaLightbulb, FaFlask, FaRocket, FaBook } from 'react-icons/fa';
 import './IdeaCard.css';
 
 const IdeaCard = ({ idea, onEdit, onDelete }) => {
-  const getCategoryColor = (category) => {
+  const getCategoryStyles = (category) => {
     switch (category) {
-      case 'study': return '#3B82F6';
-      case 'project': return '#8B5CF6';
-      case 'research': return '#10B981';
-      case 'general': return '#6B7280';
-      default: return '#6B7280';
+      case 'study': return { color: 'var(--primary)', bg: 'var(--primary-light)' };
+      case 'project': return { color: '#7c3aed', bg: '#f5f3ff' }; // Keep project distinct
+      case 'research': return { color: 'var(--success)', bg: 'var(--success-light)' };
+      case 'general': return { color: 'var(--secondary)', bg: 'var(--background)' };
+      default: return { color: 'var(--secondary)', bg: 'var(--background)' };
     }
   };
 
   const getCategoryIcon = (category) => {
     switch (category) {
-      case 'study': return '📚';
-      case 'project': return '🚀';
-      case 'research': return '🔬';
-      case 'general': return '💡';
-      default: return '💡';
+      case 'study': return <FaBook />;
+      case 'project': return <FaRocket />;
+      case 'research': return <FaFlask />;
+      case 'general': return <FaLightbulb />;
+      default: return <FaLightbulb />;
     }
   };
+
+  const styles = getCategoryStyles(idea.category);
 
   return (
     <div className="idea-card">
@@ -31,9 +34,10 @@ const IdeaCard = ({ idea, onEdit, onDelete }) => {
           <div className="idea-meta">
             <span 
               className="category-badge"
-              style={{ backgroundColor: getCategoryColor(idea.category) }}
+              style={{ color: styles.color, backgroundColor: styles.bg }}
             >
-              {getCategoryIcon(idea.category)} {idea.category}
+              {getCategoryIcon(idea.category)}
+              <span className="category-name">{idea.category}</span>
             </span>
           </div>
         </div>
@@ -43,14 +47,14 @@ const IdeaCard = ({ idea, onEdit, onDelete }) => {
             onClick={() => onEdit(idea)}
             title="Edit idea"
           >
-            ✏️
+            <FaEdit />
           </button>
           <button 
             className="action-btn delete-btn"
             onClick={() => onDelete(idea._id)}
             title="Delete idea"
           >
-            🗑️
+            <FaTrash />
           </button>
         </div>
       </div>
