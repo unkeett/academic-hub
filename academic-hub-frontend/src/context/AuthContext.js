@@ -1,5 +1,5 @@
 // src/context/AuthContext.js
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
 import api from '../utils/axiosConfig';
 
 const AuthContext = createContext();
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [state.token]);
 
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
     try {
       const res = await api.get('/api/auth/me');
       dispatch({
@@ -95,9 +95,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('token');
       dispatch({ type: 'AUTH_FAIL' });
     }
-  };
+  }, [state.token]);
 
-  const register = async (userData) => {
+  const register = useCallback(async (userData) => {
     try {
       dispatch({ type: 'AUTH_START' });
       const res = await api.post('/api/auth/register', userData);
@@ -118,9 +118,9 @@ export const AuthProvider = ({ children }) => {
       });
       return { success: false, error: error.response?.data?.message || 'Registration failed' };
     }
-  };
+  }, []);
 
-  const login = async (userData) => {
+  const login = useCallback(async (userData) => {
     try {
       dispatch({ type: 'AUTH_START' });
       const res = await api.post('/api/auth/login', userData);
@@ -141,25 +141,25 @@ export const AuthProvider = ({ children }) => {
       });
       return { success: false, error: error.response?.data?.message || 'Login failed' };
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('token');
     dispatch({ type: 'LOGOUT' });
-  };
+  }, []);
 
-  const clearError = () => {
+  const clearError = useCallback(() => {
     dispatch({ type: 'CLEAR_ERROR' });
-  };
+  }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     ...state,
     register,
     login,
     logout,
     clearError,
     loadUser
-  };
+  }), [state, register, login, logout, clearError, loadUser]);
 
   return (
     <AuthContext.Provider value={value}>

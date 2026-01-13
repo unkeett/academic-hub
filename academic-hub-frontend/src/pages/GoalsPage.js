@@ -4,9 +4,11 @@ import api from '../utils/axiosConfig';
 import GoalCard from '../components/GoalCard';
 import GoalForm from '../components/GoalForm';
 import { FaPlus } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 import './GoalsPage.css';
 
 const GoalsPage = () => {
+  const { token } = useAuth();
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -15,11 +17,10 @@ const GoalsPage = () => {
 
   useEffect(() => {
     fetchGoals();
-  }, []);
+  }, [token]);
 
   const fetchGoals = async () => {
     // Check if user is authenticated before making API call
-    const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
       return;
@@ -49,7 +50,7 @@ const GoalsPage = () => {
   const handleUpdateGoal = async (id, goalData) => {
     try {
       const response = await api.put(`/api/goals/${id}`, goalData);
-      setGoals(goals.map(goal => 
+      setGoals(goals.map(goal =>
         goal._id === id ? response.data.data : goal
       ));
       setEditingGoal(null);
@@ -72,7 +73,7 @@ const GoalsPage = () => {
   const handleToggleGoal = async (id) => {
     try {
       const response = await api.put(`/api/goals/${id}/toggle`);
-      setGoals(goals.map(goal => 
+      setGoals(goals.map(goal =>
         goal._id === id ? response.data.data : goal
       ));
     } catch (error) {
@@ -106,9 +107,9 @@ const GoalsPage = () => {
             {completedCount} of {totalCount} completed
           </span>
           <div className="mini-progress-bar">
-            <div 
+            <div
               className="mini-progress-fill"
-              style={{ 
+              style={{
                 width: totalCount > 0 ? `${(completedCount / totalCount) * 100}%` : '0%',
                 backgroundColor: 'var(--success)'
               }}
@@ -118,19 +119,19 @@ const GoalsPage = () => {
       </header>
 
       <div className="goals-filters">
-        <button 
+        <button
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
           All ({totalCount})
         </button>
-        <button 
+        <button
           className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
           onClick={() => setFilter('pending')}
         >
           Pending ({totalCount - completedCount})
         </button>
-        <button 
+        <button
           className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
           onClick={() => setFilter('completed')}
         >
@@ -168,13 +169,13 @@ const GoalsPage = () => {
           <div className="empty-state">
             <h3>No goals found</h3>
             <p>
-              {filter === 'all' 
+              {filter === 'all'
                 ? "Add your first goal to start tracking your progress."
                 : `No ${filter} goals found.`
               }
             </p>
             {filter === 'all' && (
-              <button 
+              <button
                 className="btn btn-primary"
                 onClick={() => setShowForm(true)}
               >
@@ -185,8 +186,8 @@ const GoalsPage = () => {
         )}
       </div>
 
-      <button 
-        className="fab" 
+      <button
+        className="fab"
         onClick={() => setShowForm(true)}
         title="Add New Goal"
       >
