@@ -15,10 +15,8 @@ const IdeasPage = () => {
 
   const categories = [
     { value: 'all', label: 'All Ideas' },
-    { value: 'study', label: 'Study' },
     { value: 'project', label: 'Project' },
-    { value: 'research', label: 'Research' },
-    { value: 'general', label: 'General' }
+    { value: 'research', label: 'Research' }
   ];
 
   useEffect(() => {
