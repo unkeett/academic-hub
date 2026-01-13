@@ -11,6 +11,13 @@
   margin-bottom: 2rem;
   flex-wrap: wrap;
   gap: 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+.page-header .btn.clicked {
+  background-color: #10b981 !important;
+  transform: scale(1.05);
 }
 
 .page-header h1 {
@@ -18,6 +25,12 @@
   font-weight: 700;
   color: #1e293b;
   margin: 0;
+}
+
+.page-header .btn {
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
 }
 
 .ideas-controls {
