@@ -27,7 +27,7 @@ const AppContent = () => {
   return (
     <div className="App">
       <Navbar toggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={isSidebarOpen} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
       
       <main className={`content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <Routes>

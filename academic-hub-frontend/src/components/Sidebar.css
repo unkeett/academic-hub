@@ -67,12 +67,35 @@
 }
 
 /* Add icons to menu items */
-.sidebar-menu li:nth-child(1) a::before { content: '🏠'; margin-right: 0.75rem; }
-.sidebar-menu li:nth-child(2) a::before { content: '📚'; margin-right: 0.75rem; }
-.sidebar-menu li:nth-child(3) a::before { content: '🎯'; margin-right: 0.75rem; }
-.sidebar-menu li:nth-child(4) a::before { content: '📺'; margin-right: 0.75rem; }
-.sidebar-menu li:nth-child(5) a::before { content: '💡'; margin-right: 0.75rem; }
-.sidebar-menu li:nth-child(6) a::before { content: '⚙️'; margin-right: 0.75rem; }
+.sidebar-menu li:nth-child(1) a::before {
+  content: '🏠';
+  margin-right: 0.75rem;
+}
+
+.sidebar-menu li:nth-child(2) a::before {
+  content: '📚';
+  margin-right: 0.75rem;
+}
+
+.sidebar-menu li:nth-child(3) a::before {
+  content: '🎯';
+  margin-right: 0.75rem;
+}
+
+.sidebar-menu li:nth-child(4) a::before {
+  content: '📺';
+  margin-right: 0.75rem;
+}
+
+.sidebar-menu li:nth-child(5) a::before {
+  content: '💡';
+  margin-right: 0.75rem;
+}
+
+.sidebar-menu li:nth-child(6) a::before {
+  content: '⚙️';
+  margin-right: 0.75rem;
+}
 
 .sidebar-menu li a.active::before {
   content: '';
@@ -85,11 +108,11 @@
     width: 100%;
     transform: translateX(-100%);
   }
-  
+
   .sidebar.open {
     transform: translateX(0);
   }
-  
+
   .sidebar-menu li a {
     padding: 1rem 1.5rem;
     font-size: 1rem;
@@ -100,8 +123,31 @@
   .sidebar {
     padding: 1rem 0;
   }
-  
+
   .sidebar-menu li a {
     padding: 0.875rem 1.25rem;
+  }
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black */
+  z-index: 800;
+  /* Sidebar is 900, so this is below it */
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
