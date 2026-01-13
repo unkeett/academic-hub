@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../utils/axiosConfig';
 import GoalCard from '../components/GoalCard';
 import GoalForm from '../components/GoalForm';
+import { FaPlus } from 'react-icons/fa';
 import './GoalsPage.css';
 
 const GoalsPage = () => {
@@ -98,28 +99,23 @@ const GoalsPage = () => {
 
   return (
     <div className="goals-page">
-      <div className="page-header">
-        <div className="header-content">
-          <h1>My Goals</h1>
-          <div className="goals-stats">
-            <span className="stat">
-              {completedCount} of {totalCount} completed
-            </span>
-            <div className="progress-bar">
-              <div 
-                className="progress-fill"
-                style={{ width: totalCount > 0 ? `${(completedCount / totalCount) * 100}%` : '0%' }}
-              ></div>
-            </div>
+      <header className="page-header">
+        <h1>My Goals</h1>
+        <div className="page-stats">
+          <span>
+            {completedCount} of {totalCount} completed
+          </span>
+          <div className="mini-progress-bar">
+            <div 
+              className="mini-progress-fill"
+              style={{ 
+                width: totalCount > 0 ? `${(completedCount / totalCount) * 100}%` : '0%',
+                backgroundColor: 'var(--success)'
+              }}
+            ></div>
           </div>
         </div>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setShowForm(true)}
-        >
-          Add New Goal
-        </button>
-      </div>
+      </header>
 
       <div className="goals-filters">
         <button 
@@ -188,6 +184,14 @@ const GoalsPage = () => {
           </div>
         )}
       </div>
+
+      <button 
+        className="fab" 
+        onClick={() => setShowForm(true)}
+        title="Add New Goal"
+      >
+        <FaPlus />
+      </button>
     </div>
   );
 };

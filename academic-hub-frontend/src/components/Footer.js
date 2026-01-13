@@ -28,22 +28,22 @@ const Footer = () => {
         <div className="footer-links">
           <div>
             <h4>Product</h4>
-            <a href="#">Features</a>
-            <a href="#">Integrations</a>
+            <a href="/">Features</a>
+            <a href="/">Integrations</a>
           </div>
 
           <div>
             <h4>Resources</h4>
-            <a href="#">FAQ</a>
-            <a href="#">Support</a>
-            <a href="#">Help Center</a>
+            <a href="/">FAQ</a>
+            <a href="/">Support</a>
+            <a href="/">Help Center</a>
           </div>
 
           <div>
             <h4>Company</h4>
-            <a href="#">About</a>
-            <a href="#">Careers</a>
-            <a href="#">Contact</a>
+            <a href="/">About</a>
+            <a href="/">Careers</a>
+            <a href="/">Contact</a>
           </div>
         </div>
       </div>
@@ -52,8 +52,8 @@ const Footer = () => {
         <span>© 2026 Academic Hub. All rights reserved.</span>
 
         <div className="footer-bottom-links">
-          <a href="#" >Privacy Policy</a>
-          <a href="#" >Terms of Service</a>
+          <a href="/">Privacy Policy</a>
+          <a href="/">Terms of Service</a>
           
         </div>
       </div>
