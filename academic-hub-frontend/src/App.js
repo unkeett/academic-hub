@@ -11,9 +11,8 @@ import GoalsPage from './pages/GoalsPage';
 import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage';
 import Footer from './components/Footer';
-
-
-import './App.css'; 
+import ProtectedRoute from './components/ProtectedRoute';
+import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
 
@@ -31,15 +30,40 @@ const AppContent = () => {
       
       <main className={`content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <Routes>
-          {/* All routes are now public */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/subjects" element={<SubjectsPage />} />
-          <Route path="/goals" element={<GoalsPage />} />
-          <Route path="/tutorials" element={<TutorialsPage />} />
-          <Route path="/ideas" element={<IdeasPage />} />
+          {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
+
+          {/* Protected Routes */}
+          <Route path="/" element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/subjects" element={
+            <ProtectedRoute>
+              <SubjectsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/goals" element={
+            <ProtectedRoute>
+              <GoalsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/tutorials" element={
+            <ProtectedRoute>
+              <TutorialsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/ideas" element={
+            <ProtectedRoute>
+              <IdeasPage />
+            </ProtectedRoute>
+          } />
+
+          {/* Catch all route */}
+
+
           {/* Catch all route */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

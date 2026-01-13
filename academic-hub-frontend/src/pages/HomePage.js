@@ -23,7 +23,6 @@ const HomePage = () => {
     try {
       // Check if user is authenticated (has token)
       const token = localStorage.getItem('token');
-      
       if (token) {
         // User is authenticated, fetch actual data
         const [subjectsRes, goalsRes, tutorialsRes, ideasRes] = await Promise.all([
@@ -72,26 +71,26 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-        <section className="hero-section">
-          <div className="hero-content">
-            <h1>
-              Welcome to <span>Academic Hub</span>
-            </h1>
-            <p>
-              Organize your subjects, track goals, save tutorials,
-              and turn ideas into academic success.
-            </p>
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>
+            Welcome to <span>Academic Hub</span>
+          </h1>
+          <p>
+            Organize your subjects, track goals, save tutorials,
+            and turn ideas into academic success.
+          </p>
 
-            <div className="hero-actions">
-              <Link to="/subjects" className="hero-btn primary">
-                Explore Subjects
-              </Link>
-              <Link to="/register" className="hero-btn secondary">
-                Get Started
-              </Link>
-            </div>
+          <div className="hero-actions">
+            <Link to="/subjects" className="hero-btn primary">
+              Explore Subjects
+            </Link>
+            <Link to="/register" className="hero-btn secondary">
+              Get Started
+            </Link>
           </div>
-        </section>
+        </div>
+      </section>
 
 
       <div className="stats-grid">
@@ -103,7 +102,7 @@ const HomePage = () => {
             <Link to="/subjects" className="stat-link">Manage →</Link>
           </div>
         </div>
-        
+
         <div className="stat-card">
           <div className="stat-icon">🎯</div>
           <div className="stat-content">
@@ -112,7 +111,7 @@ const HomePage = () => {
             <Link to="/goals" className="stat-link">Manage →</Link>
           </div>
         </div>
-        
+
         <div className="stat-card">
           <div className="stat-icon">📺</div>
           <div className="stat-content">
@@ -121,7 +120,7 @@ const HomePage = () => {
             <Link to="/tutorials" className="stat-link">Manage →</Link>
           </div>
         </div>
-        
+
         <div className="stat-card">
           <div className="stat-icon">💡</div>
           <div className="stat-content">
