@@ -52,13 +52,21 @@ const LandingPage = () => {
         <div className="hero-image">
           <div className="hero-illustration">
             <div className="app-preview-mockup">
-              <div className="mock-sidebar"></div>
+              <div className="mock-sidebar">
+                <div className="mock-sidebar-item"></div>
+                <div className="mock-sidebar-item"></div>
+                <div className="mock-sidebar-item"></div>
+              </div>
               <div className="mock-content">
-                <div className="mock-header"></div>
+                <div className="mock-center-brand">
+                  <FaGraduationCap className="mock-brand-icon-large" />
+                  <h2>Academic Hub</h2>
+                  <p className="mock-tagline">Simplify your studies, amplify your success.</p>
+                </div>
                 <div className="mock-grid">
-                  <div className="mock-card"></div>
-                  <div className="mock-card"></div>
-                  <div className="mock-card"></div>
+                  
+                  
+                  
                 </div>
               </div>
             </div>
