@@ -73,6 +73,12 @@ body {
   margin-right: auto;
 }
 
+.content.landing-content {
+  margin-top: 0;
+  padding: 0;
+  max-width: none;
+}
+
 @media (min-width: 1025px) {
   .content.sidebar-open {
     padding-left: calc(260px + 2.5rem);

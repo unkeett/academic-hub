@@ -1,11 +1,12 @@
 // src/App.js
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import HomePage from './pages/HomePage';
+import LandingPage from './pages/LandingPage';
+import DashboardPage from './pages/DashboardPage';
 import SubjectsPage from './pages/SubjectsPage';
 import GoalsPage from './pages/GoalsPage';
 import TutorialsPage from './pages/TutorialsPage';
@@ -18,26 +19,33 @@ import Register from './components/Register';
 
 const AppContent = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
+  const isLandingPage = location.pathname === '/';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  const showNavAndSidebar = !isLandingPage && !isAuthPage;
+
   return (
     <div className="App">
-      <Navbar toggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      {showNavAndSidebar && <Navbar toggleSidebar={toggleSidebar} />}
+      {showNavAndSidebar && <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />}
       
-      <main className={`content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      <main className={`content ${isSidebarOpen && showNavAndSidebar ? 'sidebar-open' : ''} ${isLandingPage ? 'landing-content' : ''}`}>
         <Routes>
           {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
           {/* Protected Routes */}
-          <Route path="/" element={
+          <Route path="/dashboard" element={
             <ProtectedRoute>
-              <HomePage />
+              <DashboardPage />
             </ProtectedRoute>
           } />
           <Route path="/subjects" element={
@@ -62,13 +70,10 @@ const AppContent = () => {
           } />
 
           {/* Catch all route */}
-
-
-          {/* Catch all route */}
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} />
         </Routes>
       </main>
-      <Footer />
+      {showNavAndSidebar && <Footer />}
     </div>
   );
 };

@@ -22,7 +22,7 @@ const Register = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/dashboard');
     }
     return () => clearError();
   }, [isAuthenticated, navigate, clearError]);
@@ -103,7 +103,7 @@ const Register = () => {
     
     const result = await register({ name, email, password });
     if (result.success) {
-      navigate('/');
+      navigate('/dashboard');
     }
   };
 
