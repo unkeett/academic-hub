@@ -74,7 +74,7 @@ const HomePage = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1>
-            Welcome to <span>Academic Hub</span>
+            Welcome to <span>ACADEMIC HUB</span>
           </h1>
           <p>
             Organize your subjects, track goals, save tutorials,

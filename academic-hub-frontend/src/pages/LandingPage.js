@@ -14,7 +14,7 @@ const LandingPage = () => {
         <nav className="landing-nav">
           <div className="logo">
             <FaGraduationCap className="logo-icon" />
-            Academic <span>Hub</span>
+            ACADEMIC <span>HUB</span>
           </div>
           <div className="nav-links">
             {isAuthenticated ? (
@@ -60,7 +60,7 @@ const LandingPage = () => {
               <div className="mock-content">
                 <div className="mock-center-brand">
                   <FaGraduationCap className="mock-brand-icon-large" />
-                  <h2>Academic Hub</h2>
+                  <h2>ACADEMIC HUB</h2>
                   <p className="mock-tagline">Simplify your studies, amplify your success.</p>
                 </div>
                 <div className="mock-grid">
@@ -174,33 +174,6 @@ const LandingPage = () => {
           )}
         </div>
       </section>
-
-      <footer className="landing-footer">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <div className="logo">
-              <FaGraduationCap className="logo-icon" />
-              Academic <span>Hub</span>
-            </div>
-            <p>Empowering students to achieve their academic potential.</p>
-          </div>
-          <div className="footer-links">
-            <div className="footer-col">
-              <h4>Product</h4>
-              <Link to="/features">Features</Link>
-              <Link to="/tutorials">Tutorials</Link>
-            </div>
-            <div className="footer-col">
-              <h4>Company</h4>
-              <Link to="/about">About Us</Link>
-              <Link to="/contact">Contact</Link>
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>&copy; 2026 Academic Hub. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -23,7 +23,7 @@ const Navbar = ({ toggleSidebar }) => {
           </button>
           <Link to="/" className="nav-brand">
             <FaGraduationCap className="brand-icon" />
-            Academic <span>Hub</span>
+            ACADEMIC <span>HUB</span>
           </Link>
         </div>
         

@@ -465,61 +465,6 @@
   box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.1);
 }
 
-.landing-footer {
-  padding: 6rem 5% 2rem;
-  background: #ffffff;
-  border-top: 1px solid #f1f5f9;
-}
-
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.5fr repeat(2, 1fr);
-  gap: 4rem;
-  margin-bottom: 4rem;
-}
-
-.footer-brand .logo {
-  margin-bottom: 1.5rem;
-}
-
-.footer-brand p {
-  color: #64748b;
-  max-width: 300px;
-}
-
-.footer-col h4 {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #0f172a;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.footer-col a {
-  display: block;
-  color: #64748b;
-  text-decoration: none;
-  margin-bottom: 0.75rem;
-  transition: color 0.2s;
-}
-
-.footer-col a:hover {
-  color: #3b82f6;
-}
-
-.footer-bottom {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 2rem;
-  border-top: 1px solid #f1f5f9;
-  text-align: center;
-  color: #94a3b8;
-  font-size: 0.875rem;
-}
-
 @media (max-width: 968px) {
   .hero {
     flex-direction: column;
@@ -556,10 +501,5 @@
   .app-preview-mockup {
     transform: none;
     height: 300px;
-  }
-
-  .footer-content {
-    grid-template-columns: 1fr;
-    gap: 2rem;
   }
 }

@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import LandingPage from './pages/LandingPage';
+import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
 import SubjectsPage from './pages/SubjectsPage';
 import GoalsPage from './pages/GoalsPage';
@@ -39,6 +40,7 @@ const AppContent = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
@@ -48,32 +50,18 @@ const AppContent = () => {
               <DashboardPage />
             </ProtectedRoute>
           } />
-          <Route path="/subjects" element={
-            <ProtectedRoute>
-              <SubjectsPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/goals" element={
-            <ProtectedRoute>
-              <GoalsPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/tutorials" element={
-            <ProtectedRoute>
-              <TutorialsPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/ideas" element={
-            <ProtectedRoute>
-              <IdeasPage />
-            </ProtectedRoute>
-          } />
+
+          {/* Combined Routes (Public access, but can be protected if needed) */}
+          <Route path="/subjects" element={<SubjectsPage />} />
+          <Route path="/goals" element={<GoalsPage />} />
+          <Route path="/tutorials" element={<TutorialsPage />} />
+          <Route path="/ideas" element={<IdeasPage />} />
 
           {/* Catch all route */}
           <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} />
         </Routes>
       </main>
-      {showNavAndSidebar && <Footer />}
+      {!isAuthPage && <Footer />}
     </div>
   );
 };
