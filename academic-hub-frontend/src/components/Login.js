@@ -1,6 +1,6 @@
 // src/components/Login.js
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
@@ -10,8 +10,9 @@ const Login = () => {
     password: ''
   });
 
-  const { login, isAuthenticated, error, clearError } = useAuth();
+  const { login, isAuthenticated, error } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { email, password } = formData;
 
@@ -19,8 +20,7 @@ const Login = () => {
     if (isAuthenticated) {
       navigate('/dashboard');
     }
-    return () => clearError();
-  }, [isAuthenticated, navigate, clearError]);
+  }, [isAuthenticated, navigate, location.pathname]);
 
   const onChange = (e) => {
     setFormData({
