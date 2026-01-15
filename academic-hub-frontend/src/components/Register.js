@@ -22,9 +22,8 @@ const Register = () => {
   const { name, email, password, confirmPassword } = formData;
 
   useEffect(() => {
-    // Only redirect if we're on the register page and user is authenticated
-    if (isAuthenticated && location.pathname === '/register') {
-      navigate('/');
+    if (isAuthenticated) {
+      navigate('/dashboard');
     }
   }, [isAuthenticated, navigate, location.pathname]);
 
@@ -104,7 +103,7 @@ const Register = () => {
     
     const result = await register({ name, email, password });
     if (result.success) {
-      navigate('/');
+      navigate('/dashboard');
     }
   };
 

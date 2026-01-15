@@ -4,9 +4,11 @@ import api from '../utils/axiosConfig';
 import SubjectCard from '../components/SubjectCard';
 import SubjectForm from '../components/SubjectForm';
 import { FaPlus } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 import './SubjectsPage.css';
 
 const SubjectsPage = () => {
+  const { token } = useAuth();
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -14,11 +16,11 @@ const SubjectsPage = () => {
 
   useEffect(() => {
     fetchSubjects();
-  }, []);
+  }, [token]);
 
   const fetchSubjects = async () => {
     // Check if user is authenticated before making API call
-    const token = localStorage.getItem('token');
+    // Use token from context which is reactive
     if (!token) {
       setLoading(false);
       return;
@@ -163,8 +165,8 @@ const SubjectsPage = () => {
         )}
       </div>
 
-      <button 
-        className="fab" 
+      <button
+        className="fab"
         onClick={() => setShowForm(true)}
         title="Add New Subject"
       >

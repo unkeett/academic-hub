@@ -1,7 +1,7 @@
 // src/components/Navbar.js
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
+import { FaBars, FaSignOutAlt, FaUserCircle, FaGraduationCap } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
@@ -22,7 +22,8 @@ const Navbar = ({ toggleSidebar }) => {
             <FaBars />
           </button>
           <Link to="/" className="nav-brand">
-            ACADEMIC HUB
+            <FaGraduationCap className="brand-icon" />
+            ACADEMIC <span>HUB</span>
           </Link>
         </div>
         

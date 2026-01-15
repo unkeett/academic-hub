@@ -1,12 +1,13 @@
-// src/pages/HomePage.js
+// src/pages/DashboardPage.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/axiosConfig';
+import { useAuth } from '../context/AuthContext';
 import DashboardSubjects from '../components/DashboardSubjects';
 import DashboardGoals from '../components/DashboardGoals';
-import './HomePage.css';
+import './DashboardPage.css';
 
-const HomePage = () => {
+const DashboardPage = () => {
   const [stats, setStats] = useState({
     subjects: 0,
     goals: 0,
@@ -14,6 +15,8 @@ const HomePage = () => {
     ideas: 0
   });
   const [loading, setLoading] = useState(true);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchStats();
@@ -63,30 +66,30 @@ const HomePage = () => {
 
   if (loading) {
     return (
-      <div className="home-page">
+      <div className="dashboard-page">
         <div className="loading">Loading dashboard...</div>
       </div>
     );
   }
 
   return (
-    <div className="home-page">
+    <div className="dashboard-page">
       <section className="hero-section">
         <div className="hero-content">
           <h1>
-            Welcome to <span>ACADEMIC HUB</span>
+            Welcome back, <span>{user ? user.name.split(' ')[0] : 'Student'}</span>
           </h1>
           <p>
-            Organize your subjects, track goals, save tutorials,
-            and turn ideas into academic success.
+            You have {stats.subjects} subjects and {stats.goals} goals in progress.
+            Keep up the great work!
           </p>
 
           <div className="hero-actions">
             <Link to="/subjects" className="hero-btn primary">
-              Explore Subjects
+              My Subjects
             </Link>
-            <Link to="/register" className="hero-btn secondary">
-              Get Started
+            <Link to="/goals" className="hero-btn secondary">
+              My Goals
             </Link>
           </div>
         </div>
@@ -161,4 +164,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default DashboardPage;

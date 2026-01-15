@@ -17,9 +17,8 @@ const Login = () => {
   const { email, password } = formData;
 
   useEffect(() => {
-    // Only redirect if we're on the login page and user is authenticated
-    if (isAuthenticated && location.pathname === '/login') {
-      navigate('/');
+    if (isAuthenticated) {
+      navigate('/dashboard');
     }
   }, [isAuthenticated, navigate, location.pathname]);
 
@@ -34,7 +33,7 @@ const Login = () => {
     e.preventDefault();
     const result = await login({ email, password });
     if (result.success) {
-      navigate('/');
+      navigate('/dashboard');
     }
   };
 

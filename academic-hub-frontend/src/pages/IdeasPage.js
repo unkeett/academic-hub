@@ -4,9 +4,11 @@ import api from '../utils/axiosConfig';
 import IdeaCard from '../components/IdeaCard';
 import IdeaForm from '../components/IdeaForm';
 import { FaPlus, FaSearch } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 import './IdeasPage.css';
 
 const IdeasPage = () => {
+  const { token } = useAuth();
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -15,7 +17,6 @@ const IdeasPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [createLoading, setCreateLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [buttonClicked, setButtonClicked] = useState(false);
 
   const categories = [
     { value: 'all', label: 'All Ideas' },
@@ -25,11 +26,10 @@ const IdeasPage = () => {
 
   useEffect(() => {
     fetchIdeas();
-  }, [filter, searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [filter, searchTerm, token]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchIdeas = async () => {
     // Check if user is authenticated before making API call
-    const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
       return;
@@ -38,19 +38,19 @@ const IdeasPage = () => {
     try {
       let url = '/api/ideas';
       const params = new URLSearchParams();
-      
+
       if (filter !== 'all') {
         params.append('category', filter);
       }
-      
+
       if (searchTerm) {
         params.append('search', searchTerm);
       }
-      
+
       if (params.toString()) {
         url += `?${params.toString()}`;
       }
-      
+
       const response = await api.get(url);
       setIdeas(response.data.data || []);
     } catch (error) {
@@ -64,7 +64,7 @@ const IdeasPage = () => {
   const handleCreateIdea = async (ideaData) => {
     setCreateLoading(true);
     setError(null);
-    
+
     try {
       const response = await api.post('/api/ideas', ideaData);
       setIdeas([response.data.data, ...ideas]);
@@ -81,7 +81,7 @@ const IdeasPage = () => {
   const handleUpdateIdea = async (id, ideaData) => {
     try {
       const response = await api.put(`/api/ideas/${id}`, ideaData);
-      setIdeas(ideas.map(idea => 
+      setIdeas(ideas.map(idea =>
         idea._id === id ? response.data.data : idea
       ));
       setEditingIdea(null);
@@ -102,10 +102,7 @@ const IdeasPage = () => {
   };
 
   const handleAddIdea = () => {
-    console.log('🔥 Add New Idea button clicked!');
-    setButtonClicked(true);
     setShowForm(true);
-    setTimeout(() => setButtonClicked(false), 1000);
   };
 
   const handleSearch = (e) => {
@@ -142,7 +139,7 @@ const IdeasPage = () => {
             />
           </div>
         </div>
-        
+
         <div className="category-filters">
           {categories.map(category => (
             <button
@@ -196,7 +193,7 @@ const IdeasPage = () => {
               }
             </p>
             {!searchTerm && filter === 'all' && (
-              <button 
+              <button
                 className="btn btn-primary"
                 onClick={handleAddIdea}
               >
@@ -207,8 +204,8 @@ const IdeasPage = () => {
         )}
       </div>
 
-      <button 
-        className="fab" 
+      <button
+        className="fab"
         onClick={() => setShowForm(true)}
         title="Add New Idea"
       >

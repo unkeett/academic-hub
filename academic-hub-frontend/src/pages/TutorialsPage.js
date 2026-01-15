@@ -4,9 +4,11 @@ import api from '../utils/axiosConfig';
 import TutorialCard from '../components/TutorialCard';
 import TutorialForm from '../components/TutorialForm';
 import { FaPlus } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 import './TutorialsPage.css';
 
 const TutorialsPage = () => {
+  const { token } = useAuth();
   const [tutorials, setTutorials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -15,11 +17,10 @@ const TutorialsPage = () => {
 
   useEffect(() => {
     fetchTutorials();
-  }, []);
+  }, [token]);
 
   const fetchTutorials = async () => {
     // Check if user is authenticated before making API call
-    const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
       return;
@@ -50,7 +51,7 @@ const TutorialsPage = () => {
   const handleUpdateTutorial = async (id, tutorialData) => {
     try {
       const response = await api.put(`/api/tutorials/${id}`, tutorialData);
-      setTutorials(tutorials.map(tutorial => 
+      setTutorials(tutorials.map(tutorial =>
         tutorial._id === id ? response.data.data : tutorial
       ));
       setEditingTutorial(null);
@@ -73,7 +74,7 @@ const TutorialsPage = () => {
   const handleToggleWatched = async (id) => {
     try {
       const response = await api.put(`/api/tutorials/${id}/toggle`);
-      setTutorials(tutorials.map(tutorial => 
+      setTutorials(tutorials.map(tutorial =>
         tutorial._id === id ? response.data.data : tutorial
       ));
     } catch (error) {
@@ -107,9 +108,9 @@ const TutorialsPage = () => {
             {watchedCount} of {totalCount} watched
           </span>
           <div className="mini-progress-bar">
-            <div 
+            <div
               className="mini-progress-fill"
-              style={{ 
+              style={{
                 width: totalCount > 0 ? `${(watchedCount / totalCount) * 100}%` : '0%',
                 backgroundColor: 'var(--secondary)'
               }}
@@ -119,19 +120,19 @@ const TutorialsPage = () => {
       </header>
 
       <div className="tutorials-filters">
-        <button 
+        <button
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
           All ({totalCount})
         </button>
-        <button 
+        <button
           className={`filter-btn ${filter === 'unwatched' ? 'active' : ''}`}
           onClick={() => setFilter('unwatched')}
         >
           Unwatched ({totalCount - watchedCount})
         </button>
-        <button 
+        <button
           className={`filter-btn ${filter === 'watched' ? 'active' : ''}`}
           onClick={() => setFilter('watched')}
         >
@@ -169,13 +170,13 @@ const TutorialsPage = () => {
           <div className="empty-state">
             <h3>No tutorials found</h3>
             <p>
-              {filter === 'all' 
+              {filter === 'all'
                 ? "Add your first tutorial by pasting a YouTube URL."
                 : `No ${filter} tutorials found.`
               }
             </p>
             {filter === 'all' && (
-              <button 
+              <button
                 className="btn btn-primary"
                 onClick={() => setShowForm(true)}
               >
@@ -186,8 +187,8 @@ const TutorialsPage = () => {
         )}
       </div>
 
-      <button 
-        className="fab" 
+      <button
+        className="fab"
         onClick={() => setShowForm(true)}
         title="Add New Tutorial"
       >

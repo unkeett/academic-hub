@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-top">
         <div className="footer-brand">
-          <h2>Academic Hub</h2>
+          <h2>ACADEMIC HUB</h2>
           <p>Your personal academic organization center.</p>
 
           <div className="social-icons">
