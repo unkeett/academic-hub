@@ -15,11 +15,7 @@ const initialState = {
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'AUTH_START':
-      return {
-        ...state,
-        loading: true,
-        error: null
-      };
+      return { ...state, loading: true, error: null };
     case 'AUTH_SUCCESS':
       return {
         ...state,
@@ -48,10 +44,7 @@ const authReducer = (state, action) => {
         error: null
       };
     case 'CLEAR_ERROR':
-      return {
-        ...state,
-        error: null
-      };
+      return { ...state, error: null };
     default:
       return state;
   }
@@ -60,7 +53,24 @@ const authReducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Set axios default header
+  // 1. Stabilize loadUser with useCallback and fix dependency array
+  const loadUser = useCallback(async () => {
+    try {
+      const res = await api.get('/api/auth/me');
+      dispatch({
+        type: 'AUTH_SUCCESS',
+        payload: {
+          user: res.data.data,
+          token: localStorage.getItem('token') // Use storage to ensure consistency
+        }
+      });
+    } catch (error) {
+      localStorage.removeItem('token');
+      dispatch({ type: 'AUTH_FAIL' });
+    }
+  }, []); // Added missing dependency array for useCallback
+
+  // 2. Set axios default header
   useEffect(() => {
     if (state.token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
@@ -69,54 +79,29 @@ export const AuthProvider = ({ children }) => {
     }
   }, [state.token]);
 
-  // Load user on app start
+  // 3. Load user on app start - Now includes loadUser in dependencies
   useEffect(() => {
     if (state.token) {
       loadUser();
     } else {
-      dispatch({
-        type: 'AUTH_FAIL',
-        payload: null
-      });
+      dispatch({ type: 'AUTH_FAIL', payload: null });
     }
-  }, [state.token]);
-
-  const loadUser = useCallback(async () => {
-    try {
-      const res = await api.get('/api/auth/me');
-      dispatch({
-        type: 'AUTH_SUCCESS',
-        payload: {
-          user: res.data.data,
-          token: state.token
-        }
-      });
-    } catch (error) {
-      localStorage.removeItem('token');
-      dispatch({ type: 'AUTH_FAIL' });
-    }
-  });
+  }, [state.token, loadUser]); // Added loadUser here
 
   const register = useCallback(async (userData) => {
     try {
       dispatch({ type: 'AUTH_START' });
       const res = await api.post('/api/auth/register', userData);
-
       localStorage.setItem('token', res.data.token);
       dispatch({
         type: 'AUTH_SUCCESS',
-        payload: {
-          user: res.data.data,
-          token: res.data.token
-        }
+        payload: { user: res.data.data, token: res.data.token }
       });
       return { success: true };
     } catch (error) {
-      dispatch({
-        type: 'AUTH_FAIL',
-        payload: error.response?.data?.message || 'Registration failed'
-      });
-      return { success: false, error: error.response?.data?.message || 'Registration failed' };
+      const msg = error.response?.data?.message || 'Registration failed';
+      dispatch({ type: 'AUTH_FAIL', payload: msg });
+      return { success: false, error: msg };
     }
   }, []);
 
@@ -124,27 +109,20 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: 'AUTH_START' });
       const res = await api.post('/api/auth/login', userData);
-
       localStorage.setItem('token', res.data.token);
       dispatch({
         type: 'AUTH_SUCCESS',
-        payload: {
-          user: res.data.data,
-          token: res.data.token
-        }
+        payload: { user: res.data.data, token: res.data.token }
       });
       return { success: true };
     } catch (error) {
-      dispatch({
-        type: 'AUTH_FAIL',
-        payload: error.response?.data?.message || 'Login failed'
-      });
-      return { success: false, error: error.response?.data?.message || 'Login failed' };
+      const msg = error.response?.data?.message || 'Login failed';
+      dispatch({ type: 'AUTH_FAIL', payload: msg });
+      return { success: false, error: msg };
     }
   }, []);
 
   const logout = useCallback(() => {
-    // Clear token from localStorage
     localStorage.removeItem('token');
     dispatch({ type: 'LOGOUT' });
   }, []);
