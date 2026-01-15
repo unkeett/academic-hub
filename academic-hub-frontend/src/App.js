@@ -1,7 +1,9 @@
 // src/App.js 
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react'; 
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'; 
 import { AuthProvider, useAuth } from './context/AuthContext'; 
+import { NotificationProvider, useNotification } from './context/NotificationContext'; // 1. Import Notification hooks
+import { setNotificationHandler } from './utils/axiosConfig'; // 2. Import Axios bridge
 
 import Navbar from './components/Navbar'; 
 import Sidebar from './components/Sidebar'; 
@@ -23,6 +25,12 @@ const AppContent = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false); 
   const location = useLocation(); 
   const { isAuthenticated } = useAuth(); 
+  const { showNotification } = useNotification(); // 3. Access notification trigger
+
+  // 4. Connect Axios to our Notification system on mount
+  useEffect(() => {
+    setNotificationHandler(showNotification);
+  }, [showNotification]);
 
   const toggleSidebar = () => { 
     setSidebarOpen(!isSidebarOpen); 
@@ -39,26 +47,22 @@ const AppContent = () => {
       
       <main className={`content ${isSidebarOpen && showNavAndSidebar ? 'sidebar-open' : ''} ${isLandingPage ? 'landing-content' : ''}`}> 
         <Routes> 
-          {/* Public Routes */} 
           <Route path="/" element={<LandingPage />} /> 
           <Route path="/home" element={<HomePage />} /> 
           <Route path="/login" element={<Login />} /> 
           <Route path="/register" element={<Register />} /> 
 
-          {/* Protected Routes */} 
           <Route path="/dashboard" element={ 
             <ProtectedRoute> 
               <DashboardPage /> 
             </ProtectedRoute> 
           } /> 
 
-          {/* Combined Routes (Public access, but can be protected if needed) */} 
           <Route path="/subjects" element={<SubjectsPage />} /> 
           <Route path="/goals" element={<GoalsPage />} /> 
           <Route path="/tutorials" element={<TutorialsPage />} /> 
           <Route path="/ideas" element={<IdeasPage />} /> 
 
-          {/* Catch all route */} 
           <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} /> 
         </Routes> 
       </main> 
@@ -69,11 +73,13 @@ const AppContent = () => {
 
 function App() { 
   return ( 
-    <AuthProvider> 
-      <Router> 
-        <AppContent /> 
-      </Router> 
-    </AuthProvider> 
+    <NotificationProvider> {/* 5. Wrap everything in NotificationProvider */}
+      <AuthProvider> 
+        <Router> 
+          <AppContent /> 
+        </Router> 
+      </AuthProvider> 
+    </NotificationProvider>
   ); 
 } 
 
