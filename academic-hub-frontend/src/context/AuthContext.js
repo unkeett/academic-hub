@@ -1,5 +1,5 @@
 // src/context/AuthContext.js
-import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo, useCallback } from 'react';
 import api from '../utils/axiosConfig';
 
 const AuthContext = createContext();
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('token');
       dispatch({ type: 'AUTH_FAIL' });
     }
-  }, [state.token]);
+  });
 
   const register = useCallback(async (userData) => {
     try {
@@ -144,6 +144,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = useCallback(() => {
+    // Clear token from localStorage
     localStorage.removeItem('token');
     dispatch({ type: 'LOGOUT' });
   }, []);
