@@ -5,10 +5,12 @@ import TutorialCard from '../components/TutorialCard';
 import TutorialForm from '../components/TutorialForm';
 import { FaPlus } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import './TutorialsPage.css';
 
 const TutorialsPage = () => {
   const { token } = useAuth();
+  const { showNotification } = useNotification();
   const [tutorials, setTutorials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -30,7 +32,7 @@ const TutorialsPage = () => {
       const response = await api.get('/api/tutorials');
       setTutorials(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching tutorials:', error);
+      showNotification('Could not load tutorials list.', 'error');
       setTutorials([]);
     } finally {
       setLoading(false);
@@ -42,9 +44,9 @@ const TutorialsPage = () => {
       const response = await api.post('/api/tutorials', tutorialData);
       setTutorials([response.data.data, ...tutorials]);
       setShowForm(false);
+      showNotification('Tutorial saved to your collection!', 'success');
     } catch (error) {
-      console.error('Error creating tutorial:', error);
-      alert(error.response?.data?.message || 'Error creating tutorial');
+      showNotification(error.response?.data?.message || 'Error saving tutorial', 'error');
     }
   };
 
@@ -55,8 +57,9 @@ const TutorialsPage = () => {
         tutorial._id === id ? response.data.data : tutorial
       ));
       setEditingTutorial(null);
+      showNotification('Tutorial updated.', 'success');
     } catch (error) {
-      console.error('Error updating tutorial:', error);
+      showNotification('Failed to update tutorial details.', 'error');
     }
   };
 
@@ -65,8 +68,9 @@ const TutorialsPage = () => {
       try {
         await api.delete(`/api/tutorials/${id}`);
         setTutorials(tutorials.filter(tutorial => tutorial._id !== id));
+        showNotification('Tutorial removed from list.', 'info');
       } catch (error) {
-        console.error('Error deleting tutorial:', error);
+        showNotification('Could not delete tutorial.', 'error');
       }
     }
   };
@@ -74,11 +78,17 @@ const TutorialsPage = () => {
   const handleToggleWatched = async (id) => {
     try {
       const response = await api.put(`/api/tutorials/${id}/toggle`);
+      const updatedTutorial = response.data.data;
       setTutorials(tutorials.map(tutorial =>
         tutorial._id === id ? response.data.data : tutorial
       ));
+      if (updatedTutorial.watched) {
+        showNotification('Marked as watched! ✅', 'success');
+      } else {
+        showNotification('Moved back to unwatched.', 'info');
+      }
     } catch (error) {
-      console.error('Error toggling tutorial:', error);
+      showNotification('Failed to update watch status.', 'error');
     }
   };
 
