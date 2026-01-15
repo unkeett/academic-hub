@@ -11,6 +11,8 @@ import GoalsPage from './pages/GoalsPage';
 import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage';
 import Footer from './components/Footer';
+import ProtectedRoute from './components/ProtectedRoute';
+
 
 
 import './App.css';
@@ -32,11 +34,11 @@ const AppContent = () => {
       <main className={`content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <Routes>
           {/* All routes are now public */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/subjects" element={<SubjectsPage />} />
-          <Route path="/goals" element={<GoalsPage />} />
-          <Route path="/tutorials" element={<TutorialsPage />} />
-          <Route path="/ideas" element={<IdeasPage />} />
+          <Route path="/" element={<HomePage/>}/>
+          <Route path="/subjects" element={<ProtectedRoute><SubjectsPage /></ProtectedRoute>} />
+          <Route path="/goals" element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
+          <Route path="/tutorials" element={<ProtectedRoute><TutorialsPage /></ProtectedRoute>} />
+          <Route path="/ideas" element={<ProtectedRoute><IdeasPage /></ProtectedRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
