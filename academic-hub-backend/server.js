@@ -35,7 +35,24 @@ process.on('unhandledRejection', (err, promise) => {
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    let mongoUri = process.env.MONGO_URI;
+
+    if (!mongoUri || process.env.NODE_ENV === 'development') {
+      try {
+        const { MongoMemoryServer } = require('mongodb-memory-server');
+        const mongod = await MongoMemoryServer.create();
+        mongoUri = mongod.getUri();
+        logger.info('Using MongoDB Memory Server for development');
+      } catch (err) {
+        logger.warn('Could not start MongoDB Memory Server, falling back to MONGO_URI');
+      }
+    }
+
+    if (!mongoUri) {
+      throw new Error('MONGO_URI is not defined and MongoDB Memory Server failed to start');
+    }
+
+    const conn = await mongoose.connect(mongoUri);
     logger.info(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     logger.error(`MongoDB Connection Error: ${error.message}`);

@@ -17,7 +17,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/dashboard');
     }
     return () => clearError();
   }, [isAuthenticated, navigate, clearError]);
@@ -33,7 +33,7 @@ const Login = () => {
     e.preventDefault();
     const result = await login({ email, password });
     if (result.success) {
-      navigate('/');
+      navigate('/dashboard');
     }
   };
 
