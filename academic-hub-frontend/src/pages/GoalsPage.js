@@ -5,10 +5,12 @@ import GoalCard from '../components/GoalCard';
 import GoalForm from '../components/GoalForm';
 import { FaPlus } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import './GoalsPage.css';
 
 const GoalsPage = () => {
   const { token } = useAuth();
+  const { showNotification } = useNotification();
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -30,7 +32,7 @@ const GoalsPage = () => {
       const response = await api.get('/api/goals');
       setGoals(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching goals:', error);
+      showNotification('Failed to load your goals. Please try again.', 'error');
       setGoals([]);
     } finally {
       setLoading(false);
@@ -42,9 +44,8 @@ const GoalsPage = () => {
       const response = await api.post('/api/goals', goalData);
       setGoals([response.data.data, ...goals]);
       setShowForm(false);
-    } catch (error) {
-      console.error('Error creating goal:', error);
-    }
+      showNotification('Goal added! Let\'s get to work.', 'success');
+    } catch (error) {}
   };
 
   const handleUpdateGoal = async (id, goalData) => {
@@ -54,9 +55,8 @@ const GoalsPage = () => {
         goal._id === id ? response.data.data : goal
       ));
       setEditingGoal(null);
-    } catch (error) {
-      console.error('Error updating goal:', error);
-    }
+      showNotification('Goal updated successfully.', 'success');
+    } catch (error) {}
   };
 
   const handleDeleteGoal = async (id) => {
@@ -64,8 +64,8 @@ const GoalsPage = () => {
       try {
         await api.delete(`/api/goals/${id}`);
         setGoals(goals.filter(goal => goal._id !== id));
+        showNotification('Goal removed.', 'info');
       } catch (error) {
-        console.error('Error deleting goal:', error);
       }
     }
   };
@@ -73,12 +73,16 @@ const GoalsPage = () => {
   const handleToggleGoal = async (id) => {
     try {
       const response = await api.put(`/api/goals/${id}/toggle`);
+      const updatedGoal = response.data.data;
       setGoals(goals.map(goal =>
         goal._id === id ? response.data.data : goal
       ));
-    } catch (error) {
-      console.error('Error toggling goal:', error);
-    }
+      if (updatedGoal.completed) {
+        showNotification('Goal completed! Nice job! 🎉', 'success');
+      } else {
+        showNotification('Goal moved back to pending.', 'info');
+      }
+    } catch (error) {}
   };
 
   const filteredGoals = goals.filter(goal => {
