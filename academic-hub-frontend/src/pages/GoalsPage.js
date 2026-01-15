@@ -1,5 +1,4 @@
-// src/pages/GoalsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'; // Added useCallback
 import api from '../utils/axiosConfig';
 import GoalCard from '../components/GoalCard';
 import GoalForm from '../components/GoalForm';
@@ -15,14 +14,10 @@ const GoalsPage = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingGoal, setEditingGoal] = useState(null);
-  const [filter, setFilter] = useState('all'); // all, completed, pending
+  const [filter, setFilter] = useState('all');
 
-  useEffect(() => {
-    fetchGoals();
-  }, [token]);
-
-  const fetchGoals = async () => {
-    // Check if user is authenticated before making API call
+  // 1. Wrap fetchGoals in useCallback to stabilize the function reference
+  const fetchGoals = useCallback(async () => {
     if (!token) {
       setLoading(false);
       return;
@@ -37,7 +32,12 @@ const GoalsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, showNotification]); // Dependencies for useCallback
+
+  // 2. Include fetchGoals in the dependency array
+  useEffect(() => {
+    fetchGoals();
+  }, [fetchGoals]); 
 
   const handleCreateGoal = async (goalData) => {
     try {
@@ -65,8 +65,7 @@ const GoalsPage = () => {
         await api.delete(`/api/goals/${id}`);
         setGoals(goals.filter(goal => goal._id !== id));
         showNotification('Goal removed.', 'info');
-      } catch (error) {
-      }
+      } catch (error) {}
     }
   };
 
@@ -75,7 +74,7 @@ const GoalsPage = () => {
       const response = await api.put(`/api/goals/${id}/toggle`);
       const updatedGoal = response.data.data;
       setGoals(goals.map(goal =>
-        goal._id === id ? response.data.data : goal
+        goal._id === id ? updatedGoal : goal
       ));
       if (updatedGoal.completed) {
         showNotification('Goal completed! Nice job! 🎉', 'success');
