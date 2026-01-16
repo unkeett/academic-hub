@@ -1,6 +1,6 @@
 // src/components/Register.js
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
@@ -11,200 +11,143 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-  const [localError, setLocalError] = useState('');
-  const [formErrors, setFormErrors] = useState({
-    email: ''
-  });
+
+  const [formErrors, setFormErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const { register, isAuthenticated, error } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { name, email, password, confirmPassword } = formData;
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, navigate, location.pathname]);
+    if (isAuthenticated) navigate('/dashboard');
+  }, [isAuthenticated, navigate]);
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
-    return emailRegex.test(email);
-  };
+  const validateEmail = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const validateForm = () => {
     const errors = {};
-    
-    // Email validation
-    if (email && !validateEmail(email)) {
-      errors.email = 'Please enter a valid email address';
-    }
-    
-    // Password confirmation validation
-    if (password && confirmPassword && password !== confirmPassword) {
-      setLocalError('Passwords do not match');
-      return false;
-    } else {
-      setLocalError('');
-    }
-    
+
+    if (!name.trim()) errors.name = 'Name is required';
+    if (!email) errors.email = 'Email is required';
+    else if (!validateEmail(email)) errors.email = 'Invalid email address';
+
+    if (!password) errors.password = 'Password is required';
+    else if (password.length < 6)
+      errors.password = 'Minimum 6 characters required';
+
+    if (confirmPassword !== password)
+      errors.confirmPassword = 'Passwords do not match';
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const onChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-    
-    // Validate email in real-time as user types
-    if (name === 'email' && value.trim() !== '') {
-      if (!validateEmail(value)) {
-        setFormErrors({
-          ...formErrors,
-          email: 'Please enter a valid email address'
-        });
-      } else {
-        setFormErrors({
-          ...formErrors,
-          email: ''
-        });
-      }
-    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormErrors({ ...formErrors, [e.target.name]: '' });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    
-    // Clear previous errors
-    setLocalError('');
-    
-    // Validate form before submission
-    if (!validateForm()) {
-      return;
-    }
-    
-    // Validate email format (redundant but kept for clarity)
-    if (!validateEmail(email)) {
-      setFormErrors({
-        ...formErrors,
-        email: 'Please enter a valid email address'
-      });
-      return;
-    }
-    
-    // Check that all required fields are filled
-    if (!name || !email || !password || !confirmPassword) {
-      setLocalError('Please fill in all fields');
-      return;
-    }
-    
+    if (!validateForm()) return;
+
+    setLoading(true);
     const result = await register({ name, email, password });
-    if (result.success) {
-      navigate('/dashboard');
-    }
+    setLoading(false);
+
+    if (result?.success) navigate('/dashboard');
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <div className="auth-header">
-          <h1>Create Account</h1>
-          <p>Join Academic Hub and start organizing your studies</p>
-        </div>
+        <h1>Create Account</h1>
+        <p className="auth-subtitle">
+          Start organizing your academic journey
+        </p>
 
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
-        {localError && (
-          <div className="error-message">
-            {localError}
-          </div>
-        )}
+        {error && <div className="error-message">{error}</div>}
 
-        <form onSubmit={onSubmit} className="auth-form" noValidate>
+        <form onSubmit={onSubmit} noValidate>
+          {/* Name */}
           <div className="form-group">
-            <label htmlFor="name">Full Name</label>
+            <label>Full Name</label>
             <input
               type="text"
-              id="name"
               name="name"
               value={name}
               onChange={onChange}
-              required
-              placeholder="Enter your full name"
+              className={formErrors.name ? 'input-error' : ''}
+              placeholder="John Doe"
             />
+            {formErrors.name && <span>{formErrors.name}</span>}
           </div>
 
+          {/* Email */}
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+            <label>Email</label>
             <input
               type="email"
-              id="email"
               name="email"
               value={email}
               onChange={onChange}
-              required
-              placeholder="Enter your email"
               className={formErrors.email ? 'input-error' : ''}
+              placeholder="john@email.com"
             />
-            {formErrors.email && (
-              <div className="field-error-message">
-                {formErrors.email}
-              </div>
-            )}
+            {formErrors.email && <span>{formErrors.email}</span>}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
+          {/* Password */}
+          <div className="form-group password-group">
+            <label>Password</label>
             <input
-              type="password"
-              id="password"
+              type={showPassword ? 'text' : 'password'}
               name="password"
               value={password}
               onChange={onChange}
-              required
-              minLength="6"
-              placeholder="Enter your password (min 6 characters)"
+              className={formErrors.password ? 'input-error' : ''}
             />
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+            {formErrors.password && <span>{formErrors.password}</span>}
           </div>
 
+          {/* Confirm Password */}
           <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
+            <label>Confirm Password</label>
             <input
               type="password"
-              id="confirmPassword"
               name="confirmPassword"
               value={confirmPassword}
               onChange={onChange}
-              required
-              placeholder="Confirm your password"
+              className={formErrors.confirmPassword ? 'input-error' : ''}
             />
+            {formErrors.confirmPassword && (
+              <span>{formErrors.confirmPassword}</span>
+            )}
           </div>
 
-          {password && confirmPassword && password !== confirmPassword && (
-            <div className="error-message">
-              Passwords do not match
-            </div>
-          )}
-
-          <button type="submit" className="auth-button">
-            Create Account
+          <button
+            type="submit"
+            className="auth-button"
+            disabled={loading}
+          >
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
-        <div className="auth-footer">
-          <p>
-            Already have an account?{' '}
-            <Link to="/login" className="auth-link">
-              Sign in here
-            </Link>
-          </p>
-        </div>
+        <p className="auth-footer">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
       </div>
     </div>
   );
