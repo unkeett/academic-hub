@@ -1,0 +1,13 @@
+2026-01-14 10:27:15:2715 [31merror[39m: [31mMongoDB Connection Error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017[39m
+2026-01-14 10:32:16:3216 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-14 10:32:16:3216 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-14 10:32:16:3216 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-14 10:32:16:3216 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-14 10:32:16:3216 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-14 10:32:16:3216 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-14 10:32:16:3216 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-14 10:32:16:3216 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-14 10:32:24:3224 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-14 10:32:24:3224 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-14 10:32:24:3224 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-14 10:32:24:3224 [32minfo[39m: [32mAcademic Hub API ready for requests[39m

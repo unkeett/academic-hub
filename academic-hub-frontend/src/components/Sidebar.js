@@ -1,7 +1,7 @@
 // src/components/Sidebar.js
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaHome, FaBook, FaBullseye, FaVideo, FaLightbulb } from 'react-icons/fa';
+import { FaHome, FaBook, FaBullseye, FaVideo, FaLightbulb, FaThLarge } from 'react-icons/fa';
 import './Sidebar.css';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -13,6 +13,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <li>
             <NavLink to="/" end onClick={toggleSidebar}>
               <FaHome className="menu-icon" />
+              <span>Home</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/dashboard" onClick={toggleSidebar}>
+              <FaThLarge className="menu-icon" />
               <span>Dashboard</span>
             </NavLink>
           </li>

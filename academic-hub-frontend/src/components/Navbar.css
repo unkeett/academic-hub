@@ -50,10 +50,19 @@
   font-weight: 800;
   color: #0f172a;
   text-decoration: none;
-  letter-spacing: -0.025em;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.brand-icon {
+  color: #3b82f6;
+  font-size: 1.5rem;
+}
+
+.nav-brand span {
+  color: #3b82f6;
 }
 
 .navbar-right {

@@ -17,7 +17,6 @@ const IdeasPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [createLoading, setCreateLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [buttonClicked, setButtonClicked] = useState(false);
 
   const categories = [
     { value: 'all', label: 'All Ideas' },
@@ -103,10 +102,7 @@ const IdeasPage = () => {
   };
 
   const handleAddIdea = () => {
-    console.log('🔥 Add New Idea button clicked!');
-    setButtonClicked(true);
     setShowForm(true);
-    setTimeout(() => setButtonClicked(false), 1000);
   };
 
   const handleSearch = (e) => {
