@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 // src/pages/IdeasPage.js
 import React, { useState, useEffect } from 'react';
 import api from '../utils/axiosConfig';
@@ -54,7 +55,7 @@ const IdeasPage = () => {
       const response = await api.get(url);
       setIdeas(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching ideas:', error);
+      toast.error('Failed to load ideas');
       setIdeas([]);
     } finally {
       setLoading(false);
@@ -70,7 +71,7 @@ const IdeasPage = () => {
       setIdeas([response.data.data, ...ideas]);
       setShowForm(false);
     } catch (error) {
-      console.error('Error creating idea:', error);
+      
       const errorMessage = error.response?.data?.message || 'Failed to create idea. Please try again.';
       setError(errorMessage);
     } finally {
@@ -86,7 +87,7 @@ const IdeasPage = () => {
       ));
       setEditingIdea(null);
     } catch (error) {
-      console.error('Error updating idea:', error);
+      toast.error('Failed to update idea');
     }
   };
 
@@ -96,7 +97,7 @@ const IdeasPage = () => {
         await api.delete(`/api/ideas/${id}`);
         setIdeas(ideas.filter(idea => idea._id !== id));
       } catch (error) {
-        console.error('Error deleting idea:', error);
+        toast.error('Failed to delete idea');
       }
     }
   };

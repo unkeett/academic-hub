@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 // src/components/DashboardGoals.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -26,7 +27,7 @@ const DashboardGoals = () => {
       const sortedGoals = (response.data.data || []).sort((a, b) => a.completed - b.completed);
       setGoals(sortedGoals);
     } catch (error) {
-      console.error('Error fetching goals:', error);
+      toast.error('Failed to load goals widget');
       // Don't redirect if we're already handling the error
       setGoals([]);
     } finally {
@@ -40,7 +41,7 @@ const DashboardGoals = () => {
       // Refetch goals to update the UI
       fetchGoals();
     } catch (error) {
-      console.error('Error toggling goal:', error);
+      toast.error('Failed to update goal status');
     }
   };
 

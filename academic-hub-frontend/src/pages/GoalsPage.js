@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 // src/pages/GoalsPage.js
 import React, { useState, useEffect } from 'react';
 import api from '../utils/axiosConfig';
@@ -30,7 +31,7 @@ const GoalsPage = () => {
       const response = await api.get('/api/goals');
       setGoals(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching goals:', error);
+      toast.error('Failed to load goals');
       setGoals([]);
     } finally {
       setLoading(false);
@@ -43,7 +44,7 @@ const GoalsPage = () => {
       setGoals([response.data.data, ...goals]);
       setShowForm(false);
     } catch (error) {
-      console.error('Error creating goal:', error);
+      toast.error('Failed to create goal');
     }
   };
 
@@ -55,7 +56,7 @@ const GoalsPage = () => {
       ));
       setEditingGoal(null);
     } catch (error) {
-      console.error('Error updating goal:', error);
+      toast.error('Failed to update goal');
     }
   };
 
@@ -65,7 +66,7 @@ const GoalsPage = () => {
         await api.delete(`/api/goals/${id}`);
         setGoals(goals.filter(goal => goal._id !== id));
       } catch (error) {
-        console.error('Error deleting goal:', error);
+        toast.error('Failed to delete goal');
       }
     }
   };
@@ -77,7 +78,7 @@ const GoalsPage = () => {
         goal._id === id ? response.data.data : goal
       ));
     } catch (error) {
-      console.error('Error toggling goal:', error);
+      toast.error('Failed to toggle goal');
     }
   };
 

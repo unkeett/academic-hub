@@ -1,4 +1,6 @@
+import { toast } from 'react-toastify';
 // src/pages/SubjectsPage.js
+
 import React, { useState, useEffect } from 'react';
 import api from '../utils/axiosConfig';
 import SubjectCard from '../components/SubjectCard';
@@ -30,7 +32,7 @@ const SubjectsPage = () => {
       const response = await api.get('/api/subjects');
       setSubjects(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching subjects:', error);
+      toast.error('Failed to load subjects');
       setSubjects([]);
     } finally {
       setLoading(false);
@@ -43,7 +45,7 @@ const SubjectsPage = () => {
       setSubjects([response.data.data, ...subjects]);
       setShowForm(false);
     } catch (error) {
-      console.error('Error creating subject:', error);
+      toast.error('Failed to create subject');
     }
   };
 
@@ -55,7 +57,7 @@ const SubjectsPage = () => {
       ));
       setEditingSubject(null);
     } catch (error) {
-      console.error('Error updating subject:', error);
+      toast.error('Failed to update subject');
     }
   };
 
@@ -65,7 +67,7 @@ const SubjectsPage = () => {
         await api.delete(`/api/subjects/${id}`);
         setSubjects(subjects.filter(subject => subject._id !== id));
       } catch (error) {
-        console.error('Error deleting subject:', error);
+        toast.error('Failed to delete subject');
       }
     }
   };
@@ -102,7 +104,6 @@ const SubjectsPage = () => {
         subject._id === id ? response.data.data : subject
       ));
     } catch (error) {
-      console.error('Error updating progress:', error);
       alert(error.response?.data?.message || 'Failed to update progress');
     }
   };
