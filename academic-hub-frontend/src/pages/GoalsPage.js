@@ -1,26 +1,23 @@
-// src/pages/GoalsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'; // Added useCallback
 import api from '../utils/axiosConfig';
 import GoalCard from '../components/GoalCard';
 import GoalForm from '../components/GoalForm';
 import { FaPlus } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import './GoalsPage.css';
 
 const GoalsPage = () => {
   const { token } = useAuth();
+  const { showNotification } = useNotification();
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingGoal, setEditingGoal] = useState(null);
-  const [filter, setFilter] = useState('all'); // all, completed, pending
+  const [filter, setFilter] = useState('all');
 
-  useEffect(() => {
-    fetchGoals();
-  }, [token]);
-
-  const fetchGoals = async () => {
-    // Check if user is authenticated before making API call
+  // 1. Wrap fetchGoals in useCallback to stabilize the function reference
+  const fetchGoals = useCallback(async () => {
     if (!token) {
       setLoading(false);
       return;
@@ -30,21 +27,25 @@ const GoalsPage = () => {
       const response = await api.get('/api/goals');
       setGoals(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching goals:', error);
+      showNotification('Failed to load your goals. Please try again.', 'error');
       setGoals([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, showNotification]); // Dependencies for useCallback
+
+  // 2. Include fetchGoals in the dependency array
+  useEffect(() => {
+    fetchGoals();
+  }, [fetchGoals]); 
 
   const handleCreateGoal = async (goalData) => {
     try {
       const response = await api.post('/api/goals', goalData);
       setGoals([response.data.data, ...goals]);
       setShowForm(false);
-    } catch (error) {
-      console.error('Error creating goal:', error);
-    }
+      showNotification('Goal added! Let\'s get to work.', 'success');
+    } catch (error) {}
   };
 
   const handleUpdateGoal = async (id, goalData) => {
@@ -54,9 +55,8 @@ const GoalsPage = () => {
         goal._id === id ? response.data.data : goal
       ));
       setEditingGoal(null);
-    } catch (error) {
-      console.error('Error updating goal:', error);
-    }
+      showNotification('Goal updated successfully.', 'success');
+    } catch (error) {}
   };
 
   const handleDeleteGoal = async (id) => {
@@ -64,21 +64,24 @@ const GoalsPage = () => {
       try {
         await api.delete(`/api/goals/${id}`);
         setGoals(goals.filter(goal => goal._id !== id));
-      } catch (error) {
-        console.error('Error deleting goal:', error);
-      }
+        showNotification('Goal removed.', 'info');
+      } catch (error) {}
     }
   };
 
   const handleToggleGoal = async (id) => {
     try {
       const response = await api.put(`/api/goals/${id}/toggle`);
+      const updatedGoal = response.data.data;
       setGoals(goals.map(goal =>
-        goal._id === id ? response.data.data : goal
+        goal._id === id ? updatedGoal : goal
       ));
-    } catch (error) {
-      console.error('Error toggling goal:', error);
-    }
+      if (updatedGoal.completed) {
+        showNotification('Goal completed! Nice job! 🎉', 'success');
+      } else {
+        showNotification('Goal moved back to pending.', 'info');
+      }
+    } catch (error) {}
   };
 
   const filteredGoals = goals.filter(goal => {

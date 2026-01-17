@@ -5,10 +5,12 @@ import IdeaCard from '../components/IdeaCard';
 import IdeaForm from '../components/IdeaForm';
 import { FaPlus, FaSearch } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import './IdeasPage.css';
 
 const IdeasPage = () => {
   const { token } = useAuth();
+  const { showNotification } = useNotification(); 
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -16,7 +18,6 @@ const IdeasPage = () => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [createLoading, setCreateLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const categories = [
     { value: 'all', label: 'All Ideas' },
@@ -54,7 +55,6 @@ const IdeasPage = () => {
       const response = await api.get(url);
       setIdeas(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching ideas:', error);
       setIdeas([]);
     } finally {
       setLoading(false);
@@ -63,16 +63,13 @@ const IdeasPage = () => {
 
   const handleCreateIdea = async (ideaData) => {
     setCreateLoading(true);
-    setError(null);
 
     try {
       const response = await api.post('/api/ideas', ideaData);
       setIdeas([response.data.data, ...ideas]);
       setShowForm(false);
+      showNotification('Great idea! Saved successfully. 💡', 'success');
     } catch (error) {
-      console.error('Error creating idea:', error);
-      const errorMessage = error.response?.data?.message || 'Failed to create idea. Please try again.';
-      setError(errorMessage);
     } finally {
       setCreateLoading(false);
     }
@@ -85,8 +82,8 @@ const IdeasPage = () => {
         idea._id === id ? response.data.data : idea
       ));
       setEditingIdea(null);
+      showNotification('Idea updated.', 'success');
     } catch (error) {
-      console.error('Error updating idea:', error);
     }
   };
 
@@ -95,8 +92,8 @@ const IdeasPage = () => {
       try {
         await api.delete(`/api/ideas/${id}`);
         setIdeas(ideas.filter(idea => idea._id !== id));
+        showNotification('Idea deleted.', 'info');
       } catch (error) {
-        console.error('Error deleting idea:', error);
       }
     }
   };
@@ -158,10 +155,8 @@ const IdeasPage = () => {
           onSubmit={handleCreateIdea}
           onCancel={() => {
             setShowForm(false);
-            setError(null);
           }}
           loading={createLoading}
-          error={error}
         />
       )}
 

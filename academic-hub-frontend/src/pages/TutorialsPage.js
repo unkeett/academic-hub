@@ -1,26 +1,23 @@
-// src/pages/TutorialsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'; // Added useCallback
 import api from '../utils/axiosConfig';
 import TutorialCard from '../components/TutorialCard';
 import TutorialForm from '../components/TutorialForm';
 import { FaPlus } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import './TutorialsPage.css';
 
 const TutorialsPage = () => {
   const { token } = useAuth();
+  const { showNotification } = useNotification();
   const [tutorials, setTutorials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingTutorial, setEditingTutorial] = useState(null);
-  const [filter, setFilter] = useState('all'); // all, watched, unwatched
+  const [filter, setFilter] = useState('all');
 
-  useEffect(() => {
-    fetchTutorials();
-  }, [token]);
-
-  const fetchTutorials = async () => {
-    // Check if user is authenticated before making API call
+  // 1. Wrap fetchTutorials in useCallback
+  const fetchTutorials = useCallback(async () => {
     if (!token) {
       setLoading(false);
       return;
@@ -30,34 +27,37 @@ const TutorialsPage = () => {
       const response = await api.get('/api/tutorials');
       setTutorials(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching tutorials:', error);
+      showNotification('Could not load tutorials list.', 'error');
       setTutorials([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, showNotification]);
+
+  // 2. Safely call fetchTutorials in useEffect
+  useEffect(() => {
+    fetchTutorials();
+  }, [fetchTutorials]);
 
   const handleCreateTutorial = async (tutorialData) => {
     try {
       const response = await api.post('/api/tutorials', tutorialData);
       setTutorials([response.data.data, ...tutorials]);
       setShowForm(false);
-    } catch (error) {
-      console.error('Error creating tutorial:', error);
-      alert(error.response?.data?.message || 'Error creating tutorial');
-    }
+      showNotification('Tutorial saved to your collection!', 'success');
+    } catch (error) {}
   };
 
   const handleUpdateTutorial = async (id, tutorialData) => {
     try {
       const response = await api.put(`/api/tutorials/${id}`, tutorialData);
+      const updatedData = response.data.data;
       setTutorials(tutorials.map(tutorial =>
-        tutorial._id === id ? response.data.data : tutorial
+        tutorial._id === id ? updatedData : tutorial
       ));
       setEditingTutorial(null);
-    } catch (error) {
-      console.error('Error updating tutorial:', error);
-    }
+      showNotification('Tutorial updated.', 'success');
+    } catch (error) {}
   };
 
   const handleDeleteTutorial = async (id) => {
@@ -65,21 +65,26 @@ const TutorialsPage = () => {
       try {
         await api.delete(`/api/tutorials/${id}`);
         setTutorials(tutorials.filter(tutorial => tutorial._id !== id));
-      } catch (error) {
-        console.error('Error deleting tutorial:', error);
-      }
+        showNotification('Tutorial removed from list.', 'info');
+      } catch (error) {}
     }
   };
 
   const handleToggleWatched = async (id) => {
     try {
       const response = await api.put(`/api/tutorials/${id}/toggle`);
+      const updatedTutorial = response.data.data;
+
       setTutorials(tutorials.map(tutorial =>
-        tutorial._id === id ? response.data.data : tutorial
+        tutorial._id === id ? updatedTutorial : tutorial
       ));
-    } catch (error) {
-      console.error('Error toggling tutorial:', error);
-    }
+
+      if (updatedTutorial.watched) {
+        showNotification('Marked as watched! ✅', 'success');
+      } else {
+        showNotification('Moved back to unwatched.', 'info');
+      }
+    } catch (error) {}
   };
 
   const filteredTutorials = tutorials.filter(tutorial => {
@@ -104,9 +109,7 @@ const TutorialsPage = () => {
       <header className="page-header">
         <h1>My Tutorials</h1>
         <div className="page-stats">
-          <span>
-            {watchedCount} of {totalCount} watched
-          </span>
+          <span>{watchedCount} of {totalCount} watched</span>
           <div className="mini-progress-bar">
             <div
               className="mini-progress-fill"
