@@ -1,5 +1,5 @@
 import "./Footer.css";
-import {FaSquareXTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
+import {FaSquareXTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa6";
 
 const Footer = () => {
   return (
