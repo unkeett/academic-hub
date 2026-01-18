@@ -8,6 +8,9 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+import chatRoutes from './routes/chat.js';
+
+
 
 // Middleware
 app.use(cors());
@@ -20,6 +23,7 @@ app.use('/api/subjects', require('./routes/subjects'));
 app.use('/api/goals', require('./routes/goals'));
 app.use('/api/tutorials', require('./routes/tutorials'));
 app.use('/api/ideas', require('./routes/ideas'));
+app.use('/api/chat', chatRoutes);
 
 // Error handling middleware (must be after routes)
 app.use(errorHandler);
