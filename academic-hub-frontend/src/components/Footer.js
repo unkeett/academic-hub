@@ -1,5 +1,5 @@
 import "./Footer.css";
-import { FaTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaXTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa6";
 
 const Footer = () => {
   return (
@@ -10,8 +10,8 @@ const Footer = () => {
           <p>Your personal academic organization center.</p>
 
           <div className="social-icons">
-            <a href="https://x.com/home" aria-label="Twitter">
-              <FaTwitter />
+            <a href="https://x.com/home" aria-label="X">
+              <FaXTwitter />
             </a>
             <a href="https://www.instagram.com/" aria-label="Instagram">
               <FaInstagram />
@@ -54,7 +54,7 @@ const Footer = () => {
         <div className="footer-bottom-links">
           <a href="/">Privacy Policy</a>
           <a href="/">Terms of Service</a>
-          
+
         </div>
       </div>
     </footer>
