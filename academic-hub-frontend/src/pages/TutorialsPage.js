@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 // src/pages/TutorialsPage.js
 import React, { useState, useEffect } from 'react';
 import api from '../utils/axiosConfig';
@@ -30,7 +31,7 @@ const TutorialsPage = () => {
       const response = await api.get('/api/tutorials');
       setTutorials(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching tutorials:', error);
+      toast.error('Failed to load tutorials');
       setTutorials([]);
     } finally {
       setLoading(false);
@@ -43,7 +44,7 @@ const TutorialsPage = () => {
       setTutorials([response.data.data, ...tutorials]);
       setShowForm(false);
     } catch (error) {
-      console.error('Error creating tutorial:', error);
+      
       alert(error.response?.data?.message || 'Error creating tutorial');
     }
   };
@@ -56,7 +57,7 @@ const TutorialsPage = () => {
       ));
       setEditingTutorial(null);
     } catch (error) {
-      console.error('Error updating tutorial:', error);
+      toast.error('Failed to update tutorial');
     }
   };
 
@@ -66,7 +67,7 @@ const TutorialsPage = () => {
         await api.delete(`/api/tutorials/${id}`);
         setTutorials(tutorials.filter(tutorial => tutorial._id !== id));
       } catch (error) {
-        console.error('Error deleting tutorial:', error);
+        toast.error('Failed to delete tutorial');
       }
     }
   };
@@ -78,7 +79,7 @@ const TutorialsPage = () => {
         tutorial._id === id ? response.data.data : tutorial
       ));
     } catch (error) {
-      console.error('Error toggling tutorial:', error);
+      toast.error('Failed to update tutorial status');
     }
   };
 

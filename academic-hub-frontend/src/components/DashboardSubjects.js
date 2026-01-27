@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 // src/components/DashboardSubjects.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -21,7 +22,7 @@ const DashboardSubjects = () => {
         const response = await api.get('/api/subjects');
         setSubjects(response.data.data || []);
       } catch (error) {
-        console.error('Error fetching subjects:', error);
+        toast.error('Failed to load subjects widget');
         // Don't redirect if we're already handling the error
         setSubjects([]);
       } finally {

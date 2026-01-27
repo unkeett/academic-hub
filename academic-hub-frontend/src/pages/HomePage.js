@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 // src/pages/HomePage.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -48,7 +49,7 @@ const HomePage = () => {
         });
       }
     } catch (error) {
-      console.error('Error fetching stats:', error);
+      toast.error('Failed to load dashboard stats');
       // Set default values on error
       setStats({
         subjects: 0,
