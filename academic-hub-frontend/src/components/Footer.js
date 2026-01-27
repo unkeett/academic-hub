@@ -1,5 +1,5 @@
 import "./Footer.css";
-import { FaTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
+import {FaSquareXTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa6";
 
 const Footer = () => {
   return (
@@ -11,7 +11,7 @@ const Footer = () => {
 
           <div className="social-icons">
             <a href="https://x.com/home" aria-label="Twitter">
-              <FaTwitter />
+              <FaSquareXTwitter />
             </a>
             <a href="https://www.instagram.com/" aria-label="Instagram">
               <FaInstagram />
