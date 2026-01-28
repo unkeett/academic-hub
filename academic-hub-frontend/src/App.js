@@ -14,7 +14,7 @@ import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage'; 
 import Footer from './components/Footer'; 
 import ProtectedRoute from './components/ProtectedRoute';
-
+import Chatbot from './components/Chatbot/Chatbot';
 import './App.css'; 
 import Login from './components/Login'; 
 import Register from './components/Register'; 
@@ -60,7 +60,8 @@ const AppContent = () => {
 
           {/* Catch all route */} 
           <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} /> 
-        </Routes> 
+        </Routes>
+        <Chatbot /> 
       </main> 
       {!isAuthPage && <Footer />} 
     </div> 

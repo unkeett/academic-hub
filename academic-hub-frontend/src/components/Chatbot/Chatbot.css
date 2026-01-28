@@ -1,0 +1,134 @@
+/* Floating Toggle Button */
+.chatbot-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease;
+  z-index: 999;
+}
+
+.chatbot-toggle:hover {
+  transform: scale(1.05);
+}
+
+/* Chat Window */
+.chatbot {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 340px;
+  max-height: 480px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: chatbotSlide 0.25s ease;
+  z-index: 999;
+}
+
+@keyframes chatbotSlide {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.chatbot-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatbot-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Body */
+.chatbot-body {
+  padding: 12px;
+  flex: 1;
+  overflow-y: auto;
+  background: #f8fafc;
+}
+
+/* Messages */
+.msg {
+  max-width: 80%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.msg.bot {
+  background: #eef2ff;
+  color: #1e293b;
+  align-self: flex-start;
+}
+
+.msg.user {
+  background: #4f46e5;
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+/* Input */
+.chatbot-input {
+  display: flex;
+  border-top: 1px solid #e5e7eb;
+  background: white;
+}
+
+.chatbot-input input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  font-size: 0.85rem;
+}
+
+.chatbot-input input:focus {
+  outline: none;
+}
+
+.chatbot-input button {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .chatbot {
+    width: 92%;
+    right: 4%;
+    bottom: 80px;
+  }
+}
