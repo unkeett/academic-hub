@@ -1,4 +1,3 @@
-// src/App.js 
 import React, { useState } from 'react'; 
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'; 
 import { AuthProvider, useAuth } from './context/AuthContext'; 
@@ -14,6 +13,7 @@ import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage'; 
 import Footer from './components/Footer'; 
 import ProtectedRoute from './components/ProtectedRoute';
+import Chatbot from './components/Chatbot';
 
 import './App.css'; 
 import Login from './components/Login'; 
@@ -63,6 +63,7 @@ const AppContent = () => {
         </Routes> 
       </main> 
       {!isAuthPage && <Footer />} 
+      <Chatbot />
     </div> 
   ); 
 }; 

@@ -20,6 +20,7 @@ app.use('/api/subjects', require('./routes/subjects'));
 app.use('/api/goals', require('./routes/goals'));
 app.use('/api/tutorials', require('./routes/tutorials'));
 app.use('/api/ideas', require('./routes/ideas'));
+app.use('/api/chat', require('./routes/chat'));
 
 // Error handling middleware (must be after routes)
 app.use(errorHandler);
