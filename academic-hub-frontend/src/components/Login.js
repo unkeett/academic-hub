@@ -85,6 +85,12 @@ const Login = () => {
 
         <div className="auth-footer">
           <p>
+            <Link to="/forgot-password" className="auth-link">
+              Forgot Password?
+            </Link>
+          </p>
+
+          <p>
             Don't have an account?{' '}
             <Link to="/register" className="auth-link">
               Sign up here
