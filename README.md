@@ -83,24 +83,24 @@ Many students struggle to keep track of their academic progress, goals, and reso
 
 ## Project Structure
 
-```
-academic-hub/
-├── academic-hub-backend/          # Backend API server
-│   ├── controllers/               # Request handlers
-│   ├── middleware/                # Auth & error handling
-│   ├── models/                    # MongoDB schemas
-│   ├── routes/                    # API route definitions
-│   └── server.js                  # Entry point
+```bash
+📁 academic-hub/
+├──📁 academic-hub-backend/          # Backend API server
+│   ├──📁 controllers/               # Request handlers
+│   ├──📁 middleware/                # Auth & error handling
+│   ├──📁 models/                    # MongoDB schemas
+│   ├──📁 routes/                    # API route definitions
+│   └──📄 server.js                  # Entry point
 │
-├── academic-hub-frontend/         # React frontend
-│   ├── public/                    # Static assets
-│   └── src/
-│       ├── components/            # Reusable UI components
-│       ├── context/               # React Context (Auth)
-│       ├── pages/                 # Page components
-│       └── utils/                 # Utilities (API config)
+├──📁 academic-hub-frontend/         # React frontend
+│   ├──📁 public/                    # Static assets
+│   └──📁 src/
+│       ├──📁 components/            # Reusable UI components
+│       ├──📁 context/               # React Context (Auth)
+│       ├──📁 pages/                 # Page components
+│       └──📁 utils/                 # Utilities (API config)
 │
-└── [Documentation files]
+└──📄 (...Documentation files)
 ```
 
 **Separation:**
