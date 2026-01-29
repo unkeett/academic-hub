@@ -580,6 +580,22 @@
     transform: translateY(0);
   }
 }
+.dashboard-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  background: var(--background); /* Changed */
+  min-height: 100vh;
+}
+
+.stat-card {
+  background: var(--surface); /* Changed */
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--border); /* Add this */
+  box-shadow: var(--shadow-lg);
+}
 
 /* Responsive */
 @media (max-width: 768px) {

@@ -66,15 +66,16 @@ const AppContent = () => {
     </div> 
   ); 
 }; 
-
-function App() { 
-  return ( 
-    <AuthProvider> 
-      <Router> 
-        <AppContent /> 
-      </Router> 
-    </AuthProvider> 
-  ); 
-} 
+function App() {
+  return (
+    <ThemeProvider> {/* ADD THIS WRAPPER */}
+      <AuthProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider> 
+  )
+}
 
 export default App;
