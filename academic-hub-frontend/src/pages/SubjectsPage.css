@@ -21,3 +21,27 @@
     gap: 1.25rem;
   }
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.page-info {
+  font-weight: 500;
+}
+/* Floating Add Subject Button */
+.fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000; /* ensures button stays above pagination */
+}
+
+/* Ensure pagination does not block floating elements */
+.pagination {
+  position: relative;
+  z-index: 1;
+}
