@@ -1,24 +1,36 @@
 // src/components/Navbar.js
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaSignOutAlt, FaUserCircle, FaGraduationCap } from 'react-icons/fa';
-import { useAuth } from '../context/AuthContext';
-import './Navbar.css';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  FaBars,
+  FaSignOutAlt,
+  FaUserCircle,
+  FaGraduationCap,
+} from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
+import "./Navbar.css";
+import { useTheme } from "../context/ThemeContext";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 const Navbar = ({ toggleSidebar }) => {
   const { user, logout, isAuthenticated } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-content">
         <div className="navbar-left">
-          <button className="menu-btn" onClick={toggleSidebar} title="Toggle Sidebar">
+          <button
+            className="menu-btn"
+            onClick={toggleSidebar}
+            title="Toggle Sidebar"
+          >
             <FaBars />
           </button>
           <Link to="/" className="nav-brand">
@@ -26,15 +38,27 @@ const Navbar = ({ toggleSidebar }) => {
             ACADEMIC <span>HUB</span>
           </Link>
         </div>
-        
+
         <div className="navbar-right">
+          <button
+            onClick={toggleTheme}
+            className="theme-toggle-btn"
+            aria-label="Toggle theme"
+            title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+          >
+            {theme === "light" ? <FaMoon /> : <FaSun />}
+          </button>
           {isAuthenticated && user ? (
             <div className="user-profile">
               <div className="user-info">
                 <FaUserCircle className="user-icon" />
                 <span className="user-name">{user.name}</span>
               </div>
-              <button className="logout-icon-btn" onClick={handleLogout} title="Logout">
+              <button
+                className="logout-icon-btn"
+                onClick={handleLogout}
+                title="Logout"
+              >
                 <FaSignOutAlt />
               </button>
             </div>

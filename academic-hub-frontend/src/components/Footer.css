@@ -1,14 +1,18 @@
 .footer {
   background: #ffffff;
-  padding: 40px 80px 20px; 
+  padding: 40px 40px 20px; 
   border-top: 1px solid #eaeaea;
   font-family: sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .footer-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 40px;
 }
 
 .footer-brand {
@@ -25,19 +29,18 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-
 }
 
 .footer-brand p {
   margin: 8px 0 14px;
   font-size: 14px;
   color: #6f60e3;
-  white-space: nowrap;
 }
 
 .social-icons {
   display: flex;
   gap: 14px;
+  flex-wrap: wrap;
 }
 
 .social-icons a {
@@ -58,7 +61,7 @@
 .footer-links {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 80px; 
+  gap: 110px; 
 }
 
 .footer-links h4 {
@@ -87,12 +90,15 @@
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .footer-bottom-links {
   display: flex;
   gap: 20px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .footer-bottom-links a {
@@ -104,3 +110,76 @@
   color: #6b5cff;
 }
 
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .footer {
+    padding: 30px 20px 20px;
+  }
+
+  .footer-top {
+    flex-direction: column;
+    gap: 30px;
+    align-items: center; 
+  }
+
+  .footer-brand {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-links {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+  }
+
+  .footer-links > div {
+    text-align: center;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 20px 16px 16px;
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+
+  .footer-links {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footer-links > div {
+    text-align: center;
+  }
+
+  .footer-bottom {
+    font-size: 12px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-bottom-links {
+    gap: 12px;
+    justify-content: center; 
+  }
+}
