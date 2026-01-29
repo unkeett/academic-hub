@@ -18,6 +18,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import './App.css'; 
 import Login from './components/Login'; 
 import Register from './components/Register'; 
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 const AppContent = () => { 
   const [isSidebarOpen, setSidebarOpen] = useState(false); 
@@ -29,7 +31,12 @@ const AppContent = () => {
   }; 
 
   const isLandingPage = location.pathname === '/'; 
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register'; 
+  const isAuthPage =
+  location.pathname === '/login' ||
+  location.pathname === '/register' ||
+  location.pathname === '/forgot-password' ||
+  location.pathname.startsWith('/reset-password');
+
   const showNavAndSidebar = !isLandingPage && !isAuthPage; 
 
   return ( 
@@ -44,6 +51,8 @@ const AppContent = () => {
           <Route path="/home" element={<HomePage />} /> 
           <Route path="/login" element={<Login />} /> 
           <Route path="/register" element={<Register />} /> 
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:resettoken" element={<ResetPassword />} />
 
           {/* Protected Routes */} 
           <Route path="/dashboard" element={ 
