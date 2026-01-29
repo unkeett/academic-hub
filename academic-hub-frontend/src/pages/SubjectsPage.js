@@ -1,26 +1,23 @@
 // src/pages/SubjectsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'; // Added useCallback
 import api from '../utils/axiosConfig';
 import SubjectCard from '../components/SubjectCard';
 import SubjectForm from '../components/SubjectForm';
 import { FaPlus } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import './SubjectsPage.css';
 
 const SubjectsPage = () => {
   const { token } = useAuth();
+  const { showNotification } = useNotification();
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingSubject, setEditingSubject] = useState(null);
 
-  useEffect(() => {
-    fetchSubjects();
-  }, [token]);
-
-  const fetchSubjects = async () => {
-    // Check if user is authenticated before making API call
-    // Use token from context which is reactive
+  // 1. Wrap fetchSubjects in useCallback to stabilize the function reference
+  const fetchSubjects = useCallback(async () => {
     if (!token) {
       setLoading(false);
       return;
@@ -30,20 +27,26 @@ const SubjectsPage = () => {
       const response = await api.get('/api/subjects');
       setSubjects(response.data.data || []);
     } catch (error) {
-      console.error('Error fetching subjects:', error);
+      showNotification('Failed to load subjects. Please refresh the page.', 'error');
       setSubjects([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, showNotification]); // Dependencies for useCallback
+
+  // 2. Include fetchSubjects in the dependency array
+  useEffect(() => {
+    fetchSubjects();
+  }, [fetchSubjects]);
 
   const handleCreateSubject = async (subjectData) => {
     try {
       const response = await api.post('/api/subjects', subjectData);
       setSubjects([response.data.data, ...subjects]);
       setShowForm(false);
+      showNotification('Subject created successfully!', 'success'); 
     } catch (error) {
-      console.error('Error creating subject:', error);
+      // Interceptor will handle the notification, but local logic stays the same
     }
   };
 
@@ -54,9 +57,8 @@ const SubjectsPage = () => {
         subject._id === id ? response.data.data : subject
       ));
       setEditingSubject(null);
-    } catch (error) {
-      console.error('Error updating subject:', error);
-    }
+      showNotification('Subject updated!', 'success');
+    } catch (error) {}
   };
 
   const handleDeleteSubject = async (id) => {
@@ -64,9 +66,8 @@ const SubjectsPage = () => {
       try {
         await api.delete(`/api/subjects/${id}`);
         setSubjects(subjects.filter(subject => subject._id !== id));
-      } catch (error) {
-        console.error('Error deleting subject:', error);
-      }
+        showNotification('Subject deleted.', 'info');
+      } catch (error) {}
     }
   };
 
@@ -74,22 +75,19 @@ const SubjectsPage = () => {
     const subject = subjects.find(s => s._id === id);
     if (!subject) return;
 
-    if (
-      completedTopics === undefined ||
-      completedTopics === null ||
-      Number.isNaN(completedTopics)
-    ) {
-      alert('Please enter a valid number');
+    // Validation logic stays here for immediate feedback
+    if (completedTopics === undefined || completedTopics === null || Number.isNaN(completedTopics)) {
+      showNotification('Please enter a valid number', 'error');
       return;
     }
 
     if (completedTopics < 0) {
-      alert('Completed topics cannot be negative');
+      showNotification('Completed topics cannot be negative', 'error');
       return;
     }
 
     if (subject.topics && completedTopics > subject.topics.length) {
-      alert(`Completed topics cannot exceed total topics (${subject.topics.length})`);
+      showNotification(`Completed topics cannot exceed total (${subject.topics.length})`, 'error');
       return;
     }
 
@@ -101,12 +99,9 @@ const SubjectsPage = () => {
       setSubjects(subjects.map(subject =>
         subject._id === id ? response.data.data : subject
       ));
-    } catch (error) {
-      console.error('Error updating progress:', error);
-      alert(error.response?.data?.message || 'Failed to update progress');
-    }
+      showNotification('Progress updated!', 'success');
+    } catch (error) {}
   };
-
 
   if (loading) {
     return (

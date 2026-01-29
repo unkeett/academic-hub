@@ -3,6 +3,14 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
+// 1. Create a placeholder for our notification function
+let showToast = null;
+
+// 2. Export a function to "inject" the toast trigger from your React components
+export const setNotificationHandler = (handler) => {
+  showToast = handler;
+};
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -10,7 +18,7 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add auth token
+// Request interceptor ... (kept exactly as you have it)
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -19,45 +27,47 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle errors
+// 3. Enhanced Response interceptor
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Token expired or invalid
+    const status = error.response?.status;
+    const message = error.response?.data?.message || 'A network error occurred. Please try again.';
+
+    // A. Global Notification logic
+    if (showToast) {
+      // Don't show generic error toast for 401s (handled below) or specific validation errors
+      if (status !== 401 && status !== 422) {
+        showToast(message, 'error');
+      }
+    }
+
+    // B. Your existing 401/Auth logic
+    if (status === 401) {
       const token = localStorage.getItem('token');
       const currentPath = window.location.pathname;
       const publicRoutes = ['/login', '/register'];
       
-      // Only redirect if:
-      // 1. We had a token (meaning it expired/invalid, not just missing)
-      // 2. We're not already on a public route
-      // 3. The error wasn't from a login/register attempt
       if (token && !publicRoutes.includes(currentPath)) {
-        // Check if this is an auth endpoint (login/register) - don't redirect on those
         const isAuthEndpoint = error.config?.url?.includes('/api/auth/login') || 
                               error.config?.url?.includes('/api/auth/register');
         
         if (!isAuthEndpoint) {
           localStorage.removeItem('token');
-          // Use a small delay to prevent redirect loops
+          if (showToast) showToast('Session expired. Please log in again.', 'info');
+          
           setTimeout(() => {
-            const stillOnPublicRoute = publicRoutes.includes(window.location.pathname);
-            if (!stillOnPublicRoute) {
+            if (!publicRoutes.includes(window.location.pathname)) {
               window.location.href = '/login';
             }
-          }, 100);
+          }, 1500); // Increased delay so user can read the toast
         }
       }
-      // If no token, just let the error pass through (component will handle it)
     }
+    
     return Promise.reject(error);
   }
 );
