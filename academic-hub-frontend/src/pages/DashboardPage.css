@@ -3,7 +3,8 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 2.5rem 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: transparent;
+  /* Let body background show through */
   min-height: 100vh;
 }
 
@@ -18,16 +19,13 @@
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--bg-secondary);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 2.5rem 2rem;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-md);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -42,9 +40,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, 
-    rgba(102, 126, 234, 0.05) 0%, 
-    rgba(118, 75, 162, 0.05) 100%);
+  background: linear-gradient(135deg,
+      rgba(102, 126, 234, 0.05) 0%,
+      rgba(118, 75, 162, 0.05) 100%);
   z-index: -1;
 }
 
@@ -64,7 +62,7 @@
 
 .stat-card:hover {
   transform: translateY(-10px) scale(1.02);
-  box-shadow: 
+  box-shadow:
     0 25px 50px rgba(102, 126, 234, 0.15),
     0 15px 30px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -86,7 +84,7 @@
   border-radius: 20px;
   flex-shrink: 0;
   color: white;
-  box-shadow: 
+  box-shadow:
     0 8px 20px rgba(102, 126, 234, 0.3),
     inset 0 1px 1px rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
@@ -94,7 +92,7 @@
 
 .stat-card:hover .stat-icon {
   transform: rotate(10deg) scale(1.1);
-  box-shadow: 
+  box-shadow:
     0 12px 30px rgba(102, 126, 234, 0.4),
     inset 0 1px 1px rgba(255, 255, 255, 0.3);
 }
@@ -106,9 +104,8 @@
 .stat-content h3 {
   font-size: 3rem;
   font-weight: 800;
-  color: #1a202c;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #2d3748, #4a5568);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -116,7 +113,7 @@
 }
 
 .stat-content p {
-  color: #718096;
+  color: var(--text-secondary);
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -148,10 +145,10 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.3), 
-    transparent);
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
   transition: left 0.6s ease;
 }
 
@@ -179,15 +176,12 @@
 
 /* Quick Actions - Modern Glass Effect */
 .quick-actions {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--bg-secondary);
   backdrop-filter: blur(20px);
   border-radius: 28px;
   padding: 3.5rem 3rem;
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.1),
-    0 10px 20px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
   margin-top: 3rem;
   position: relative;
   overflow: hidden;
@@ -207,7 +201,7 @@
 .quick-actions h2 {
   font-size: 2.25rem;
   font-weight: 800;
-  color: #1a202c;
+  color: var(--text-primary);
   margin-bottom: 3rem;
   text-align: center;
   position: relative;
@@ -222,10 +216,10 @@
   transform: translateX(-50%);
   width: 120px;
   height: 5px;
-  background: linear-gradient(90deg, 
-    #667eea 0%, 
-    #764ba2 50%, 
-    #667eea 100%);
+  background: linear-gradient(90deg,
+      #667eea 0%,
+      #764ba2 50%,
+      #667eea 100%);
   background-size: 200% 100%;
   animation: gradientShift 3s ease infinite;
   border-radius: 3px;
@@ -243,17 +237,18 @@
   align-items: center;
   justify-content: center;
   padding: 2.5rem 2rem;
-  background: rgba(255, 255, 255, 0.9);
+  padding: 2.5rem 2rem;
+  background: var(--bg-secondary);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   text-decoration: none;
-  color: #2d3748;
+  color: var(--text-secondary);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
   min-height: 160px;
-  box-shadow: 
+  box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
@@ -262,9 +257,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, 
-    rgba(102, 126, 234, 0.1) 0%, 
-    rgba(118, 75, 162, 0.1) 100%);
+  background: linear-gradient(135deg,
+      rgba(102, 126, 234, 0.1) 0%,
+      rgba(118, 75, 162, 0.1) 100%);
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: 1;
@@ -285,7 +280,7 @@
 
 .action-btn:hover {
   transform: translateY(-8px) scale(1.03);
-  box-shadow: 
+  box-shadow:
     0 20px 40px rgba(102, 126, 234, 0.2),
     0 15px 30px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -338,9 +333,12 @@
 
 /* Animations */
 @keyframes gradientShift {
-  0%, 100% {
+
+  0%,
+  100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
@@ -351,12 +349,12 @@
   .page-header h1 {
     font-size: 3.25rem;
   }
-  
+
   .dashboard-widgets {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -366,45 +364,45 @@
   .home-page {
     padding: 2rem 1.5rem;
   }
-  
+
   .page-header {
     padding: 3rem 2rem;
     margin-bottom: 3.5rem;
     border-radius: 20px;
   }
-  
+
   .page-header h1 {
     font-size: 2.75rem;
   }
-  
+
   .page-header p {
     font-size: 1.25rem;
   }
-  
+
   .stats-grid {
     gap: 1.75rem;
   }
-  
+
   .stat-card {
     padding: 2rem 1.5rem;
     gap: 1.75rem;
   }
-  
+
   .stat-icon {
     width: 80px;
     height: 80px;
     font-size: 2.5rem;
   }
-  
+
   .stat-content h3 {
     font-size: 2.75rem;
   }
-  
+
   .quick-actions {
     padding: 3rem 2rem;
     border-radius: 24px;
   }
-  
+
   .action-buttons {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.75rem;
@@ -415,29 +413,29 @@
   .page-header h1 {
     font-size: 2.5rem;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .action-buttons {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .stat-card {
     padding: 1.75rem;
   }
-  
+
   .action-btn {
     padding: 2rem 1.75rem;
     min-height: 140px;
   }
-  
+
   .dashboard-widgets {
     grid-template-columns: 1fr;
   }
-  
+
   .quick-actions h2 {
     font-size: 2rem;
   }
@@ -449,11 +447,11 @@
     height: 70px;
     font-size: 2.25rem;
   }
-  
+
   .stat-content h3 {
     font-size: 2.5rem;
   }
-  
+
   .quick-actions {
     padding: 2.5rem 1.5rem;
   }
@@ -482,6 +480,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -509,7 +508,9 @@
   align-items: center;
   justify-content: center;
   padding: 3rem 1.5rem;
-  background: linear-gradient(135deg, #f5f3ff, #fff7ed);
+  background: var(--bg-secondary);
+  border-radius: 24px;
+  margin-bottom: 3rem;
   text-align: center;
 }
 
@@ -521,7 +522,7 @@
 .hero-content h1 {
   font-size: 3rem;
   font-weight: 800;
-  color: #111827;
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -531,7 +532,7 @@
 
 .hero-content p {
   font-size: 1.1rem;
-  color: #4b5563;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 2.2rem;
 }
@@ -575,6 +576,7 @@
     opacity: 0;
     transform: translateY(14px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

@@ -11,3 +11,24 @@
 2026-01-14 10:32:24:3224 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
 2026-01-14 10:32:24:3224 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
 2026-01-14 10:32:24:3224 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-29 13:34:20:3420 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-29 13:34:20:3420 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-29 13:34:20:3420 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-29 13:34:20:3420 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-29 13:38:40:3840 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-01-29 13:43:47:4347 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-29 13:43:47:4347 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-29 13:43:47:4347 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-29 13:43:47:4347 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-29 14:09:42:942 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-29 14:09:42:942 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-29 14:09:42:942 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-29 14:09:42:942 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-29 14:10:41:1041 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-01-29 14:10:43:1043 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-01-29 14:12:25:1225 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-29 14:12:25:1225 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-29 14:12:25:1225 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-29 14:12:25:1225 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-29 14:13:10:1310 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-01-29 14:13:31:1331 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m

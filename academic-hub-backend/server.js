@@ -1,10 +1,17 @@
 // server.js
+require('dotenv').config(); // Load env vars FIRST
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const errorHandler = require('./middleware/error');
 const logger = require('./config/logger');
-require('dotenv').config();
+
+// Debug: Check if JWT_SECRET is loaded
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL ERROR: JWT_SECRET is not defined in environment variables!');
+} else {
+  console.log('Environment Check: JWT_SECRET is loaded.'); // Do not log the actual secret
+}
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -14,6 +21,7 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
+app.get('/', (req, res) => res.json({ message: 'Academic Hub API is running', status: 'OK' }));
 app.get('/api/test', (req, res) => res.json({ message: 'Academic Hub API is running!' }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/subjects', require('./routes/subjects'));
