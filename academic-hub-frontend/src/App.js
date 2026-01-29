@@ -53,31 +53,24 @@ const AppContent = () => {
             </ProtectedRoute>
           } />
 
-          {/* Combined Routes (Public access, but can be protected if needed) */}
-          <Route path="/subjects" element={<SubjectsPage />} />
-          <Route path="/goals" element={<GoalsPage />} />
-          <Route path="/tutorials" element={<TutorialsPage />} />
-          <Route path="/ideas" element={<IdeasPage />} />
-
-          {/* Catch all route */}
-          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} />
-        </Routes>
-      </main>
-      {!isAuthPage && <Footer />}
-    </div>
-  );
-};
-
+          {/* Catch all route */} 
+          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} /> 
+        </Routes> 
+      </main> 
+      {!isAuthPage && <Footer />} 
+    </div> 
+  ); 
+}; 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
+    <ThemeProvider> {/* ADD THIS WRAPPER */}
+      <AuthProvider>
         <Router>
           <AppContent />
         </Router>
-      </ThemeProvider>
-    </AuthProvider>
-  );
+      </AuthProvider>
+    </ThemeProvider> 
+  )
 }
 
 export default App;
