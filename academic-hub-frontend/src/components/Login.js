@@ -9,6 +9,7 @@ const Login = () => {
     email: '',
     password: ''
   });
+  const [errors, setErrors] = useState({});
 
   const { login, isAuthenticated, error } = useAuth();
   const navigate = useNavigate();
@@ -29,13 +30,36 @@ const Login = () => {
     });
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    const result = await login({ email, password });
-    if (result.success) {
-      navigate('/dashboard');
-    }
-  };
+    const onSubmit = async (e) => {
+      e.preventDefault();
+
+      const newErrors = {};
+
+      // Email validation
+      if (!email) {
+        newErrors.email = 'Email address is required';
+      } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+
+      // Password validation
+      if (!password) {
+        newErrors.password = 'Password is required';
+      }
+
+      // If validation fails, stop submission
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
+      setErrors({});
+
+      const result = await login({ email, password });
+      if (result.success) {
+        navigate('/dashboard');
+      }
+    };
 
   return (
     <div className="auth-container">
@@ -60,9 +84,11 @@ const Login = () => {
               name="email"
               value={email}
               onChange={onChange}
-              required
               placeholder="Enter your email"
             />
+            {errors.email && (
+              <small className="field-error">{errors.email}</small>
+            )}
           </div>
 
           <div className="form-group">
@@ -73,9 +99,11 @@ const Login = () => {
               name="password"
               value={password}
               onChange={onChange}
-              required
               placeholder="Enter your password"
             />
+            {errors.password && (
+              <small className="field-error">{errors.password}</small>
+            )}
           </div>
 
           <button type="submit" className="auth-button">
