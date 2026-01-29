@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import './IdeaForm.css';
 
-const IdeaForm = ({ idea, onSubmit, onCancel, loading = false, error = null }) => {
+const IdeaForm = ({ idea, onSubmit, onCancel, error: externalError = null }) => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -10,6 +10,8 @@ const IdeaForm = ({ idea, onSubmit, onCancel, loading = false, error = null }) =
     tags: []
   });
   const [newTag, setNewTag] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(externalError);
 
   const categories = [
     { value: 'study', label: 'Study' },
@@ -28,6 +30,10 @@ const IdeaForm = ({ idea, onSubmit, onCancel, loading = false, error = null }) =
       });
     }
   }, [idea]);
+
+  useEffect(() => {
+    setError(externalError);
+  }, [externalError]);
 
   const handleChange = (e) => {
     setFormData({
@@ -53,10 +59,17 @@ const IdeaForm = ({ idea, onSubmit, onCancel, loading = false, error = null }) =
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!loading) {
-      onSubmit(formData);
+    setLoading(true);
+    setError(null);
+    try {
+      await onSubmit(formData);
+    } catch (err) {
+      console.error('Submission error:', err);
+      setError(err.response?.data?.message || 'An error occurred during submission');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -135,7 +148,7 @@ const IdeaForm = ({ idea, onSubmit, onCancel, loading = false, error = null }) =
                 Add
               </button>
             </div>
-            
+
             {formData.tags.length > 0 && (
               <div className="tags-list">
                 {formData.tags.map((tag, index) => (
