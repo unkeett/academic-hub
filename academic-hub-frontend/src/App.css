@@ -40,6 +40,24 @@
   --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+[data-theme='dark'] {
+  --background: #0f172a;
+  --surface: #1e293b;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --border: #334155;
+  --border-focus: #475569;
+
+  --primary-light: rgba(79, 70, 229, 0.15);
+  --success-light: rgba(16, 185, 129, 0.15);
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+}
+
 * {
   margin: 0;
   padding: 0;

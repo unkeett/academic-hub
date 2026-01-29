@@ -1,12 +1,14 @@
 // src/components/Navbar.js
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaSignOutAlt, FaUserCircle, FaGraduationCap } from 'react-icons/fa';
+import { FaBars, FaSignOutAlt, FaUserCircle, FaGraduationCap, FaSun, FaMoon } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import './Navbar.css';
 
 const Navbar = ({ toggleSidebar }) => {
   const { user, logout, isAuthenticated } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -26,8 +28,11 @@ const Navbar = ({ toggleSidebar }) => {
             ACADEMIC <span>HUB</span>
           </Link>
         </div>
-        
+
         <div className="navbar-right">
+          <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Theme">
+            {theme === 'light' ? <FaMoon /> : <FaSun />}
+          </button>
           {isAuthenticated && user ? (
             <div className="user-profile">
               <div className="user-info">
