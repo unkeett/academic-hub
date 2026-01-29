@@ -1,3 +1,18 @@
+// @desc    Forgot password
+// @route   POST /api/auth/forgotpassword
+// @access  Public
+exports.forgotPassword = async (req, res, next) => {
+  // TODO: Implement sending reset email with token
+  res.status(501).json({ success: false, message: 'Not implemented yet' });
+};
+
+// @desc    Reset password
+// @route   PUT /api/auth/resetpassword/:resettoken
+// @access  Public
+exports.resetPassword = async (req, res, next) => {
+  // TODO: Implement password reset using token
+  res.status(501).json({ success: false, message: 'Not implemented yet' });
+};
 // controllers/authController.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
