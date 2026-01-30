@@ -77,13 +77,13 @@ const AppContent = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
+    <ThemeProvider>
+      <AuthProvider>
         <Router>
           <AppContent />
         </Router>
-      </ThemeProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

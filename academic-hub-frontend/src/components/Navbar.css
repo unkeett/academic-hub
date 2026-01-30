@@ -259,3 +259,28 @@
     font-size: 0.8125rem;
   }
 }
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  margin-left: 0.5rem;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--background);
+  color: var(--primary);
+  transform: rotate(15deg) scale(1.1);
+}
+
+.theme-toggle-btn:active {
+  transform: rotate(15deg) scale(0.95);
+}

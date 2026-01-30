@@ -48,3 +48,7 @@
 2026-01-30 12:57:06:576 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
 2026-01-30 12:57:06:576 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
 2026-01-30 12:57:06:576 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-30 13:00:03:03 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-30 13:00:03:03 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-30 13:00:03:03 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-30 13:00:03:03 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
