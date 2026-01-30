@@ -32,3 +32,19 @@
 2026-01-29 14:12:25:1225 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
 2026-01-29 14:13:10:1310 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
 2026-01-29 14:13:31:1331 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-01-29 14:14:45:1445 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-29 14:14:45:1445 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-29 14:14:45:1445 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-29 14:14:45:1445 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-30 12:50:16:5016 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-30 12:50:16:5016 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-30 12:50:16:5016 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-30 12:50:16:5016 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-30 12:56:50:5650 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-30 12:56:51:5651 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-30 12:56:51:5651 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-30 12:56:51:5651 [32minfo[39m: [32mAcademic Hub API ready for requests[39m
+2026-01-30 12:57:06:576 [32minfo[39m: [32mUsing MongoDB Memory Server for development[39m
+2026-01-30 12:57:06:576 [32minfo[39m: [32mMongoDB Connected: 127.0.0.1[39m
+2026-01-30 12:57:06:576 [32minfo[39m: [32mServer is running on http://localhost:5001[39m
+2026-01-30 12:57:06:576 [32minfo[39m: [32mAcademic Hub API ready for requests[39m

@@ -13,6 +13,7 @@ import SubjectsPage from './pages/SubjectsPage';
 import GoalsPage from './pages/GoalsPage';
 import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage';
+import SearchPage from './pages/SearchPage';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -50,6 +51,12 @@ const AppContent = () => {
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/search" element={
+            <ProtectedRoute>
+              <SearchPage />
             </ProtectedRoute>
           } />
 
