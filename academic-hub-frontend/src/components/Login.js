@@ -29,11 +29,20 @@ const Login = () => {
     });
   };
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = async (e) => {
     e.preventDefault();
-    const result = await login({ email, password });
-    if (result.success) {
-      navigate('/dashboard');
+    setLoading(true);
+    try {
+      const result = await login({ email, password });
+      if (result.success) {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,6 +71,7 @@ const Login = () => {
               onChange={onChange}
               required
               placeholder="Enter your email"
+              disabled={loading}
             />
           </div>
 
@@ -75,11 +85,12 @@ const Login = () => {
               onChange={onChange}
               required
               placeholder="Enter your password"
+              disabled={loading}
             />
           </div>
 
-          <button type="submit" className="auth-button">
-            Sign In
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
