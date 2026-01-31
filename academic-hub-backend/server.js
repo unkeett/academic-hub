@@ -4,6 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const errorHandler = require('./middleware/error');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const logger = require('./config/logger');
 
 // Debug: Check if JWT_SECRET is loaded
@@ -19,6 +21,8 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 app.use(cors());
 app.use(express.json());
+// Swagger API Docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // API Routes
 app.get('/', (req, res) => res.json({ message: 'Academic Hub API is running', status: 'OK' }));
