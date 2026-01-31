@@ -13,6 +13,7 @@ import SubjectsPage from './pages/SubjectsPage';
 import GoalsPage from './pages/GoalsPage';
 import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage';
+import SearchPage from './pages/SearchPage';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -70,24 +71,37 @@ const AppContent = () => {
             </ProtectedRoute>
           } />
 
-          {/* Catch all route */} 
-          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} /> 
-        </Routes> 
-      </main> 
-      {!isAuthPage && <Footer />} 
-    </div> 
-  ); 
-}; 
+          <Route path="/search" element={
+            <ProtectedRoute>
+              <SearchPage />
+            </ProtectedRoute>
+          } />
+
+          {/* Combined Routes (Public access, but can be protected if needed) */}
+          <Route path="/subjects" element={<SubjectsPage />} />
+          <Route path="/goals" element={<GoalsPage />} />
+          <Route path="/tutorials" element={<TutorialsPage />} />
+          <Route path="/ideas" element={<IdeasPage />} />
+
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} />
+        </Routes>
+      </main>
+      {!isAuthPage && <Footer />}
+    </div>
+  );
+};
+
 function App() {
   return (
-    <ThemeProvider> {/* ADD THIS WRAPPER */}
+    <ThemeProvider>
       <AuthProvider>
         <Router>
           <AppContent />
         </Router>
       </AuthProvider>
-    </ThemeProvider> 
-  )
+    </ThemeProvider>
+  );
 }
 
 export default App;

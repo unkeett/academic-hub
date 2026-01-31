@@ -28,6 +28,7 @@ app.use('/api/subjects', require('./routes/subjects'));
 app.use('/api/goals', require('./routes/goals'));
 app.use('/api/tutorials', require('./routes/tutorials'));
 app.use('/api/ideas', require('./routes/ideas'));
+app.use('/api/search', require('./routes/search'));
 
 // Error handling middleware (must be after routes)
 app.use(errorHandler);
