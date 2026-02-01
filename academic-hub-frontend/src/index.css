@@ -1,4 +1,25 @@
 /* src/index.css */
+:root {
+  --bg-primary: #f4f7f6;
+  --bg-secondary: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #475569;
+  --border-color: #e2e8f0;
+  --icon-color: #64748b;
+  --primary-color: #3b82f6;
+  --hover-bg: #f1f5f9;
+}
+
+[data-theme='dark'] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --border-color: #334155;
+  --icon-color: #94a3b8;
+  --hover-bg: #334155;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,8 +27,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f4f7f6; /* A light grey background */
-  color: #333; /* A dark grey for text */
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {

@@ -36,6 +36,8 @@ const Register = () => {
     });
   };
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -105,6 +107,7 @@ const Register = () => {
               value={name}
               onChange={onChange}
               placeholder="Enter your full name"
+              disabled={loading}
             />
             {errors.name && (
               <small className="field-error">{errors.name}</small>
@@ -135,6 +138,7 @@ const Register = () => {
               value={password}
               onChange={onChange}
               placeholder="Enter your password (min 6 characters)"
+              disabled={loading}
             />
             {errors.password && (
               <small className="field-error">{errors.password}</small>
@@ -150,6 +154,7 @@ const Register = () => {
               value={confirmPassword}
               onChange={onChange}
               placeholder="Confirm your password"
+              disabled={loading}
             />
             {errors.confirmPassword && (
               <small className="field-error">{errors.confirmPassword}</small>

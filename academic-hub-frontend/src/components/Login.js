@@ -85,6 +85,7 @@ const Login = () => {
               value={email}
               onChange={onChange}
               placeholder="Enter your email"
+              disabled={loading}
             />
             {errors.email && (
               <small className="field-error">{errors.email}</small>
@@ -100,18 +101,25 @@ const Login = () => {
               value={password}
               onChange={onChange}
               placeholder="Enter your password"
+              disabled={loading}
             />
             {errors.password && (
               <small className="field-error">{errors.password}</small>
             )}
           </div>
 
-          <button type="submit" className="auth-button">
-            Sign In
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
         <div className="auth-footer">
+          <p>
+            <Link to="/forgot-password" className="auth-link">
+              Forgot Password?
+            </Link>
+          </p>
+
           <p>
             Don't have an account?{' '}
             <Link to="/register" className="auth-link">

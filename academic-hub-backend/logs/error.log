@@ -1,1 +1,6 @@
 2026-01-14 10:27:15:2715 [31merror[39m: [31mMongoDB Connection Error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017[39m
+2026-01-29 13:38:40:3840 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-01-29 14:10:41:1041 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-01-29 14:10:43:1043 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-01-29 14:13:10:1310 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-01-29 14:13:31:1331 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
