@@ -120,6 +120,8 @@ router.put('/updatedetails', protect, updateDetails);
  *         description: Password updated
  */
 router.put('/updatepassword', protect, updatePassword);
+router.post('/forgotpassword', forgotPassword);
+router.put('/resetpassword/:resettoken', resetPassword);
 
 /**
  * @swagger
