@@ -39,7 +39,51 @@
   /* Transitions */
   --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
+[data-theme="dark"] {
+  /* Primary colors remain vibrant in dark mode */
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --primary-light: #1e1b4b;
 
+  --secondary: #94a3b8;
+  --secondary-hover: #cbd5e1;
+
+  --success: #34d399;
+  --success-hover: #6ee7b7;
+  --success-light: #064e3b;
+
+  --warning: #fbbf24;
+  --warning-hover: #fcd34d;
+
+  --danger: #f87171;
+  --danger-hover: #fca5a5;
+
+  /* Dark backgrounds */
+  --background: #0f172a;
+  --surface: #1e293b;
+
+  /* Light text on dark backgrounds */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+
+  /* Darker borders */
+  --border: #334155;
+  --border-focus: #475569;
+
+  /* Adjusted shadows for dark mode */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}
+
+/* Smooth transition for theme changes */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
 * {
   margin: 0;
   padding: 0;

@@ -1,6 +1,7 @@
 // models/User.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -25,13 +26,19 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false
   },
-  role: {
+    role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
   },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date
+
+  // 🔐 Password reset fields
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpire: {
+    type: Date
+  }
 }, {
   timestamps: true
 });
@@ -41,6 +48,7 @@ UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
   }
+
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
@@ -53,15 +61,18 @@ UserSchema.methods.matchPassword = async function(enteredPassword) {
 };
 
 // Generate and hash password reset token
-const crypto = require('crypto');
 UserSchema.methods.getResetPasswordToken = function() {
-  // Generate token
+  // Generate random token
   const resetToken = crypto.randomBytes(20).toString('hex');
 
-  // Hash token and set to resetPasswordToken field
-  this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-  // Set expire (10 minutes)
-  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+  // Hash token and store in database
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // Set token expiry (15 minutes)
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
 
   return resetToken;
 };
