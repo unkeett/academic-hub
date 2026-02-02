@@ -21,11 +21,7 @@ import './App.css';
 import Login from './components/Login'; 
 import Register from './components/Register'; 
 import ForgotPassword from './components/ForgotPassword';
-<<<<<<< HEAD
 import ResetPassword from './components/ResetPassword'; 
-=======
-import ResetPassword from './components/ResetPassword';
->>>>>>> 04fde337cc2ec3be7c0676e811e3aaa800c4a7a6
 
 const AppContent = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -37,16 +33,7 @@ const AppContent = () => {
   };
 
   const isLandingPage = location.pathname === '/'; 
-<<<<<<< HEAD
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/forgot-password' || location.pathname.startsWith('/reset-password'); 
-=======
-  const isAuthPage =
-  location.pathname === '/login' ||
-  location.pathname === '/register' ||
-  location.pathname === '/forgot-password' ||
-  location.pathname.startsWith('/reset-password');
-
->>>>>>> 04fde337cc2ec3be7c0676e811e3aaa800c4a7a6
   const showNavAndSidebar = !isLandingPage && !isAuthPage; 
 
   return ( 
