@@ -151,6 +151,70 @@
   font-size: 1rem;
 }
 
+.success-message {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.success-message::before {
+  content: "✓";
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.forgot-password-link {
+  text-align: right;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+.forgot-password-link .auth-link {
+  font-size: 0.875rem;
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.forgot-password-link .auth-link:hover {
+  text-decoration: underline;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link-button:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.auth-subtitle {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.auth-links {
+  text-align: center;
+  margin-top: 1rem;
+}
+
 /* Responsive Design */
 @media (max-width: 480px) {
   .auth-container {

@@ -114,6 +114,7 @@ academic-hub/
 
 ### ✅ Implemented & Working
 - User registration and login with JWT authentication
+- **Password reset functionality via email** 🆕
 - Subject management (create, read, update, delete)
 - Goal tracking with completion status and priorities
 - Tutorial collection from YouTube URLs (with metadata extraction)
@@ -121,6 +122,7 @@ academic-hub/
 - Dashboard with statistics overview
 - Responsive UI design
 - Protected API routes (authentication required)
+- Structured logging with Winston
 
 ### ⚠️ Partially Working / Needs Improvement
 - Error handling (errors logged to console, not always shown to users)
@@ -129,7 +131,6 @@ academic-hub/
 - Route protection (ProtectedRoute component exists but not fully implemented)
 
 ### ❌ Missing / Planned
-- Password reset functionality
 - Email verification
 - User profile management UI
 - API documentation (Swagger/OpenAPI)
@@ -436,7 +437,7 @@ See [GITHUB_ISSUES.md](./GITHUB_ISSUES.md) for the complete list.
 The project roadmap includes:
 
 ### Short-term
-- [ ] Implement password reset functionality
+- [x] Implement password reset functionality ✅
 - [ ] Add user-friendly error notifications (toast messages)
 - [ ] Complete input validation and sanitization
 - [ ] Add loading states to all forms
