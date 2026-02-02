@@ -1,10 +1,19 @@
 // server.js
+require('dotenv').config(); // Load env vars FIRST
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const errorHandler = require('./middleware/error');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const logger = require('./config/logger');
-require('dotenv').config();
+
+// Debug: Check if JWT_SECRET is loaded
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL ERROR: JWT_SECRET is not defined in environment variables!');
+} else {
+  console.log('Environment Check: JWT_SECRET is loaded.'); // Do not log the actual secret
+}
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -12,14 +21,18 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 app.use(cors());
 app.use(express.json());
+// Swagger API Docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // API Routes
+app.get('/', (req, res) => res.json({ message: 'Academic Hub API is running', status: 'OK' }));
 app.get('/api/test', (req, res) => res.json({ message: 'Academic Hub API is running!' }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/subjects', require('./routes/subjects'));
 app.use('/api/goals', require('./routes/goals'));
 app.use('/api/tutorials', require('./routes/tutorials'));
 app.use('/api/ideas', require('./routes/ideas'));
+app.use('/api/search', require('./routes/search'));
 
 // Error handling middleware (must be after routes)
 app.use(errorHandler);

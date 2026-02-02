@@ -1,37 +1,52 @@
 // src/App.js 
-import React, { useState } from 'react'; 
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'; 
-import { AuthProvider, useAuth } from './context/AuthContext'; 
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 
-import Navbar from './components/Navbar'; 
-import Sidebar from './components/Sidebar'; 
-import LandingPage from './pages/LandingPage'; 
-import HomePage from './pages/HomePage'; 
-import DashboardPage from './pages/DashboardPage'; 
-import SubjectsPage from './pages/SubjectsPage'; 
-import GoalsPage from './pages/GoalsPage'; 
-import TutorialsPage from './pages/TutorialsPage'; 
-import IdeasPage from './pages/IdeasPage'; 
-import Footer from './components/Footer'; 
+import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+import LandingPage from './pages/LandingPage';
+import HomePage from './pages/HomePage';
+import DashboardPage from './pages/DashboardPage';
+import SubjectsPage from './pages/SubjectsPage';
+import GoalsPage from './pages/GoalsPage';
+import TutorialsPage from './pages/TutorialsPage';
+import IdeasPage from './pages/IdeasPage';
+import SearchPage from './pages/SearchPage';
+import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import './App.css'; 
 import Login from './components/Login'; 
 import Register from './components/Register'; 
 import ForgotPassword from './components/ForgotPassword';
+<<<<<<< HEAD
 import ResetPassword from './components/ResetPassword'; 
+=======
+import ResetPassword from './components/ResetPassword';
+>>>>>>> 04fde337cc2ec3be7c0676e811e3aaa800c4a7a6
 
-const AppContent = () => { 
-  const [isSidebarOpen, setSidebarOpen] = useState(false); 
-  const location = useLocation(); 
-  const { isAuthenticated } = useAuth(); 
+const AppContent = () => {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
-  const toggleSidebar = () => { 
-    setSidebarOpen(!isSidebarOpen); 
-  }; 
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
 
   const isLandingPage = location.pathname === '/'; 
+<<<<<<< HEAD
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/forgot-password' || location.pathname.startsWith('/reset-password'); 
+=======
+  const isAuthPage =
+  location.pathname === '/login' ||
+  location.pathname === '/register' ||
+  location.pathname === '/forgot-password' ||
+  location.pathname.startsWith('/reset-password');
+
+>>>>>>> 04fde337cc2ec3be7c0676e811e3aaa800c4a7a6
   const showNavAndSidebar = !isLandingPage && !isAuthPage; 
 
   return ( 
@@ -49,36 +64,52 @@ const AppContent = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:resettoken" element={<ResetPassword />} />
 
-          {/* Protected Routes */} 
-          <Route path="/dashboard" element={ 
-            <ProtectedRoute> 
-              <DashboardPage /> 
-            </ProtectedRoute> 
-          } /> 
+      <main className={`content ${isSidebarOpen && showNavAndSidebar ? 'sidebar-open' : ''} ${isLandingPage ? 'landing-content' : ''}`}>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-          {/* Combined Routes (Public access, but can be protected if needed) */} 
-          <Route path="/subjects" element={<SubjectsPage />} /> 
-          <Route path="/goals" element={<GoalsPage />} /> 
-          <Route path="/tutorials" element={<TutorialsPage />} /> 
-          <Route path="/ideas" element={<IdeasPage />} /> 
+          {/* Protected Routes */}
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          } />
 
-          {/* Catch all route */} 
-          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} /> 
-        </Routes> 
-      </main> 
-      {!isAuthPage && <Footer />} 
-    </div> 
-  ); 
-}; 
+          <Route path="/search" element={
+            <ProtectedRoute>
+              <SearchPage />
+            </ProtectedRoute>
+          } />
 
-function App() { 
-  return ( 
-    <AuthProvider> 
-      <Router> 
-        <AppContent /> 
-      </Router> 
-    </AuthProvider> 
-  ); 
-} 
+          {/* Combined Routes (Public access, but can be protected if needed) */}
+          <Route path="/subjects" element={<SubjectsPage />} />
+          <Route path="/goals" element={<GoalsPage />} />
+          <Route path="/tutorials" element={<TutorialsPage />} />
+          <Route path="/ideas" element={<IdeasPage />} />
+
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} />
+        </Routes>
+      </main>
+      {!isAuthPage && <Footer />}
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
 
 export default App;
