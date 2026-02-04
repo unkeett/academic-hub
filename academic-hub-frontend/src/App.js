@@ -22,6 +22,10 @@ import Login from './components/Login';
 import Register from './components/Register'; 
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsPage from "./pages/TermsPage";
+
+
 
 const AppContent = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -63,6 +67,8 @@ const AppContent = () => {
           <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+<Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+<Route path="/terms" element={<TermsPage />} />
 
           {/* Protected Routes */}
           <Route path="/dashboard" element={
