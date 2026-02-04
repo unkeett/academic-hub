@@ -1,5 +1,7 @@
 // models/Tutorial.js
 const mongoose = require('mongoose');
+TutorialSchema.index({ user: 1, watched: 1 });
+
 
 const TutorialSchema = new mongoose.Schema({
   title: {

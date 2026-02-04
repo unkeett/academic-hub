@@ -1,5 +1,6 @@
 // models/Subject.js
 const mongoose = require('mongoose');
+SubjectSchema.index({ user: 1, createdAt: -1 });
 
 const SubjectSchema = new mongoose.Schema({
   name: {
