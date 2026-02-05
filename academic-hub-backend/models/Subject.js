@@ -33,4 +33,7 @@ const SubjectSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+// Indexes
+SubjectSchema.index({ user: 1 });
+
 module.exports = mongoose.model('Subject', SubjectSchema);
