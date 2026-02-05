@@ -20,6 +20,12 @@ const SubjectSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  
+  lastStudiedAt: {
+  type: Date,
+  default: null,
+  index: true
+},
   color: {
     type: String,
     default: '#3B82F6'
