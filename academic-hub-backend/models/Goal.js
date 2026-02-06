@@ -32,4 +32,9 @@ const GoalSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+// --- ADD THIS SECTION ---
+GoalSchema.index({ user: 1 });
+GoalSchema.index({ text: 'text', description: 'text' });
+// ------------------------
+
 module.exports = mongoose.model('Goal', GoalSchema);
