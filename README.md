@@ -97,7 +97,7 @@ Many students struggle to keep track of their academic progress, goals, and reso
 
 ## System Architecture
 
-```
+```mermaid
 graph LR
     subgraph Client [Frontend - React]
     A[User UI] --> B[React Components]
