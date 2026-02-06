@@ -2,30 +2,15 @@
   Academic Hub
 </h1> 
 
-<table align="center">
-    <thead align="center">
-        <tr>
-            <td><b>🌟 Stars</b></td>
-            <td><b>🍴 Forks</b></td>
-            <td><b>🐛 Issues</b></td>
-            <td><b>🔔 Open PRs</b></td>
-            <td><b>🔕 Closed PRs</b></td>
-            <td><b>🛠️ Languages</b></td>
-            <td><b>👥 Contributors</b></td>
-        </tr>
-     </thead>
-    <tbody>
-         <tr>
-            <td><img alt="Stars" src="https://img.shields.io/github/stars/unkeett/academic-hub?style=flat&logo=github"/></td>
-            <td><img alt="Forks" src="https://img.shields.io/github/forks/unkeett/academic-hub?style=flat&logo=github"/></td>
-            <td><img alt="Issues" src="https://img.shields.io/github/issues/unkeett/academic-hub?style=flat&logo=github"/></td>
-            <td><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/unkeett/academic-hub?style=flat&logo=github"/></td>
-            <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/unkeett/academic-hub?style=flat&color=critical&logo=github"/></td>
-            <td><img alt="Languages Count" src="https://img.shields.io/github/languages/count/unkeett/academic-hub?style=flat&color=green&logo=github"></td>
-            <td><img alt="Contributors Count" src="https://img.shields.io/github/contributors/unkeett/academic-hub?style=flat&color=blue&logo=github"/></td>
-        </tr>
-    </tbody>
-</table>
+<div align="center">
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/unkeett/academic-hub/graphs/commit-activity)
+[![Issues](https://img.shields.io/github/issues/unkeett/academic-hub)](https://github.com/unkeett/academic-hub/issues)
+[![Good First Issue](https://img.shields.io/github/issues/unkeett/academic-hub/good%20first%20issue?color=purple)](https://github.com/unkeett/academic-hub/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+
+</div>
 
 # 🚀 Academic Hub — Student Productivity Dashboard
 
@@ -107,6 +92,32 @@ Many students struggle to keep track of their academic progress, goals, and reso
 - **Backend** (`academic-hub-backend/`): RESTful API server running on port 5001
 - **Frontend** (`academic-hub-frontend/`): React SPA running on port 3000
 - Both can run independently but frontend requires backend for full functionality
+
+---
+
+## System Architecture
+
+```
+graph LR
+    subgraph Client [Frontend - React]
+    A[User UI] --> B[React Components]
+    B --> C[Axios Client]
+    end
+
+    subgraph Server [Backend - Node/Express]
+    C -->|HTTP Request| D[Express API]
+    D --> E[Controllers/Routes]
+    E --> F[Mongoose Models]
+    end
+
+    subgraph Database [Storage]
+    F --> G[(MongoDB)]
+    end
+
+    style Client fill:#61dbfb,stroke:#333,stroke-width:2px
+    style Server fill:#68a063,stroke:#333,stroke-width:2px
+    style Database fill:#47a248,stroke:#333,stroke-width:2px
+```
 
 ---
 
@@ -342,30 +353,17 @@ All resource endpoints require authentication. Include `Authorization: Bearer <t
 
 This project is actively being developed. Here are known issues and limitations:
 
-### Bugs
-- Some error messages only appear in browser console, not shown to users
-- Password confirmation error in registration form doesn't always display properly
-- No loading indicators on some form submissions
-- Console.error statements throughout codebase (should use proper logging)
+### 🐛 Known Bugs
+> [!IMPORTANT]
+> Some error messages only appear in the browser console. We are working on a Toast notification system to show these to users.
 
-### Missing Features
-- **Password reset** - Users cannot reset forgotten passwords
-- **Email verification** - No email verification on registration
-- **API documentation** - No Swagger/OpenAPI docs
-- **Tests** - No unit or integration tests
-- **Pagination** - All data loads at once (performance issue with large datasets)
+### ⚠️ Security Considerations
+> [!WARNING]
+> This project currently has no rate limiting on authentication. It is intended for **local learning use only** and should not be deployed to production without adding security headers and input sanitization.
 
-### Security Considerations
-- No rate limiting on authentication endpoints (vulnerable to brute force)
-- Input sanitization not fully implemented (XSS risk)
-- CORS allows all origins (should be restricted in production)
-- No HTTPS enforcement or security headers
-
-### Code Quality
-- Some duplicate code in controllers
-- No API versioning strategy
-- Missing database indexes (performance issue)
-- Configuration management could be improved
+### 💡 Note for Contributors
+> [!NOTE]
+> We follow a "separation of concerns" logic. If you are touching the database, look at the `models/` folder in the backend first.
 
 **For a complete list of issues, see [GITHUB_ISSUES.md](./GITHUB_ISSUES.md)**
 
