@@ -5,14 +5,24 @@ import api from '../utils/axiosConfig';
 import { useAuth } from '../context/AuthContext';
 import DashboardSubjects from '../components/DashboardSubjects';
 import DashboardGoals from '../components/DashboardGoals';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  PieChart, Pie, Cell
+} from 'recharts';
 import './DashboardPage.css';
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 const DashboardPage = () => {
   const [stats, setStats] = useState({
     subjects: 0,
     goals: 0,
     tutorials: 0,
-    ideas: 0
+    ideas: 0,
+    goalCompletionRate: 0,
+    subjectStats: [],
+    completedGoals: 0,
+    totalGoals: 0
   });
   const [loading, setLoading] = useState(true);
 
@@ -24,45 +34,52 @@ const DashboardPage = () => {
 
   const fetchStats = async () => {
     try {
-      // Check if user is authenticated (has token)
       const token = localStorage.getItem('token');
       if (token) {
-        // User is authenticated, fetch actual data
-        const [subjectsRes, goalsRes, tutorialsRes, ideasRes] = await Promise.all([
-          api.get('/api/subjects'),
-          api.get('/api/goals'),
-          api.get('/api/tutorials'),
-          api.get('/api/ideas')
-        ]);
-
+        const res = await api.get('/api/stats/summary');
         setStats({
-          subjects: subjectsRes.data.count,
-          goals: goalsRes.data.count,
-          tutorials: tutorialsRes.data.count,
-          ideas: ideasRes.data.count
+          subjects: res.data.data.totalSubjects,
+          goals: res.data.data.totalGoals,
+          tutorials: res.data.data.totalTutorials,
+          ideas: res.data.data.totalIdeas,
+          goalCompletionRate: res.data.data.goalCompletionRate,
+          subjectStats: res.data.data.subjectStats,
+          completedGoals: res.data.data.completedGoals,
+          totalGoals: res.data.data.totalGoals
         });
       } else {
-        // User is not authenticated, set default values
         setStats({
           subjects: 0,
           goals: 0,
           tutorials: 0,
-          ideas: 0
+          ideas: 0,
+          goalCompletionRate: 0,
+          subjectStats: [],
+          completedGoals: 0,
+          totalGoals: 0
         });
       }
     } catch (error) {
       console.error('Error fetching stats:', error);
-      // Set default values on error
       setStats({
         subjects: 0,
         goals: 0,
         tutorials: 0,
-        ideas: 0
+        ideas: 0,
+        goalCompletionRate: 0,
+        subjectStats: [],
+        completedGoals: 0,
+        totalGoals: 0
       });
     } finally {
       setLoading(false);
     }
   };
+
+  const goalData = [
+    { name: 'Completed', value: stats.completedGoals },
+    { name: 'Pending', value: stats.totalGoals - stats.completedGoals }
+  ];
 
   if (loading) {
     return (
@@ -130,6 +147,50 @@ const DashboardPage = () => {
             <h3>{stats.ideas}</h3>
             <p>Ideas</p>
             <Link to="/ideas" className="stat-link">Manage →</Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="charts-section">
+        <div className="chart-container">
+          <h3>Subject Progress</h3>
+          <div className="chart-wrapper">
+            <ResponsiveContainer>
+              <BarChart data={stats.subjectStats}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="completionRate" fill="#8884d8" name="Completion %" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="chart-container">
+          <h3>Goal Completion</h3>
+          <div className="chart-wrapper">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  data={goalData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {goalData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
