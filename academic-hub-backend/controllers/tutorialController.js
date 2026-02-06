@@ -1,4 +1,3 @@
-// controllers/tutorialController.js
 const axios = require('axios');
 const Tutorial = require('../models/Tutorial');
 
@@ -6,34 +5,51 @@ const Tutorial = require('../models/Tutorial');
 const extractVideoId = (url) => {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
-  return (match && match[2].length === 11) ? match[2] : null;
+  return match && match[2].length === 11 ? match[2] : null;
 };
 
 // Helper function to format duration
 const formatDuration = (duration) => {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if (!match) return 'Unknown';
-  
+
   const hours = parseInt(match[1] || 0);
   const minutes = parseInt(match[2] || 0);
   const seconds = parseInt(match[3] || 0);
-  
+
   if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  } else {
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds
+      .toString()
+      .padStart(2, '0')}`;
   }
+
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
-// @desc    Get all tutorials for a user
-// @route   GET /api/tutorials
+// @desc    Get all tutorials for a user (with pagination)
+// @route   GET /api/tutorials?page=1&limit=5
 // @access  Private
 const getTutorials = async (req, res, next) => {
   try {
-    const tutorials = await Tutorial.find({ user: req.user.id }).sort({ createdAt: -1 });
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 5;
+    const skip = (page - 1) * limit;
+
+    const totalTutorials = await Tutorial.countDocuments({
+      user: req.user.id
+    });
+
+    const tutorials = await Tutorial.find({ user: req.user.id })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
     res.status(200).json({
       success: true,
       count: tutorials.length,
+      total: totalTutorials,
+      page,
+      pages: Math.ceil(totalTutorials / limit),
       data: tutorials
     });
   } catch (error) {
@@ -55,7 +71,6 @@ const getTutorial = async (req, res, next) => {
       });
     }
 
-    // Make sure user owns tutorial
     if (tutorial.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,
@@ -94,10 +109,9 @@ const createTutorial = async (req, res, next) => {
       });
     }
 
-    // Check if tutorial already exists for this user
-    const existingTutorial = await Tutorial.findOne({ 
-      url: url, 
-      user: req.user.id 
+    const existingTutorial = await Tutorial.findOne({
+      url,
+      user: req.user.id
     });
 
     if (existingTutorial) {
@@ -107,7 +121,6 @@ const createTutorial = async (req, res, next) => {
       });
     }
 
-    // Fetch video details from YouTube Data API
     const youtubeApiKey = process.env.YOUTUBE_API_KEY;
     if (!youtubeApiKey) {
       return res.status(500).json({
@@ -131,18 +144,17 @@ const createTutorial = async (req, res, next) => {
     const snippet = videoData.snippet;
     const contentDetails = videoData.contentDetails;
 
-    // Create tutorial with fetched data
-    const tutorialData = {
+    const tutorial = await Tutorial.create({
       title: snippet.title,
       channel: snippet.channelTitle,
       duration: formatDuration(contentDetails.duration),
-      url: url,
-      thumbnail: snippet.thumbnails.medium?.url || snippet.thumbnails.default?.url,
-      description: snippet.description.substring(0, 1000), // Limit description length
+      url,
+      thumbnail:
+        snippet.thumbnails.medium?.url ||
+        snippet.thumbnails.default?.url,
+      description: snippet.description.substring(0, 1000),
       user: req.user.id
-    };
-
-    const tutorial = await Tutorial.create(tutorialData);
+    });
 
     res.status(201).json({
       success: true,
@@ -173,7 +185,6 @@ const updateTutorial = async (req, res, next) => {
       });
     }
 
-    // Make sure user owns tutorial
     if (tutorial.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,
@@ -209,7 +220,6 @@ const deleteTutorial = async (req, res, next) => {
       });
     }
 
-    // Make sure user owns tutorial
     if (tutorial.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,
@@ -242,7 +252,6 @@ const toggleWatched = async (req, res, next) => {
       });
     }
 
-    // Make sure user owns tutorial
     if (tutorial.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,

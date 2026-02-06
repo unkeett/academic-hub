@@ -1,15 +1,29 @@
-// controllers/subjectController.js
 const Subject = require('../models/Subject');
 
-// @desc    Get all subjects for a user
-// @route   GET /api/subjects
+// @desc    Get all subjects for a user (with pagination)
+// @route   GET /api/subjects?page=1&limit=5
 // @access  Private
 const getSubjects = async (req, res, next) => {
   try {
-    const subjects = await Subject.find({ user: req.user.id }).sort({ createdAt: -1 });
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 5;
+    const skip = (page - 1) * limit;
+
+    const totalSubjects = await Subject.countDocuments({
+      user: req.user.id
+    });
+
+    const subjects = await Subject.find({ user: req.user.id })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
     res.status(200).json({
       success: true,
       count: subjects.length,
+      total: totalSubjects,
+      page,
+      pages: Math.ceil(totalSubjects / limit),
       data: subjects
     });
   } catch (error) {
@@ -31,7 +45,6 @@ const getSubject = async (req, res, next) => {
       });
     }
 
-    // Make sure user owns subject
     if (subject.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,
@@ -53,10 +66,10 @@ const getSubject = async (req, res, next) => {
 // @access  Private
 const createSubject = async (req, res, next) => {
   try {
-    // Add user to req.body
     req.body.user = req.user.id;
 
     const subject = await Subject.create(req.body);
+
     res.status(201).json({
       success: true,
       data: subject
@@ -80,7 +93,6 @@ const updateSubject = async (req, res, next) => {
       });
     }
 
-    // Make sure user owns subject
     if (subject.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,
@@ -116,7 +128,6 @@ const deleteSubject = async (req, res, next) => {
       });
     }
 
-    // Make sure user owns subject
     if (subject.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,
@@ -142,7 +153,6 @@ const updateSubjectProgress = async (req, res, next) => {
   try {
     const { completedTopics } = req.body;
 
-    // 1️. Early validation (NO DB access yet)
     if (completedTopics === undefined) {
       return res.status(400).json({
         success: false,
@@ -164,7 +174,6 @@ const updateSubjectProgress = async (req, res, next) => {
       });
     }
 
-    // 2. Now fetch subject
     const subject = await Subject.findById(req.params.id);
 
     if (!subject) {
@@ -174,7 +183,6 @@ const updateSubjectProgress = async (req, res, next) => {
       });
     }
 
-    // 3. Ownership check
     if (subject.user.toString() !== req.user.id) {
       return res.status(401).json({
         success: false,
@@ -182,7 +190,6 @@ const updateSubjectProgress = async (req, res, next) => {
       });
     }
 
-    // 4. Final logical validation
     if (completedTopics > subject.topics.length) {
       return res.status(400).json({
         success: false,
@@ -201,7 +208,6 @@ const updateSubjectProgress = async (req, res, next) => {
     next(error);
   }
 };
-
 
 module.exports = {
   getSubjects,

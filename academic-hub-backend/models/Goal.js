@@ -1,5 +1,7 @@
 // models/Goal.js
 const mongoose = require('mongoose');
+GoalSchema.index({ user: 1, completed: 1 });
+
 
 const GoalSchema = new mongoose.Schema({
   text: {
