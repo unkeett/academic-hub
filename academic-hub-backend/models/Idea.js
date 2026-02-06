@@ -31,4 +31,9 @@ const IdeaSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// --- ADD THIS SECTION ---
+IdeaSchema.index({ user: 1 });
+IdeaSchema.index({ title: 'text', content: 'text' });
+// ------------------------
+
 module.exports = mongoose.model('Idea', IdeaSchema);

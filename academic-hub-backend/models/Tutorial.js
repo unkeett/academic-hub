@@ -45,4 +45,9 @@ const TutorialSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// --- ADD THIS SECTION ---
+TutorialSchema.index({ user: 1 });
+TutorialSchema.index({ title: 'text', description: 'text' });
+// ------------------------
+
 module.exports = mongoose.model('Tutorial', TutorialSchema);
