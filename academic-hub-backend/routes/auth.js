@@ -12,6 +12,7 @@ const {
 } = require('../controllers/authController');
 
 const { protect } = require('../middleware/auth');
+const { authLimiter } = require('../middleware/rateLimiter');
 
 /**
  * @swagger
@@ -49,7 +50,7 @@ const { protect } = require('../middleware/auth');
  * 400:
  * description: Validation error
  */
-router.post('/register', register);
+router.post('/register', authLimiter, register);
 
 /**
  * @swagger
@@ -77,7 +78,7 @@ router.post('/register', register);
  * 401:
  * description: Invalid credentials
  */
-router.post('/login', login);
+router.post('/login', authLimiter, login);
 
 /**
  * @swagger
@@ -144,7 +145,7 @@ router.put('/updatepassword', protect, updatePassword);
  * 404:
  * description: User not found
  */
-router.post('/forgotpassword', forgotPassword);
+router.post('/forgotpassword', authLimiter, forgotPassword);
 
 /**
  * @swagger

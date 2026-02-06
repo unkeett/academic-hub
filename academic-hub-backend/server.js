@@ -7,6 +7,7 @@ const errorHandler = require('./middleware/error');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const logger = require('./config/logger');
+const { globalLimiter } = require('./middleware/rateLimiter');
 
 // Debug: Check if JWT_SECRET is loaded
 if (!process.env.JWT_SECRET) {
@@ -21,6 +22,7 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/api', globalLimiter);
 // Swagger API Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
