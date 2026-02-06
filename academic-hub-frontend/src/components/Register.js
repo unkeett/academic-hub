@@ -11,10 +11,7 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-  const [localError, setLocalError] = useState('');
-  const [formErrors, setFormErrors] = useState({
-    email: ''
-  });
+  const [errors, setErrors] = useState({});
   const { register, isAuthenticated, error } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,52 +24,16 @@ const Register = () => {
     }
   }, [isAuthenticated, navigate, location.pathname]);
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
-    return emailRegex.test(email);
-  };
-
-  const validateForm = () => {
-    const errors = {};
-
-    // Email validation
-    if (email && !validateEmail(email)) {
-      errors.email = 'Please enter a valid email address';
-    }
-
-    // Password confirmation validation
-    if (password && confirmPassword && password !== confirmPassword) {
-      setLocalError('Passwords do not match');
-      return false;
-    } else {
-      setLocalError('');
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
   const onChange = (e) => {
-    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [e.target.name]: e.target.value
     });
 
-    // Validate email in real-time as user types
-    if (name === 'email' && value.trim() !== '') {
-      if (!validateEmail(value)) {
-        setFormErrors({
-          ...formErrors,
-          email: 'Please enter a valid email address'
-        });
-      } else {
-        setFormErrors({
-          ...formErrors,
-          email: ''
-        });
-      }
-    }
+    setErrors({
+      ...errors,
+      [e.target.name]: ''
+    });
   };
 
   const [loading, setLoading] = useState(false);
@@ -80,39 +41,40 @@ const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // Clear previous errors
-    setLocalError('');
+    const newErrors = {};
 
-    // Validate form before submission
-    if (!validateForm()) {
+    if (!name) {
+      newErrors.name = 'Full name is required';
+    }
+
+    if (!email) {
+      newErrors.email = 'Email address is required';
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    // Validate email format (redundant but kept for clarity)
-    if (!validateEmail(email)) {
-      setFormErrors({
-        ...formErrors,
-        email: 'Please enter a valid email address'
-      });
-      return;
-    }
+    setErrors({});
 
-    // Check that all required fields are filled
-    if (!name || !email || !password || !confirmPassword) {
-      setLocalError('Please fill in all fields');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const result = await register({ name, email, password });
-      if (result.success) {
-        navigate('/dashboard');
-      }
-    } catch (err) {
-      console.error('Registration error:', err);
-    } finally {
-      setLoading(false);
+    const result = await register({ name, email, password });
+    if (result.success) {
+      navigate('/dashboard');
     }
   };
 
@@ -129,9 +91,9 @@ const Register = () => {
             {error}
           </div>
         )}
-        {localError && (
+        {error && (
           <div className="error-message">
-            {localError}
+            {error}
           </div>
         )}
 
@@ -144,10 +106,12 @@ const Register = () => {
               name="name"
               value={name}
               onChange={onChange}
-              required
               placeholder="Enter your full name"
               disabled={loading}
             />
+            {errors.name && (
+              <small className="field-error">{errors.name}</small>
+            )}
           </div>
 
           <div className="form-group">
@@ -158,15 +122,10 @@ const Register = () => {
               name="email"
               value={email}
               onChange={onChange}
-              required
               placeholder="Enter your email"
-              className={formErrors.email ? 'input-error' : ''}
-              disabled={loading}
             />
-            {formErrors.email && (
-              <div className="field-error-message">
-                {formErrors.email}
-              </div>
+            {errors.email && (
+              <small className="field-error">{errors.email}</small>
             )}
           </div>
 
@@ -178,11 +137,12 @@ const Register = () => {
               name="password"
               value={password}
               onChange={onChange}
-              required
-              minLength="6"
               placeholder="Enter your password (min 6 characters)"
               disabled={loading}
             />
+            {errors.password && (
+              <small className="field-error">{errors.password}</small>
+            )}
           </div>
 
           <div className="form-group">
@@ -193,20 +153,16 @@ const Register = () => {
               name="confirmPassword"
               value={confirmPassword}
               onChange={onChange}
-              required
               placeholder="Confirm your password"
               disabled={loading}
             />
+            {errors.confirmPassword && (
+              <small className="field-error">{errors.confirmPassword}</small>
+            )}
           </div>
 
-          {password && confirmPassword && password !== confirmPassword && (
-            <div className="error-message">
-              Passwords do not match
-            </div>
-          )}
-
-          <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Creating Account...' : 'Create Account'}
+          <button type="submit" className="auth-button">
+            Create Account
           </button>
         </form>
 
