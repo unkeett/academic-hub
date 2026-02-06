@@ -1,19 +1,21 @@
-// config/swagger.js
-const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerJsdoc = require('swagger-jsdoc');
 
-const swaggerOptions = {
+const options = {
   definition: {
     openapi: '3.0.0',
     info: {
       title: 'Academic Hub API',
       version: '1.0.0',
-      description:
-        'API documentation for Academic Hub backend. This includes authentication, subjects, goals, tutorials, and ideas APIs.',
+      description: 'API documentation for the Academic Hub Backend',
+      contact: {
+        name: 'API Support',
+        email: 'support@academichub.com'
+      }
     },
     servers: [
       {
         url: 'http://localhost:5001',
-        description: 'Local development server',
+        description: 'Development Server',
       },
     ],
     components: {
@@ -31,11 +33,10 @@ const swaggerOptions = {
       },
     ],
   },
-
-  // Files where Swagger will look for documentation comments
+  // This looks for the @swagger comments in your route files
   apis: ['./routes/*.js'],
 };
 
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
+const swaggerSpec = swaggerJsdoc(options);
 
 module.exports = swaggerSpec;
