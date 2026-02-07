@@ -13,11 +13,11 @@ const extractVideoId = (url) => {
 const formatDuration = (duration) => {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if (!match) return 'Unknown';
-  
+
   const hours = parseInt(match[1] || 0);
   const minutes = parseInt(match[2] || 0);
   const seconds = parseInt(match[3] || 0);
-  
+
   if (hours > 0) {
     return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   } else {
@@ -95,9 +95,9 @@ const createTutorial = async (req, res, next) => {
     }
 
     // Check if tutorial already exists for this user
-    const existingTutorial = await Tutorial.findOne({ 
-      url: url, 
-      user: req.user.id 
+    const existingTutorial = await Tutorial.findOne({
+      url: url,
+      user: req.user.id
     });
 
     if (existingTutorial) {
@@ -262,11 +262,56 @@ const toggleWatched = async (req, res, next) => {
   }
 };
 
+// @desc    Toggle tutorial bookmark
+// @route   PUT /api/tutorials/:id/bookmark
+// @access  Private
+const toggleBookmark = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    const tutorialId = req.params.id;
+
+    // Check if tutorial exists
+    const tutorial = await Tutorial.findById(tutorialId);
+    if (!tutorial) {
+      return res.status(404).json({
+        success: false,
+        message: 'Tutorial not found'
+      });
+    }
+
+    // Check if tutorial is already bookmarked
+    // Ensure bookmarkedTutorials is initialized
+    if (!user.bookmarkedTutorials) {
+      user.bookmarkedTutorials = [];
+    }
+
+    if (user.bookmarkedTutorials.includes(tutorialId)) {
+      // Remove bookmark
+      user.bookmarkedTutorials = user.bookmarkedTutorials.filter(
+        (id) => id.toString() !== tutorialId
+      );
+    } else {
+      // Add bookmark
+      user.bookmarkedTutorials.push(tutorialId);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      data: user.bookmarkedTutorials
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getTutorials,
   getTutorial,
   createTutorial,
   updateTutorial,
   deleteTutorial,
-  toggleWatched
+  toggleWatched,
+  toggleBookmark
 };

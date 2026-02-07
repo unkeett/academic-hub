@@ -8,12 +8,12 @@ import { useAuth } from '../context/AuthContext';
 import './TutorialsPage.css';
 
 const TutorialsPage = () => {
-  const { token } = useAuth();
+  const { token, user, loadUser } = useAuth();
   const [tutorials, setTutorials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingTutorial, setEditingTutorial] = useState(null);
-  const [filter, setFilter] = useState('all'); // all, watched, unwatched
+  const [filter, setFilter] = useState('all'); // all, watched, unwatched, bookmarked
 
   useEffect(() => {
     fetchTutorials();
@@ -82,13 +82,24 @@ const TutorialsPage = () => {
     }
   };
 
+  const handleToggleBookmark = async (id) => {
+    try {
+      await api.put(`/api/tutorials/${id}/bookmark`);
+      await loadUser(); // Refresh user data to get updated bookmarks
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+    }
+  };
+
   const filteredTutorials = tutorials.filter(tutorial => {
     if (filter === 'watched') return tutorial.watched;
     if (filter === 'unwatched') return !tutorial.watched;
+    if (filter === 'bookmarked') return user?.bookmarkedTutorials?.includes(tutorial._id);
     return true;
   });
 
   const watchedCount = tutorials.filter(tutorial => tutorial.watched).length;
+  const bookmarkedCount = user?.bookmarkedTutorials?.length || 0;
   const totalCount = tutorials.length;
 
   if (loading) {
@@ -138,6 +149,12 @@ const TutorialsPage = () => {
         >
           Watched ({watchedCount})
         </button>
+        <button
+          className={`filter-btn ${filter === 'bookmarked' ? 'active' : ''}`}
+          onClick={() => setFilter('bookmarked')}
+        >
+          Bookmarked ({bookmarkedCount})
+        </button>
       </div>
 
       {showForm && (
@@ -164,6 +181,8 @@ const TutorialsPage = () => {
               onEdit={setEditingTutorial}
               onDelete={handleDeleteTutorial}
               onToggleWatched={handleToggleWatched}
+              isBookmarked={user?.bookmarkedTutorials?.includes(tutorial._id)}
+              onToggleBookmark={handleToggleBookmark}
             />
           ))
         ) : (
