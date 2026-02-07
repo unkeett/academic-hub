@@ -1,9 +1,21 @@
-// src/components/SubjectForm.js
 import React, { useState, useEffect } from 'react';
 import './SubjectForm.css';
 
-const SubjectForm = ({ subject, onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState({
+interface SubjectFormData {
+  name: string;
+  description: string;
+  topics: string[];
+  color: string;
+}
+
+interface SubjectFormProps {
+  subject?: SubjectFormData;
+  onSubmit: (data: SubjectFormData) => Promise<void>;
+  onCancel: () => void;
+}
+
+const SubjectForm: React.FC<SubjectFormProps> = ({ subject, onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState<SubjectFormData>({
     name: '',
     description: '',
     topics: [],
@@ -22,7 +34,7 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
     }
   }, [subject]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -39,7 +51,7 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
     }
   };
 
-  const handleRemoveTopic = (index) => {
+  const handleRemoveTopic = (index: number) => {
     setFormData({
       ...formData,
       topics: formData.topics.filter((_, i) => i !== index)
@@ -48,7 +60,7 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -96,7 +108,7 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
               value={formData.description}
               onChange={handleChange}
               placeholder="Brief description of the subject"
-              rows="3"
+              rows={3}
               disabled={loading}
             />
           </div>

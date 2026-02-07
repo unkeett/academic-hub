@@ -1,19 +1,38 @@
-// src/components/SubjectCard.js
-import React, { useState } from 'react';
+import React, { useState, ElementType } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import './SubjectCard.css';
 
-const SubjectCard = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
+interface Subject {
+  _id: string;
+  name: string;
+  description?: string;
+  color?: string;
+  topics?: string[];
+  completedTopics?: number;
+  createdAt: string;
+}
+
+interface SubjectCardProps {
+  subject: Subject;
+  onEdit: (subject: Subject) => void;
+  onDelete: (id: string) => void;
+  onUpdateProgress: (id: string, completedTopics: number) => void;
+}
+
+const EditIcon = FaEdit as ElementType;
+const TrashIcon = FaTrash as ElementType;
+
+const SubjectCard: React.FC<SubjectCardProps> = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
   const [showTopics, setShowTopics] = useState(false);
 
   const calculateProgress = () => {
     if (!subject.topics || subject.topics.length === 0) {
       return 0;
     }
-    return Math.round((subject.completedTopics / subject.topics.length) * 100);
+    return Math.round(((subject.completedTopics || 0) / subject.topics.length) * 100);
   };
 
-  const handleProgressUpdate = (e) => {
+  const handleProgressUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCompletedTopics = parseInt(e.target.value);
     onUpdateProgress(subject._id, newCompletedTopics);
   };
@@ -31,19 +50,19 @@ const SubjectCard = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
           )}
         </div>
         <div className="card-actions">
-          <button 
+          <button
             className="action-btn edit-btn"
             onClick={() => onEdit(subject)}
             title="Edit subject"
           >
-            <FaEdit />
+            <EditIcon />
           </button>
-          <button 
+          <button
             className="action-btn delete-btn"
             onClick={() => onDelete(subject._id)}
             title="Delete subject"
           >
-            <FaTrash />
+            <TrashIcon />
           </button>
         </div>
       </div>
@@ -55,9 +74,9 @@ const SubjectCard = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
         </div>
         <div className="progress-bar-container">
           <div className="progress-bar-bg">
-            <div 
+            <div
               className="progress-fill"
-              style={{ 
+              style={{
                 width: `${progress}%`,
                 backgroundColor: subject.color,
                 boxShadow: `0 0 10px ${subject.color}40`
@@ -74,19 +93,19 @@ const SubjectCard = ({ subject, onEdit, onDelete, onUpdateProgress }) => {
 
       {subject.topics && subject.topics.length > 0 && (
         <div className="topics-section">
-          <button 
+          <button
             className={`topics-toggle ${showTopics ? 'active' : ''}`}
             onClick={() => setShowTopics(!showTopics)}
           >
             <span className="toggle-text">{showTopics ? 'Hide Topics' : 'Show Topics'}</span>
             <span className="toggle-count">{subject.topics.length}</span>
           </button>
-          
+
           {showTopics && (
             <div className="topics-list">
               {subject.topics.map((topic, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className={`topic-item ${index < (subject.completedTopics || 0) ? 'completed' : ''}`}
                 >
                   <div className="topic-indicator">
