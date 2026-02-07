@@ -17,9 +17,9 @@ import SearchPage from './pages/SearchPage';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
-import './App.css'; 
-import Login from './components/Login'; 
-import Register from './components/Register'; 
+import './App.css';
+import Login from './components/Login';
+import Register from './components/Register';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 
@@ -32,29 +32,19 @@ const AppContent = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
-  const isLandingPage = location.pathname === '/'; 
+  const isLandingPage = location.pathname === '/';
   const isAuthPage =
-  location.pathname === '/login' ||
-  location.pathname === '/register' ||
-  location.pathname === '/forgot-password' ||
-  location.pathname.startsWith('/reset-password');
+    location.pathname === '/login' ||
+    location.pathname === '/register' ||
+    location.pathname === '/forgot-password' ||
+    location.pathname.startsWith('/reset-password');
 
-  const showNavAndSidebar = !isLandingPage && !isAuthPage; 
+  const showNavAndSidebar = !isLandingPage && !isAuthPage;
 
-  return ( 
-    <div className="App"> 
-      {showNavAndSidebar && <Navbar toggleSidebar={toggleSidebar} />} 
-      {showNavAndSidebar && <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />} 
-      
-      <main className={`content ${isSidebarOpen && showNavAndSidebar ? 'sidebar-open' : ''} ${isLandingPage ? 'landing-content' : ''}`}> 
-        <Routes> 
-          {/* Public Routes */} 
-          <Route path="/" element={<LandingPage />} /> 
-          <Route path="/home" element={<HomePage />} /> 
-          <Route path="/login" element={<Login />} /> 
-          <Route path="/register" element={<Register />} /> 
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:resettoken" element={<ResetPassword />} />
+  return (
+    <div className="App">
+      {showNavAndSidebar && <Navbar toggleSidebar={toggleSidebar} />}
+      {showNavAndSidebar && <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />}
 
       <main className={`content ${isSidebarOpen && showNavAndSidebar ? 'sidebar-open' : ''} ${isLandingPage ? 'landing-content' : ''}`}>
         <Routes>
@@ -63,6 +53,8 @@ const AppContent = () => {
           <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:resettoken" element={<ResetPassword />} />
 
           {/* Protected Routes */}
           <Route path="/dashboard" element={
