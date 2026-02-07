@@ -1,5 +1,5 @@
-// src/components/ForgotPassword.js
-import React, { useState } from 'react';
+// src/components/ForgotPassword.tsx
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/axiosConfig';
 import './Auth.css';
@@ -10,7 +10,7 @@ const ForgotPassword = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('');
     setError('');
@@ -26,12 +26,13 @@ const ForgotPassword = () => {
 
       setMessage(
         res.data.message ||
-          'If an account exists with this email, a reset link has been sent'
+        'If an account exists with this email, a reset link has been sent'
       );
       setEmail('');
     } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
       setError(
-        err.response?.data?.message || 'Something went wrong. Please try again.'
+        error.response?.data?.message || 'Something went wrong. Please try again.'
       );
     } finally {
       setLoading(false);

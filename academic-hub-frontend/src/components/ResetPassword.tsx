@@ -1,5 +1,5 @@
-// src/components/ResetPassword.js
-import React, { useState } from 'react';
+// src/components/ResetPassword.tsx
+import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../utils/axiosConfig';
 import './Auth.css';
@@ -14,7 +14,7 @@ const ResetPassword = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('');
     setError('');
@@ -46,8 +46,9 @@ const ResetPassword = () => {
         navigate('/login');
       }, 2000);
     } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
       setError(
-        err.response?.data?.message || 'Reset link is invalid or expired'
+        error.response?.data?.message || 'Reset link is invalid or expired'
       );
     } finally {
       setLoading(false);
