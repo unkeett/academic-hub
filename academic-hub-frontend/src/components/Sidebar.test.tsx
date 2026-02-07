@@ -1,21 +1,19 @@
 
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Sidebar from './Sidebar';
 
 // Mock react-router-dom
 jest.mock('react-router-dom', () => ({
-    NavLink: ({ children, onClick, to }) => <a href={to} onClick={onClick}>{children}</a>,
-    BrowserRouter: ({ children }) => <div>{children}</div>
+    NavLink: ({ children, onClick, to }: any) => <a href={to} onClick={onClick}>{children}</a>,
+    BrowserRouter: ({ children }: any) => <div>{children}</div>
 }), { virtual: true });
 
 describe('Sidebar Component', () => {
     const mockToggleSidebar = jest.fn();
 
-    const renderSidebar = (isOpen) => {
-        return render(
-            <Sidebar isOpen={isOpen} toggleSidebar={mockToggleSidebar} />
-        );
+    const renderSidebar = (isOpen: boolean) => {
+        // @ts-ignore
+        return render(<Sidebar isOpen={isOpen} toggleSidebar={mockToggleSidebar} />);
     };
 
     beforeEach(() => {
@@ -43,7 +41,9 @@ describe('Sidebar Component', () => {
     test('calls toggleSidebar when overlay is clicked', () => {
         const { container } = renderSidebar(true);
         const overlay = container.querySelector('.sidebar-overlay');
-        fireEvent.click(overlay);
+        if (overlay) {
+            fireEvent.click(overlay);
+        }
         expect(mockToggleSidebar).toHaveBeenCalledTimes(1);
     });
 
