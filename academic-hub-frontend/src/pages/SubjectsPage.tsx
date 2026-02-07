@@ -1,5 +1,4 @@
-// src/pages/SubjectsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ElementType } from 'react';
 import api from '../utils/axiosConfig';
 import SubjectCard from '../components/SubjectCard';
 import SubjectForm from '../components/SubjectForm';
@@ -7,12 +6,32 @@ import { FaPlus } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import './SubjectsPage.css';
 
-const SubjectsPage = () => {
+interface Subject {
+  _id: string;
+  name: string;
+  description?: string;
+  color?: string;
+  topics?: string[];
+  completedTopics?: number;
+  createdAt: string;
+
+}
+
+interface SubjectFormData {
+  name: string;
+  description: string;
+  topics: string[];
+  color: string;
+}
+
+const PlusIcon = FaPlus as ElementType;
+
+const SubjectsPage: React.FC = () => {
   const { token } = useAuth();
-  const [subjects, setSubjects] = useState([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingSubject, setEditingSubject] = useState(null);
+  const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
 
   useEffect(() => {
     fetchSubjects();
@@ -20,7 +39,6 @@ const SubjectsPage = () => {
 
   const fetchSubjects = async () => {
     // Check if user is authenticated before making API call
-    // Use token from context which is reactive
     if (!token) {
       setLoading(false);
       return;
@@ -37,7 +55,7 @@ const SubjectsPage = () => {
     }
   };
 
-  const handleCreateSubject = async (subjectData) => {
+  const handleCreateSubject = async (subjectData: SubjectFormData) => {
     try {
       const response = await api.post('/api/subjects', subjectData);
       setSubjects([response.data.data, ...subjects]);
@@ -47,7 +65,7 @@ const SubjectsPage = () => {
     }
   };
 
-  const handleUpdateSubject = async (id, subjectData) => {
+  const handleUpdateSubject = async (id: string, subjectData: SubjectFormData) => {
     try {
       const response = await api.put(`/api/subjects/${id}`, subjectData);
       setSubjects(subjects.map(subject =>
@@ -59,7 +77,7 @@ const SubjectsPage = () => {
     }
   };
 
-  const handleDeleteSubject = async (id) => {
+  const handleDeleteSubject = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this subject?')) {
       try {
         await api.delete(`/api/subjects/${id}`);
@@ -70,32 +88,32 @@ const SubjectsPage = () => {
     }
   };
 
-  const handleUpdateProgress = async (id, completedTopics) => {
+  const handleUpdateProgress = async (id: string, completedTopics: number) => {
     const subject = subjects.find(s => s._id === id);
     if (!subject) return;
 
     if (
       completedTopics === undefined ||
       completedTopics === null ||
-      Number.isNaN(completedTopics)
+      Number.isNaN(Number(completedTopics))
     ) {
       alert('Please enter a valid number');
       return;
     }
 
-    if (completedTopics < 0) {
+    if (Number(completedTopics) < 0) {
       alert('Completed topics cannot be negative');
       return;
     }
 
-    if (subject.topics && completedTopics > subject.topics.length) {
+    if (subject.topics && Number(completedTopics) > subject.topics.length) {
       alert(`Completed topics cannot exceed total topics (${subject.topics.length})`);
       return;
     }
 
     try {
       const response = await api.put(`/api/subjects/${id}/progress`, {
-        completedTopics
+        completedTopics: Number(completedTopics)
       });
 
       setSubjects(subjects.map(subject =>
@@ -103,10 +121,10 @@ const SubjectsPage = () => {
       ));
     } catch (error) {
       console.error('Error updating progress:', error);
-      alert(error.response?.data?.message || 'Failed to update progress');
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Failed to update progress';
+      alert(message);
     }
   };
-
 
   if (loading) {
     return (
@@ -134,8 +152,13 @@ const SubjectsPage = () => {
 
       {editingSubject && (
         <SubjectForm
-          subject={editingSubject}
-          onSubmit={(data) => handleUpdateSubject(editingSubject._id, data)}
+          subject={{
+            name: editingSubject.name,
+            description: editingSubject.description || '',
+            topics: editingSubject.topics || [],
+            color: editingSubject.color || '#3B82F6'
+          }}
+          onSubmit={(data: SubjectFormData) => handleUpdateSubject(editingSubject._id, data) as Promise<void>}
           onCancel={() => setEditingSubject(null)}
         />
       )}
@@ -170,7 +193,7 @@ const SubjectsPage = () => {
         onClick={() => setShowForm(true)}
         title="Add New Subject"
       >
-        <FaPlus />
+        <PlusIcon />
       </button>
     </div>
   );
