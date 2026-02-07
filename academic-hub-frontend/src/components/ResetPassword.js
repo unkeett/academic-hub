@@ -1,53 +1,63 @@
-// src/components/ResetPassword.js
-import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import api from '../utils/axiosConfig';
-import './Auth.css';
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "../utils/axiosConfig";
+import "./Auth.css";
 
 const ResetPassword = () => {
-  const { resettoken } = useParams();
-  const navigate = useNavigate();
-
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { resettoken } = useParams();
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    setError("");
+    setLoading(true);
 
+    // Validation
     if (!password || !confirmPassword) {
-      setError('Please fill in all fields');
+      setError("Please fill in all fields");
+      setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError("Password must be at least 6 characters");
+      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
+      setLoading(false);
       return;
     }
 
     try {
-      setLoading(true);
-      await api.put(`/api/auth/resetpassword/${resettoken}`, {
-        password
-      });
+      const response = await axios.put(
+        `/api/auth/resetpassword/${resettoken}`,
+        {
+          password,
+        },
+      );
 
-      setMessage('Password reset successful. You can now log in.');
+      if (response.data.success) {
+        // Store token if user is automatically logged in
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+        }
 
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+        alert(
+          "Password reset successful! You can now login with your new password.",
+        );
+        navigate("/login");
+      }
     } catch (err) {
       setError(
-        err.response?.data?.message || 'Reset link is invalid or expired'
+        err.response?.data?.message ||
+          "Failed to reset password. The link may have expired.",
       );
     } finally {
       setLoading(false);
@@ -57,15 +67,12 @@ const ResetPassword = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <div className="auth-header">
-          <h1>Reset Password</h1>
-          <p>Enter your new password</p>
-        </div>
+        <h2>Reset Password</h2>
+        <p className="auth-subtitle">Enter your new password below.</p>
 
-        {message && <div className="success-message">{message}</div>}
         {error && <div className="error-message">{error}</div>}
 
-        <form onSubmit={onSubmit} className="auth-form">
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="password">New Password</label>
             <input
@@ -73,8 +80,9 @@ const ResetPassword = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
               placeholder="Enter new password"
+              required
+              minLength="6"
             />
           </div>
 
@@ -85,22 +93,21 @@ const ResetPassword = () => {
               id="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              required
               placeholder="Confirm new password"
+              required
+              minLength="6"
             />
           </div>
 
-          <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Resetting...' : 'Reset Password'}
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? "Resetting..." : "Reset Password"}
           </button>
         </form>
 
-        <div className="auth-footer">
-          <p>
-            <Link to="/login" className="auth-link">
-              Back to Login
-            </Link>
-          </p>
+        <div className="auth-links">
+          <button onClick={() => navigate("/login")} className="link-button">
+            Back to Login
+          </button>
         </div>
       </div>
     </div>

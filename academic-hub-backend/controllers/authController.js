@@ -1,22 +1,13 @@
-// @desc    Forgot password
-// @route   POST /api/auth/forgotpassword
-// @access  Public
-exports.forgotPassword = async (req, res, next) => {
-  // TODO: Implement sending reset email with token
-  res.status(501).json({ success: false, message: 'Not implemented yet' });
-};
-
-// @desc    Reset password
-// @route   PUT /api/auth/resetpassword/:resettoken
-// @access  Public
-exports.resetPassword = async (req, res, next) => {
-  // TODO: Implement password reset using token
-  res.status(501).json({ success: false, message: 'Not implemented yet' });
-};
 // controllers/authController.js
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
 const crypto = require('crypto');
+const User = require('../models/User');
+<<<<<<< HEAD
+const logger = require('../utils/logger');
+const sendEmail = require('../utils/sendEmail');
+=======
+const crypto = require('crypto');
+>>>>>>> 04fde337cc2ec3be7c0676e811e3aaa800c4a7a6
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -295,4 +286,101 @@ const sendTokenResponse = (user, statusCode, res) => {
         role: user.role
       }
     });
+};
+
+// @desc    Forgot password
+// @route   POST /api/auth/forgotpassword
+// @access  Public
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'There is no user with that email'
+      });
+    }
+
+    // Get reset token
+    const resetToken = user.getResetPasswordToken();
+
+    await user.save({ validateBeforeSave: false });
+
+    // Create reset url
+    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
+
+    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+
+    const html = `
+      <h1>Password Reset Request</h1>
+      <p>You are receiving this email because you (or someone else) has requested the reset of a password.</p>
+      <p>Please click on the following link to reset your password:</p>
+      <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
+      <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+      <p>This link will expire in 10 minutes.</p>
+    `;
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'Password Reset Request - Academic Hub',
+        message,
+        html
+      });
+
+      res.status(200).json({ 
+        success: true, 
+        message: 'Email sent successfully' 
+      });
+    } catch (err) {
+      logger.error(`Error sending email: ${err.message}`);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+
+      await user.save({ validateBeforeSave: false });
+
+      return res.status(500).json({
+        success: false,
+        message: 'Email could not be sent'
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Reset password
+// @route   PUT /api/auth/resetpassword/:resettoken
+// @access  Public
+exports.resetPassword = async (req, res, next) => {
+  try {
+    // Get hashed token
+    const resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(req.params.resettoken)
+      .digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid or expired reset token'
+      });
+    }
+
+    // Set new password
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    sendTokenResponse(user, 200, res);
+  } catch (error) {
+    next(error);
+  }
 };

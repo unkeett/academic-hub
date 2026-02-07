@@ -21,7 +21,7 @@ import './App.css';
 import Login from './components/Login'; 
 import Register from './components/Register'; 
 import ForgotPassword from './components/ForgotPassword';
-import ResetPassword from './components/ResetPassword';
+import ResetPassword from './components/ResetPassword'; 
 
 const AppContent = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -33,12 +33,7 @@ const AppContent = () => {
   };
 
   const isLandingPage = location.pathname === '/'; 
-  const isAuthPage =
-  location.pathname === '/login' ||
-  location.pathname === '/register' ||
-  location.pathname === '/forgot-password' ||
-  location.pathname.startsWith('/reset-password');
-
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/forgot-password' || location.pathname.startsWith('/reset-password'); 
   const showNavAndSidebar = !isLandingPage && !isAuthPage; 
 
   return ( 

@@ -1,37 +1,38 @@
-// src/components/ForgotPassword.js
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import api from '../utils/axiosConfig';
-import './Auth.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "../utils/axiosConfig";
+import "./Auth.css";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    setError("");
+    setMessage("");
+    setLoading(true);
 
     if (!email) {
-      setError('Please enter your email address');
+      setError("Please enter your email address");
+      setLoading(false);
       return;
     }
 
     try {
-      setLoading(true);
-      const res = await api.post('/api/auth/forgotpassword', { email });
+      const response = await axios.post("/api/auth/forgotpassword", { email });
 
-      setMessage(
-        res.data.message ||
-          'If an account exists with this email, a reset link has been sent'
-      );
-      setEmail('');
+      if (response.data.success) {
+        setMessage("Password reset email sent! Please check your inbox.");
+        setEmail("");
+      }
     } catch (err) {
       setError(
-        err.response?.data?.message || 'Something went wrong. Please try again.'
+        err.response?.data?.message ||
+          "Failed to send reset email. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -41,15 +42,16 @@ const ForgotPassword = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <div className="auth-header">
-          <h1>Forgot Password</h1>
-          <p>Enter your email to reset your password</p>
-        </div>
+        <h2>Forgot Password</h2>
+        <p className="auth-subtitle">
+          Enter your email address and we'll send you a link to reset your
+          password.
+        </p>
 
-        {message && <div className="success-message">{message}</div>}
         {error && <div className="error-message">{error}</div>}
+        {message && <div className="success-message">{message}</div>}
 
-        <form onSubmit={onSubmit} className="auth-form">
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
             <input
@@ -57,23 +59,20 @@ const ForgotPassword = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
               required
-              placeholder="Enter your registered email"
             />
           </div>
 
-          <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Sending...' : 'Send Reset Link'}
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
 
-        <div className="auth-footer">
-          <p>
-            Remembered your password?{' '}
-            <Link to="/login" className="auth-link">
-              Sign in
-            </Link>
-          </p>
+        <div className="auth-links">
+          <button onClick={() => navigate("/login")} className="link-button">
+            Back to Login
+          </button>
         </div>
       </div>
     </div>
