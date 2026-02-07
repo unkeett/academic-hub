@@ -1,14 +1,33 @@
-// src/pages/SearchPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ElementType } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../utils/axiosConfig';
-import { FaSearch, FaFilter, FaHistory, FaSortAmountDown } from 'react-icons/fa';
+import { FaFilter } from 'react-icons/fa';
 import './SearchPage.css';
 
-const SearchPage = () => {
-    const [results, setResults] = useState([]);
+interface SearchFilters {
+    type: string[];
+    priority: string;
+    date: string;
+}
+
+interface SearchResultItem {
+    _id: string;
+    type: 'subject' | 'goal' | 'tutorial' | 'idea';
+    name?: string;
+    title?: string;
+    text?: string;
+    description?: string;
+    priority?: string;
+    createdAt: string;
+    updatedAt?: string;
+}
+
+const FilterIcon = FaFilter as ElementType;
+
+const SearchPage: React.FC = () => {
+    const [results, setResults] = useState<SearchResultItem[]>([]);
     const [loading, setLoading] = useState(false);
-    const [filters, setFilters] = useState({
+    const [filters, setFilters] = useState<SearchFilters>({
         type: [],
         priority: '',
         date: 'newest'
@@ -44,7 +63,7 @@ const SearchPage = () => {
         }
     };
 
-    const handleFilterChange = (filterType, value) => {
+    const handleFilterChange = (filterType: keyof SearchFilters, value: string) => {
         setFilters(prev => {
             if (filterType === 'type') {
                 const newTypes = prev.type.includes(value)
@@ -56,9 +75,8 @@ const SearchPage = () => {
         });
     };
 
-    const renderResultItem = (item) => {
+    const renderResultItem = (item: SearchResultItem) => {
         let link = '#';
-        let icon = null;
         let badgeClass = '';
 
         switch (item.type) {
@@ -109,7 +127,7 @@ const SearchPage = () => {
             <div className="search-layout">
                 <aside className="search-filters">
                     <div className="filter-group">
-                        <h3><FaFilter /> Filters</h3>
+                        <h3><FilterIcon /> Filters</h3>
 
                         <div className="filter-section">
                             <h4>Type</h4>
