@@ -1,4 +1,3 @@
-// src/pages/DashboardPage.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/axiosConfig';
@@ -7,7 +6,7 @@ import DashboardSubjects from '../components/DashboardSubjects';
 import DashboardGoals from '../components/DashboardGoals';
 import './DashboardPage.css';
 
-const DashboardPage = () => {
+const DashboardPage: React.FC = () => {
   const [stats, setStats] = useState({
     subjects: 0,
     goals: 0,
@@ -36,10 +35,10 @@ const DashboardPage = () => {
         ]);
 
         setStats({
-          subjects: subjectsRes.data.count,
-          goals: goalsRes.data.count,
-          tutorials: tutorialsRes.data.count,
-          ideas: ideasRes.data.count
+          subjects: subjectsRes.data.count || subjectsRes.data.data?.length || 0,
+          goals: goalsRes.data.count || goalsRes.data.data?.length || 0,
+          tutorials: tutorialsRes.data.count || tutorialsRes.data.data?.length || 0,
+          ideas: ideasRes.data.count || ideasRes.data.data?.length || 0
         });
       } else {
         // User is not authenticated, set default values
