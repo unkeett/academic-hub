@@ -1,13 +1,19 @@
-// src/context/ThemeContext.js
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
-const ThemeContext = createContext();
+type Theme = 'light' | 'dark';
 
-export const ThemeProvider = ({ children }) => {
+interface ThemeContextType {
+  theme: Theme;
+  toggleTheme: () => void;
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   // Check localStorage for saved theme preference, default to 'light'
-  const [theme, setTheme] = useState(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
     const savedTheme = localStorage.getItem('theme');
-    return savedTheme || 'light';
+    return (savedTheme as Theme) || 'light';
   });
 
   useEffect(() => {
