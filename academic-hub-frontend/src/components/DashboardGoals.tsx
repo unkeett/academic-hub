@@ -1,11 +1,17 @@
-// src/components/DashboardGoals.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/axiosConfig';
 import './DashboardGoals.css';
 
-const DashboardGoals = () => {
-  const [goals, setGoals] = useState([]);
+interface Goal {
+  _id: string;
+  text: string;
+  completed: boolean;
+  priority?: 'high' | 'medium' | 'low';
+}
+
+const DashboardGoals: React.FC = () => {
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,7 +29,7 @@ const DashboardGoals = () => {
     try {
       const response = await api.get('/api/goals');
       // Sort goals to show incomplete ones first
-      const sortedGoals = (response.data.data || []).sort((a, b) => a.completed - b.completed);
+      const sortedGoals = (response.data.data || []).sort((a: Goal, b: Goal) => Number(a.completed) - Number(b.completed));
       setGoals(sortedGoals);
     } catch (error) {
       console.error('Error fetching goals:', error);
@@ -34,7 +40,7 @@ const DashboardGoals = () => {
     }
   };
 
-  const toggleComplete = async (id, currentStatus) => {
+  const toggleComplete = async (id: string) => {
     try {
       await api.put(`/api/goals/${id}/toggle`);
       // Refetch goals to update the UI
@@ -57,7 +63,7 @@ const DashboardGoals = () => {
         <h3>Today's Goals</h3>
         <Link to="/goals" className="view-all-link">View All</Link>
       </div>
-      
+
       {goals.length > 0 ? (
         <div className="goals-content">
           <div className="goals-stats">
@@ -65,20 +71,20 @@ const DashboardGoals = () => {
               {completedGoals.length} of {goals.length} completed
             </span>
             <div className="progress-bar">
-              <div 
+              <div
                 className="progress-fill"
                 style={{ width: `${(completedGoals.length / goals.length) * 100}%` }}
               ></div>
             </div>
           </div>
-          
+
           <ul className="goals-list">
             {pendingGoals.slice(0, 3).map((goal) => (
               <li key={goal._id} className="goal-item">
                 <input
                   type="checkbox"
                   checked={goal.completed}
-                  onChange={() => toggleComplete(goal._id, goal.completed)}
+                  onChange={() => toggleComplete(goal._id)}
                 />
                 <span className="goal-text">{goal.text}</span>
                 {goal.priority === 'high' && <span className="priority-high">!</span>}

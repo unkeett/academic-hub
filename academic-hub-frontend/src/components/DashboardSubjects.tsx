@@ -1,11 +1,18 @@
-// src/components/DashboardSubjects.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/axiosConfig';
 import './DashboardSubjects.css';
 
-const DashboardSubjects = () => {
-  const [subjects, setSubjects] = useState([]);
+interface Subject {
+  _id: string;
+  name: string;
+  color?: string;
+  topics?: string[]; // Define Topic interface if needed
+  completedTopics?: number;
+}
+
+const DashboardSubjects: React.FC = () => {
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,12 +41,15 @@ const DashboardSubjects = () => {
   if (loading) {
     return <div className="subjects-widget card"><h3>Subjects in Progress</h3><p>Loading...</p></div>;
   }
-  
-  const calculateProgress = (subject) => {
+
+  const calculateProgress = (subject: Subject) => {
     if (!subject.topics || subject.topics.length === 0) {
       return 0;
     }
-    return Math.round((subject.completedTopics / subject.topics.length) * 100);
+    // Assuming backend sends completedTopics or we calculate it?
+    // Original code: subject.completedTopics / subject.topics.length
+    // If completedTopics is undefined, treat as 0
+    return Math.round(((subject.completedTopics || 0) / subject.topics.length) * 100);
   };
 
   return (
@@ -57,9 +67,9 @@ const DashboardSubjects = () => {
                 <span className="subject-progress-text">{calculateProgress(subject)}%</span>
               </div>
               <div className="progress-bar-container">
-                <div 
-                  className="progress-bar" 
-                  style={{ 
+                <div
+                  className="progress-bar"
+                  style={{
                     width: `${calculateProgress(subject)}%`,
                     backgroundColor: subject.color || '#3B82F6'
                   }}
