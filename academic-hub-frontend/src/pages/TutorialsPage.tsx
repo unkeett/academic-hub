@@ -1,5 +1,4 @@
-// src/pages/TutorialsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ElementType } from 'react';
 import api from '../utils/axiosConfig';
 import TutorialCard from '../components/TutorialCard';
 import TutorialForm from '../components/TutorialForm';
@@ -7,13 +6,33 @@ import { FaPlus } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import './TutorialsPage.css';
 
-const TutorialsPage = () => {
+interface Tutorial {
+  _id: string;
+  title: string;
+  url: string;
+  description?: string;
+  channel?: string;
+  duration?: string;
+  thumbnail?: string;
+  watched: boolean;
+  createdAt: string;
+
+}
+
+interface TutorialFormData {
+  url: string;
+  title?: string;
+}
+
+const PlusIcon = FaPlus as ElementType;
+
+const TutorialsPage: React.FC = () => {
   const { token } = useAuth();
-  const [tutorials, setTutorials] = useState([]);
+  const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingTutorial, setEditingTutorial] = useState(null);
-  const [filter, setFilter] = useState('all'); // all, watched, unwatched
+  const [editingTutorial, setEditingTutorial] = useState<Tutorial | null>(null);
+  const [filter, setFilter] = useState<'all' | 'watched' | 'unwatched'>('all');
 
   useEffect(() => {
     fetchTutorials();
@@ -37,18 +56,19 @@ const TutorialsPage = () => {
     }
   };
 
-  const handleCreateTutorial = async (tutorialData) => {
+  const handleCreateTutorial = async (tutorialData: TutorialFormData) => {
     try {
       const response = await api.post('/api/tutorials', tutorialData);
       setTutorials([response.data.data, ...tutorials]);
       setShowForm(false);
     } catch (error) {
       console.error('Error creating tutorial:', error);
-      alert(error.response?.data?.message || 'Error creating tutorial');
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Error creating tutorial';
+      alert(message);
     }
   };
 
-  const handleUpdateTutorial = async (id, tutorialData) => {
+  const handleUpdateTutorial = async (id: string, tutorialData: TutorialFormData) => {
     try {
       const response = await api.put(`/api/tutorials/${id}`, tutorialData);
       setTutorials(tutorials.map(tutorial =>
@@ -60,7 +80,7 @@ const TutorialsPage = () => {
     }
   };
 
-  const handleDeleteTutorial = async (id) => {
+  const handleDeleteTutorial = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this tutorial?')) {
       try {
         await api.delete(`/api/tutorials/${id}`);
@@ -71,7 +91,7 @@ const TutorialsPage = () => {
     }
   };
 
-  const handleToggleWatched = async (id) => {
+  const handleToggleWatched = async (id: string) => {
     try {
       const response = await api.put(`/api/tutorials/${id}/toggle`);
       setTutorials(tutorials.map(tutorial =>
@@ -150,7 +170,7 @@ const TutorialsPage = () => {
       {editingTutorial && (
         <TutorialForm
           tutorial={editingTutorial}
-          onSubmit={(data) => handleUpdateTutorial(editingTutorial._id, data)}
+          onSubmit={(data: TutorialFormData) => handleUpdateTutorial(editingTutorial._id, data) as Promise<void>}
           onCancel={() => setEditingTutorial(null)}
         />
       )}
@@ -192,7 +212,7 @@ const TutorialsPage = () => {
         onClick={() => setShowForm(true)}
         title="Add New Tutorial"
       >
-        <FaPlus />
+        <PlusIcon />
       </button>
     </div>
   );
