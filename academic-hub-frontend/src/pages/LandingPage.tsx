@@ -1,11 +1,17 @@
-
-import React from 'react';
+import React, { ElementType } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBook, FaBullseye, FaLightbulb, FaVideo, FaGraduationCap, FaCheckCircle } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import './LandingPage.css';
 
-const LandingPage = () => {
+const BookIcon = FaBook as ElementType;
+const BullseyeIcon = FaBullseye as ElementType;
+const LightbulbIcon = FaLightbulb as ElementType;
+const VideoIcon = FaVideo as ElementType;
+const GradCapIcon = FaGraduationCap as ElementType;
+const CheckCircleIcon = FaCheckCircle as ElementType;
+
+const LandingPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
   return (
@@ -13,7 +19,7 @@ const LandingPage = () => {
       <header className="landing-header">
         <nav className="landing-nav">
           <div className="logo">
-            <FaGraduationCap className="logo-icon" />
+            <GradCapIcon className="logo-icon" />
             ACADEMIC <span>HUB</span>
           </div>
           <div className="nav-links">
@@ -45,8 +51,8 @@ const LandingPage = () => {
             )}
           </div>
           <div className="hero-trust">
-            <div className="trust-item"><FaCheckCircle /> Free for students</div>
-            <div className="trust-item"><FaCheckCircle /> No credit card required</div>
+            <div className="trust-item"><CheckCircleIcon /> Free for students</div>
+            <div className="trust-item"><CheckCircleIcon /> No credit card required</div>
           </div>
         </div>
         <div className="hero-image">
@@ -59,14 +65,14 @@ const LandingPage = () => {
               </div>
               <div className="mock-content">
                 <div className="mock-center-brand">
-                  <FaGraduationCap className="mock-brand-icon-large" />
+                  <GradCapIcon className="mock-brand-icon-large" />
                   <h2>ACADEMIC HUB</h2>
                   <p className="mock-tagline">Simplify your studies, amplify your success.</p>
                 </div>
                 <div className="mock-grid">
-                  
-                  
-                  
+
+
+
                 </div>
               </div>
             </div>
@@ -102,22 +108,22 @@ const LandingPage = () => {
         </div>
         <div className="features-grid">
           <div className="feature-card">
-            <div className="feature-icon"><FaBook /></div>
+            <div className="feature-icon"><BookIcon /></div>
             <h3>Subject Management</h3>
             <p>Keep all your course materials, notes, and resources organized by subject. Never lose a syllabus or a key reading again.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon"><FaBullseye /></div>
+            <div className="feature-icon"><BullseyeIcon /></div>
             <h3>Goal Tracking</h3>
             <p>Set academic milestones, track study hours, and monitor your progress towards your GPA targets.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon"><FaLightbulb /></div>
+            <div className="feature-icon"><LightbulbIcon /></div>
             <h3>Idea Lab</h3>
             <p>Capture research ideas, project concepts, and creative thoughts. Tag them by subject for easy retrieval later.</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon"><FaVideo /></div>
+            <div className="feature-icon"><VideoIcon /></div>
             <h3>Tutorial Library</h3>
             <p>Save and organize educational videos and tutorials. Create custom playlists for complex topics you're mastering.</p>
           </div>
