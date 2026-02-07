@@ -1,10 +1,9 @@
-// src/components/Register.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
-const Register = () => {
+const Register: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,7 +11,7 @@ const Register = () => {
     confirmPassword: ''
   });
   const [localError, setLocalError] = useState('');
-  const [formErrors, setFormErrors] = useState({
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({
     email: ''
   });
   const { register, isAuthenticated, error } = useAuth();
@@ -27,13 +26,13 @@ const Register = () => {
     }
   }, [isAuthenticated, navigate, location.pathname]);
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
     return emailRegex.test(email);
   };
 
   const validateForm = () => {
-    const errors = {};
+    const errors: { [key: string]: string } = {};
 
     // Email validation
     if (email && !validateEmail(email)) {
@@ -52,7 +51,7 @@ const Register = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const onChange = (e) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -77,7 +76,7 @@ const Register = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Clear previous errors
@@ -179,7 +178,7 @@ const Register = () => {
               value={password}
               onChange={onChange}
               required
-              minLength="6"
+              minLength={6}
               placeholder="Enter your password (min 6 characters)"
               disabled={loading}
             />
