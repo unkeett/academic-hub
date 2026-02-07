@@ -5,6 +5,7 @@ import api from '../utils/axiosConfig';
 import { useAuth } from '../context/AuthContext';
 import DashboardSubjects from '../components/DashboardSubjects';
 import DashboardGoals from '../components/DashboardGoals';
+import AnalyticsSection from '../components/AnalyticsSection';
 import './DashboardPage.css';
 
 const DashboardPage = () => {
@@ -14,12 +15,15 @@ const DashboardPage = () => {
     tutorials: 0,
     ideas: 0
   });
+  const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
 
   const { user } = useAuth();
 
   useEffect(() => {
     fetchStats();
+    fetchAnalytics();
   }, []);
 
   const fetchStats = async () => {
@@ -61,6 +65,22 @@ const DashboardPage = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchAnalytics = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const response = await api.get('/api/stats/summary');
+        if (response.data.success) {
+          setAnalyticsData(response.data.data);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+    } finally {
+      setAnalyticsLoading(false);
     }
   };
 
@@ -133,6 +153,11 @@ const DashboardPage = () => {
           </div>
         </div>
       </div>
+
+      <AnalyticsSection
+        analyticsData={analyticsData}
+        loading={analyticsLoading}
+      />
 
       <div className="dashboard-widgets">
         <DashboardSubjects />
