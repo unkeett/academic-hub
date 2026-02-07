@@ -1,5 +1,4 @@
-// src/pages/IdeasPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ElementType } from 'react';
 import api from '../utils/axiosConfig';
 import IdeaCard from '../components/IdeaCard';
 import IdeaForm from '../components/IdeaForm';
@@ -7,16 +6,36 @@ import { FaPlus, FaSearch } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import './IdeasPage.css';
 
-const IdeasPage = () => {
+interface Idea {
+  _id: string;
+  title: string;
+  content: string;
+  category?: 'study' | 'project' | 'research' | 'general' | string;
+  tags?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface IdeaFormData {
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+}
+
+const PlusIcon = FaPlus as ElementType;
+const SearchIcon = FaSearch as ElementType;
+
+const IdeasPage: React.FC = () => {
   const { token } = useAuth();
-  const [ideas, setIdeas] = useState([]);
+  const [ideas, setIdeas] = useState<Idea[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingIdea, setEditingIdea] = useState(null);
+  const [editingIdea, setEditingIdea] = useState<Idea | null>(null);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [createLoading, setCreateLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const categories = [
     { value: 'all', label: 'All Ideas' },
@@ -26,7 +45,7 @@ const IdeasPage = () => {
 
   useEffect(() => {
     fetchIdeas();
-  }, [filter, searchTerm, token]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [filter, searchTerm, token]);
 
   const fetchIdeas = async () => {
     // Check if user is authenticated before making API call
@@ -61,7 +80,7 @@ const IdeasPage = () => {
     }
   };
 
-  const handleCreateIdea = async (ideaData) => {
+  const handleCreateIdea = async (ideaData: IdeaFormData) => {
     setCreateLoading(true);
     setError(null);
 
@@ -71,14 +90,14 @@ const IdeasPage = () => {
       setShowForm(false);
     } catch (error) {
       console.error('Error creating idea:', error);
-      const errorMessage = error.response?.data?.message || 'Failed to create idea. Please try again.';
-      setError(errorMessage);
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Failed to create idea. Please try again.';
+      setError(message);
     } finally {
       setCreateLoading(false);
     }
   };
 
-  const handleUpdateIdea = async (id, ideaData) => {
+  const handleUpdateIdea = async (id: string, ideaData: IdeaFormData) => {
     try {
       const response = await api.put(`/api/ideas/${id}`, ideaData);
       setIdeas(ideas.map(idea =>
@@ -90,7 +109,7 @@ const IdeasPage = () => {
     }
   };
 
-  const handleDeleteIdea = async (id) => {
+  const handleDeleteIdea = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this idea?')) {
       try {
         await api.delete(`/api/ideas/${id}`);
@@ -105,7 +124,7 @@ const IdeasPage = () => {
     setShowForm(true);
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -129,7 +148,7 @@ const IdeasPage = () => {
       <div className="ideas-controls">
         <div className="search-box">
           <div className="search-input-wrapper">
-            <FaSearch className="search-icon" />
+            <SearchIcon className="search-icon" />
             <input
               type="text"
               placeholder="Search ideas..."
@@ -168,7 +187,7 @@ const IdeasPage = () => {
       {editingIdea && (
         <IdeaForm
           idea={editingIdea}
-          onSubmit={(data) => handleUpdateIdea(editingIdea._id, data)}
+          onSubmit={(data: IdeaFormData) => handleUpdateIdea(editingIdea._id, data) as Promise<void>}
           onCancel={() => setEditingIdea(null)}
         />
       )}
@@ -209,7 +228,7 @@ const IdeasPage = () => {
         onClick={() => setShowForm(true)}
         title="Add New Idea"
       >
-        <FaPlus />
+        <PlusIcon />
       </button>
     </div>
   );
