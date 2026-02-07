@@ -1,26 +1,48 @@
-// src/components/IdeaCard.js
-import React from 'react';
+import React, { ElementType } from 'react';
 import { FaEdit, FaTrash, FaLightbulb, FaFlask, FaRocket, FaBook } from 'react-icons/fa';
 import './IdeaCard.css';
 
-const IdeaCard = ({ idea, onEdit, onDelete }) => {
-  const getCategoryStyles = (category) => {
+interface Idea {
+  _id: string;
+  title: string;
+  content: string;
+  category?: 'study' | 'project' | 'research' | 'general' | string;
+  tags?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface IdeaCardProps {
+  idea: Idea;
+  onEdit: (idea: Idea) => void;
+  onDelete: (id: string) => void;
+}
+
+const EditIcon = FaEdit as ElementType;
+const TrashIcon = FaTrash as ElementType;
+const BookIcon = FaBook as ElementType;
+const RocketIcon = FaRocket as ElementType;
+const FlaskIcon = FaFlask as ElementType;
+const LightbulbIcon = FaLightbulb as ElementType;
+
+const IdeaCard: React.FC<IdeaCardProps> = ({ idea, onEdit, onDelete }) => {
+  const getCategoryIcon = (category?: string) => {
+    switch (category) {
+      case 'study': return <BookIcon />;
+      case 'project': return <RocketIcon />;
+      case 'research': return <FlaskIcon />;
+      case 'general': return <LightbulbIcon />;
+      default: return <LightbulbIcon />;
+    }
+  };
+
+  const getCategoryStyles = (category?: string) => {
     switch (category) {
       case 'study': return { color: 'var(--primary)', bg: 'var(--primary-light)' };
       case 'project': return { color: '#7c3aed', bg: '#f5f3ff' }; // Keep project distinct
       case 'research': return { color: 'var(--success)', bg: 'var(--success-light)' };
       case 'general': return { color: 'var(--secondary)', bg: 'var(--background)' };
       default: return { color: 'var(--secondary)', bg: 'var(--background)' };
-    }
-  };
-
-  const getCategoryIcon = (category) => {
-    switch (category) {
-      case 'study': return <FaBook />;
-      case 'project': return <FaRocket />;
-      case 'research': return <FaFlask />;
-      case 'general': return <FaLightbulb />;
-      default: return <FaLightbulb />;
     }
   };
 
@@ -32,7 +54,7 @@ const IdeaCard = ({ idea, onEdit, onDelete }) => {
         <div className="idea-info">
           <h3 className="idea-title">{idea.title}</h3>
           <div className="idea-meta">
-            <span 
+            <span
               className="category-badge"
               style={{ color: styles.color, backgroundColor: styles.bg }}
             >
@@ -42,19 +64,19 @@ const IdeaCard = ({ idea, onEdit, onDelete }) => {
           </div>
         </div>
         <div className="card-actions">
-          <button 
+          <button
             className="action-btn edit-btn"
             onClick={() => onEdit(idea)}
             title="Edit idea"
           >
-            <FaEdit />
+            <EditIcon />
           </button>
-          <button 
+          <button
             className="action-btn delete-btn"
             onClick={() => onDelete(idea._id)}
             title="Delete idea"
           >
-            <FaTrash />
+            <TrashIcon />
           </button>
         </div>
       </div>

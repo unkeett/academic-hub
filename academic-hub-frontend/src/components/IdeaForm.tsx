@@ -1,9 +1,28 @@
-// src/components/IdeaForm.js
 import React, { useState, useEffect } from 'react';
 import './IdeaForm.css';
 
-const IdeaForm = ({ idea, onSubmit, onCancel, error: externalError = null }) => {
-  const [formData, setFormData] = useState({
+interface IdeaFormData {
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+}
+
+interface IdeaFormProps {
+  idea?: {
+    title?: string;
+    content?: string;
+    category?: string;
+    tags?: string[];
+  };
+  onSubmit: (data: IdeaFormData) => Promise<void>;
+  onCancel: () => void;
+  error?: string | null;
+  loading?: boolean;
+}
+
+const IdeaForm: React.FC<IdeaFormProps> = ({ idea, onSubmit, onCancel, error: externalError = null }) => {
+  const [formData, setFormData] = useState<IdeaFormData>({
     title: '',
     content: '',
     category: 'general',
@@ -11,7 +30,7 @@ const IdeaForm = ({ idea, onSubmit, onCancel, error: externalError = null }) => 
   });
   const [newTag, setNewTag] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(externalError);
+  const [error, setError] = useState<string | null>(externalError);
 
   const categories = [
     { value: 'study', label: 'Study' },
@@ -35,7 +54,7 @@ const IdeaForm = ({ idea, onSubmit, onCancel, error: externalError = null }) => 
     setError(externalError);
   }, [externalError]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -52,14 +71,14 @@ const IdeaForm = ({ idea, onSubmit, onCancel, error: externalError = null }) => 
     }
   };
 
-  const handleRemoveTag = (tagToRemove) => {
+  const handleRemoveTag = (tagToRemove: string) => {
     setFormData({
       ...formData,
       tags: formData.tags.filter(tag => tag !== tagToRemove)
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -67,7 +86,7 @@ const IdeaForm = ({ idea, onSubmit, onCancel, error: externalError = null }) => 
       await onSubmit(formData);
     } catch (err) {
       console.error('Submission error:', err);
-      setError(err.response?.data?.message || 'An error occurred during submission');
+      setError((err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'An error occurred during submission');
     } finally {
       setLoading(false);
     }
@@ -111,7 +130,7 @@ const IdeaForm = ({ idea, onSubmit, onCancel, error: externalError = null }) => 
               onChange={handleChange}
               required
               placeholder="Describe your idea in detail..."
-              rows="6"
+              rows={6}
               disabled={loading}
             />
           </div>
