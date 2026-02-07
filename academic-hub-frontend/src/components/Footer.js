@@ -52,8 +52,8 @@ const Footer = () => {
         <span>© 2026 Academic Hub. All rights reserved.</span>
 
         <div className="footer-bottom-links">
-          <a href="/">Privacy Policy</a>
-          <a href="/">Terms of Service</a>
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
           
         </div>
       </div>
