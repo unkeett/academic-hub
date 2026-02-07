@@ -1,29 +1,45 @@
-// src/components/Navbar.js
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, ElementType } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaSignOutAlt, FaUserCircle, FaGraduationCap, FaSun, FaMoon, FaSearch, FaHistory } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import './Navbar.css';
 
-const Navbar = ({ toggleSidebar }) => {
+interface NavbarProps {
+  toggleSidebar: () => void;
+}
+
+const BarsIcon = FaBars as ElementType;
+const SignOutIcon = FaSignOutAlt as ElementType;
+const UserIcon = FaUserCircle as ElementType;
+const GradCapIcon = FaGraduationCap as ElementType;
+const SunIcon = FaSun as ElementType;
+const MoonIcon = FaMoon as ElementType;
+const SearchIcon = FaSearch as ElementType;
+const HistoryIcon = FaHistory as ElementType;
+
+const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const { user, logout, isAuthenticated } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const [query, setQuery] = useState('');
   const [showRecent, setShowRecent] = useState(false);
-  const [recentSearches, setRecentSearches] = useState([]);
-  const searchRef = useRef(null);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('recentSearches');
     if (saved) {
-      setRecentSearches(JSON.parse(saved));
+      try {
+        setRecentSearches(JSON.parse(saved));
+      } catch (e) {
+        setRecentSearches([]);
+      }
     }
 
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowRecent(false);
       }
     };
@@ -32,7 +48,7 @@ const Navbar = ({ toggleSidebar }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
 
@@ -55,10 +71,10 @@ const Navbar = ({ toggleSidebar }) => {
       <div className="navbar-content">
         <div className="navbar-left">
           <button className="menu-btn" onClick={toggleSidebar} title="Toggle Sidebar">
-            <FaBars />
+            <BarsIcon />
           </button>
           <Link to="/" className="nav-brand">
-            <FaGraduationCap className="brand-icon" />
+            <GradCapIcon className="brand-icon" />
             ACADEMIC <span>HUB</span>
           </Link>
         </div>
@@ -66,7 +82,7 @@ const Navbar = ({ toggleSidebar }) => {
         {isAuthenticated && (
           <div className="navbar-center" ref={searchRef}>
             <form onSubmit={handleSearch} className="search-bar-form">
-              <FaSearch className="search-icon" />
+              <SearchIcon className="search-icon" />
               <input
                 type="text"
                 placeholder="Search..."
@@ -89,7 +105,7 @@ const Navbar = ({ toggleSidebar }) => {
                       setShowRecent(false);
                     }}
                   >
-                    <FaHistory className="recent-icon" />
+                    <HistoryIcon className="recent-icon" />
                     <span>{term}</span>
                   </div>
                 ))}
@@ -100,16 +116,16 @@ const Navbar = ({ toggleSidebar }) => {
 
         <div className="navbar-right">
           <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Theme">
-            {theme === 'light' ? <FaMoon /> : <FaSun />}
+            {theme === 'light' ? <MoonIcon /> : <SunIcon />}
           </button>
           {isAuthenticated && user ? (
             <div className="user-profile">
               <div className="user-info">
-                <FaUserCircle className="user-icon" />
+                <UserIcon className="user-icon" />
                 <span className="user-name">{user.name}</span>
               </div>
               <button className="logout-icon-btn" onClick={handleLogout} title="Logout">
-                <FaSignOutAlt />
+                <SignOutIcon />
               </button>
             </div>
           ) : (
