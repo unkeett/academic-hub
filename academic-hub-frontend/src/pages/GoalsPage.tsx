@@ -1,5 +1,4 @@
-// src/pages/GoalsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ElementType } from 'react';
 import api from '../utils/axiosConfig';
 import GoalCard from '../components/GoalCard';
 import GoalForm from '../components/GoalForm';
@@ -7,19 +6,39 @@ import { FaPlus } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import './GoalsPage.css';
 
-const GoalsPage = () => {
+interface Goal {
+  _id: string;
+  text: string;
+  completed: boolean;
+  description?: string;
+  dueDate?: string;
+  priority?: 'high' | 'medium' | 'low';
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface GoalFormData {
+  text: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  dueDate: string;
+}
+
+const PlusIcon = FaPlus as ElementType;
+
+const GoalsPage: React.FC = () => {
   const { token } = useAuth();
-  const [goals, setGoals] = useState([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingGoal, setEditingGoal] = useState(null);
-  const [filter, setFilter] = useState('all'); // all, completed, pending
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
 
   useEffect(() => {
     fetchGoals();
   }, [token]);
 
-  const fetchGoals = async () => {
+  const fetchGoals = async (): Promise<void> => {
     // Check if user is authenticated before making API call
     if (!token) {
       setLoading(false);
@@ -37,7 +56,7 @@ const GoalsPage = () => {
     }
   };
 
-  const handleCreateGoal = async (goalData) => {
+  const handleCreateGoal = async (goalData: GoalFormData): Promise<void> => {
     try {
       const response = await api.post('/api/goals', goalData);
       setGoals([response.data.data, ...goals]);
@@ -47,7 +66,7 @@ const GoalsPage = () => {
     }
   };
 
-  const handleUpdateGoal = async (id, goalData) => {
+  const handleUpdateGoal = async (id: string, goalData: GoalFormData): Promise<void> => {
     try {
       const response = await api.put(`/api/goals/${id}`, goalData);
       setGoals(goals.map(goal =>
@@ -59,7 +78,7 @@ const GoalsPage = () => {
     }
   };
 
-  const handleDeleteGoal = async (id) => {
+  const handleDeleteGoal = async (id: string): Promise<void> => {
     if (window.confirm('Are you sure you want to delete this goal?')) {
       try {
         await api.delete(`/api/goals/${id}`);
@@ -70,7 +89,7 @@ const GoalsPage = () => {
     }
   };
 
-  const handleToggleGoal = async (id) => {
+  const handleToggleGoal = async (id: string): Promise<void> => {
     try {
       const response = await api.put(`/api/goals/${id}/toggle`);
       setGoals(goals.map(goal =>
@@ -121,19 +140,19 @@ const GoalsPage = () => {
       <div className="goals-filters">
         <button
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-          onClick={() => setFilter('all')}
+          onClick={(): void => setFilter('all')}
         >
           All ({totalCount})
         </button>
         <button
           className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
-          onClick={() => setFilter('pending')}
+          onClick={(): void => setFilter('pending')}
         >
           Pending ({totalCount - completedCount})
         </button>
         <button
           className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
-          onClick={() => setFilter('completed')}
+          onClick={(): void => setFilter('completed')}
         >
           Completed ({completedCount})
         </button>
@@ -142,15 +161,20 @@ const GoalsPage = () => {
       {showForm && (
         <GoalForm
           onSubmit={handleCreateGoal}
-          onCancel={() => setShowForm(false)}
+          onCancel={(): void => setShowForm(false)}
         />
       )}
 
       {editingGoal && (
         <GoalForm
-          goal={editingGoal}
-          onSubmit={(data) => handleUpdateGoal(editingGoal._id, data)}
-          onCancel={() => setEditingGoal(null)}
+          goal={{
+            text: editingGoal.text,
+            description: editingGoal.description || '',
+            priority: editingGoal.priority || 'medium',
+            dueDate: editingGoal.dueDate || ''
+          }}
+          onSubmit={(data: GoalFormData): Promise<void> => handleUpdateGoal(editingGoal._id, data)}
+          onCancel={(): void => setEditingGoal(null)}
         />
       )}
 
@@ -160,7 +184,7 @@ const GoalsPage = () => {
             <GoalCard
               key={goal._id}
               goal={goal}
-              onEdit={setEditingGoal}
+              onEdit={(goal): void => setEditingGoal(goal)}
               onDelete={handleDeleteGoal}
               onToggle={handleToggleGoal}
             />
@@ -177,7 +201,7 @@ const GoalsPage = () => {
             {filter === 'all' && (
               <button
                 className="btn btn-primary"
-                onClick={() => setShowForm(true)}
+                onClick={(): void => setShowForm(true)}
               >
                 Add Your First Goal
               </button>
@@ -188,10 +212,10 @@ const GoalsPage = () => {
 
       <button
         className="fab"
-        onClick={() => setShowForm(true)}
+        onClick={(): void => setShowForm(true)}
         title="Add New Goal"
       >
-        <FaPlus />
+        <PlusIcon />
       </button>
     </div>
   );
