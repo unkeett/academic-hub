@@ -1,10 +1,30 @@
-// src/components/GoalCard.js
-import React from 'react';
+import React, { ElementType } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import './GoalCard.css';
 
-const GoalCard = ({ goal, onEdit, onDelete, onToggle }) => {
-  const getPriorityStyles = (priority) => {
+interface Goal {
+  _id: string;
+  text: string;
+  description?: string;
+  priority?: 'high' | 'medium' | 'low';
+  completed: boolean;
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface GoalCardProps {
+  goal: Goal;
+  onEdit: (goal: Goal) => void;
+  onDelete: (id: string) => void;
+  onToggle: (id: string) => void;
+}
+
+const EditIcon = FaEdit as ElementType;
+const TrashIcon = FaTrash as ElementType;
+
+const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onToggle }) => {
+  const getPriorityStyles = (priority?: string) => {
     switch (priority) {
       case 'high': return { color: 'var(--danger)', bg: '#fef2f2', border: '#fecaca' };
       case 'medium': return { color: 'var(--warning)', bg: '#fffbeb', border: '#fef3c7' };
@@ -15,13 +35,13 @@ const GoalCard = ({ goal, onEdit, onDelete, onToggle }) => {
 
   const styles = getPriorityStyles(goal.priority);
 
-  const formatDueDate = (dueDate) => {
+  const formatDueDate = (dueDate?: string) => {
     if (!dueDate) return null;
     const date = new Date(dueDate);
     const now = new Date();
-    const diffTime = date - now;
+    const diffTime = date.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays < 0) {
       return { text: 'Overdue', className: 'overdue' };
     } else if (diffDays === 0) {
@@ -61,35 +81,35 @@ const GoalCard = ({ goal, onEdit, onDelete, onToggle }) => {
           )}
         </div>
         <div className="card-actions">
-          <button 
+          <button
             className="action-btn edit-btn"
             onClick={() => onEdit(goal)}
             title="Edit goal"
           >
-            <FaEdit />
+            <EditIcon />
           </button>
-          <button 
+          <button
             className="action-btn delete-btn"
             onClick={() => onDelete(goal._id)}
             title="Delete goal"
           >
-            <FaTrash />
+            <TrashIcon />
           </button>
         </div>
       </div>
 
       <div className="goal-meta">
-        <div 
+        <div
           className="priority-badge"
-          style={{ 
-            color: styles.color, 
+          style={{
+            color: styles.color,
             backgroundColor: styles.bg,
             borderColor: styles.border
           }}
         >
           <span className="priority-text">{goal.priority}</span>
         </div>
-        
+
         {dueDateInfo && (
           <div className={`due-date ${dueDateInfo.className}`}>
             <span className="due-icon">📅</span>

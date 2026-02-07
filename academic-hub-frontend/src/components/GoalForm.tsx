@@ -1,9 +1,26 @@
-// src/components/GoalForm.js
 import React, { useState, useEffect } from 'react';
 import './GoalForm.css';
 
-const GoalForm = ({ goal, onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState({
+interface GoalFormData {
+  text: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  dueDate: string;
+}
+
+interface GoalFormProps {
+  goal?: {
+    text?: string;
+    description?: string;
+    priority?: 'high' | 'medium' | 'low';
+    dueDate?: string;
+  };
+  onSubmit: (data: GoalFormData) => Promise<void>;
+  onCancel: () => void;
+}
+
+const GoalForm: React.FC<GoalFormProps> = ({ goal, onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState<GoalFormData>({
     text: '',
     description: '',
     priority: 'medium',
@@ -21,7 +38,7 @@ const GoalForm = ({ goal, onSubmit, onCancel }) => {
     }
   }, [goal]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -30,13 +47,13 @@ const GoalForm = ({ goal, onSubmit, onCancel }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const submitData = {
+      const submitData: GoalFormData = {
         ...formData,
-        dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : null
+        dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : ''
       };
       await onSubmit(submitData);
     } catch (error) {
@@ -83,7 +100,7 @@ const GoalForm = ({ goal, onSubmit, onCancel }) => {
               value={formData.description}
               onChange={handleChange}
               placeholder="Additional details about this goal"
-              rows="3"
+              rows={3}
               disabled={loading}
             />
           </div>
