@@ -7,7 +7,8 @@ const {
   createTutorial,
   updateTutorial,
   deleteTutorial,
-  toggleWatched
+  toggleWatched,
+  toggleBookmark
 } = require('../controllers/tutorialController');
 const { protect } = require('../middleware/auth');
 
@@ -25,5 +26,8 @@ router.route('/:id')
 
 router.route('/:id/toggle')
   .put(toggleWatched);
+
+router.route('/:id/bookmark')
+  .put(toggleBookmark);
 
 module.exports = router;
