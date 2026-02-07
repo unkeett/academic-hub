@@ -1,20 +1,22 @@
+import { ReactNode } from 'react';
 import { render, screen } from '@testing-library/react';
+import App from './App';
 
 // Mock react-router-dom
 jest.mock('react-router-dom', () => ({
-  BrowserRouter: ({ children }) => <div>{children}</div>,
+  BrowserRouter: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   useLocation: () => ({ pathname: '/' }),
   useNavigate: () => jest.fn(),
-  Link: ({ children, to }) => <a href={to}>{children}</a>,
-  NavLink: ({ children, to }) => <a href={to}>{children}</a>,
-  Routes: ({ children }) => <div>{children}</div>,
-  Route: ({ element }) => element,
-  Navigate: ({ to }) => <div>Redirecting to {to}</div>,
-}), { virtual: true });
+  Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
+  NavLink: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
+  Routes: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+  Route: ({ element }: { element: ReactNode }) => element,
+  Navigate: ({ to }: { to: string }) => <div>Redirecting to {to}</div>,
+}));
 
 // Mock AuthContext
 jest.mock('./context/AuthContext', () => ({
-  AuthProvider: ({ children }) => <div>{children}</div>,
+  AuthProvider: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   useAuth: () => ({
     isAuthenticated: false,
     user: null,
@@ -34,12 +36,10 @@ jest.mock('./pages/TutorialsPage', () => () => <div>Tutorials Page</div>);
 jest.mock('./pages/IdeasPage', () => () => <div>Ideas Page</div>);
 jest.mock('./components/Login', () => () => <div>Login Page</div>);
 jest.mock('./components/Register', () => () => <div>Register Page</div>);
-jest.mock('./components/ProtectedRoute', () => ({ children }) => <div>{children}</div>);
+jest.mock('./components/ProtectedRoute', () => ({ children }: { children: ReactNode }) => <div>{children}</div>);
 jest.mock('./components/Navbar', () => () => <div>Navbar</div>);
 jest.mock('./components/Sidebar', () => () => <div>Sidebar</div>);
 jest.mock('./components/Footer', () => () => <div>Footer</div>);
-
-import App from './App';
 
 test('renders academic hub brand', () => {
   render(<App />);
