@@ -1,10 +1,9 @@
-// src/components/Login.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
-const Login = () => {
+const Login: React.FC = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -22,7 +21,7 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate, location.pathname]);
 
-  const onChange = (e) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -31,7 +30,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
