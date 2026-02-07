@@ -14,9 +14,12 @@ exports.resetPassword = async (req, res, next) => {
   res.status(501).json({ success: false, message: 'Not implemented yet' });
 };
 // controllers/authController.js
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Goal = require('../models/Goal');
+const Subject = require('../models/Subject');
+const Idea = require('../models/Idea');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -133,7 +136,9 @@ exports.updateDetails = async (req, res, next) => {
   try {
     const fieldsToUpdate = {
       name: req.body.name,
-      email: req.body.email
+      email: req.body.email,
+      bio: req.body.bio,
+      avatar: req.body.avatar
     };
 
     const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
@@ -144,6 +149,37 @@ exports.updateDetails = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: user
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Delete user account
+// @route   DELETE /api/auth/deleteaccount
+// @access  Private
+exports.deleteAccount = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Cascading delete
+    await Goal.deleteMany({ user: req.user.id });
+    await Subject.deleteMany({ user: req.user.id });
+    await Idea.deleteMany({ user: req.user.id });
+
+    // Use deleteOne() or findByIdAndDelete() instead of remove() which is deprecated
+    await User.findByIdAndDelete(req.user.id);
+
+    res.status(200).json({
+      success: true,
+      message: 'User account and all associated data deleted'
     });
   } catch (error) {
     next(error);
