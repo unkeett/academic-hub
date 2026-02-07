@@ -1,9 +1,20 @@
-// src/components/TutorialForm.js
 import React, { useState, useEffect } from 'react';
 import './TutorialForm.css';
 
-const TutorialForm = ({ tutorial, onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState({
+interface TutorialFormData {
+  url: string;
+}
+
+interface TutorialFormProps {
+  tutorial?: {
+    url?: string;
+  };
+  onSubmit: (data: TutorialFormData) => Promise<void>;
+  onCancel: () => void;
+}
+
+const TutorialForm: React.FC<TutorialFormProps> = ({ tutorial, onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState<TutorialFormData>({
     url: ''
   });
   const [loading, setLoading] = useState(false);
@@ -16,14 +27,14 @@ const TutorialForm = ({ tutorial, onSubmit, onCancel }) => {
     }
   }, [tutorial]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
@@ -36,7 +47,7 @@ const TutorialForm = ({ tutorial, onSubmit, onCancel }) => {
     }
   };
 
-  const isValidYouTubeUrl = (url) => {
+  const isValidYouTubeUrl = (url: string) => {
     const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+/;
     return youtubeRegex.test(url);
   };
