@@ -1,9 +1,8 @@
-// src/components/TutorialCard.js
 import React from 'react';
-import { FaEdit, FaTrash, FaYoutube, FaTv, FaEye, FaCheck } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaYoutube, FaTv, FaEye, FaCheck, FaBookmark, FaRegBookmark } from 'react-icons/fa';
 import './TutorialCard.css';
 
-const TutorialCard = ({ tutorial, onEdit, onDelete, onToggleWatched }) => {
+const TutorialCard = ({ tutorial, onEdit, onDelete, onToggleWatched, isBookmarked, onToggleBookmark }) => {
   const formatDuration = (duration) => {
     if (!duration) return 'Unknown';
     return duration;
@@ -21,15 +20,15 @@ const TutorialCard = ({ tutorial, onEdit, onDelete, onToggleWatched }) => {
   return (
     <div className={`tutorial-card ${tutorial.watched ? 'watched' : ''}`}>
       <div className="tutorial-thumbnail">
-        <img 
-          src={thumbnailUrl} 
+        <img
+          src={thumbnailUrl}
           alt={tutorial.title}
           className="thumbnail-image"
         />
         <div className="thumbnail-overlay">
-          <a 
-            href={tutorial.url} 
-            target="_blank" 
+          <a
+            href={tutorial.url}
+            target="_blank"
             rel="noopener noreferrer"
             className="play-button"
             title="Play Video"
@@ -51,14 +50,14 @@ const TutorialCard = ({ tutorial, onEdit, onDelete, onToggleWatched }) => {
         <div className="card-header">
           <h3 className="tutorial-title" title={tutorial.title}>{tutorial.title}</h3>
           <div className="card-actions">
-            <button 
+            <button
               className="action-btn edit-btn"
               onClick={() => onEdit(tutorial)}
               title="Edit tutorial"
             >
               <FaEdit />
             </button>
-            <button 
+            <button
               className="action-btn delete-btn"
               onClick={() => onDelete(tutorial._id)}
               title="Delete tutorial"
@@ -73,16 +72,26 @@ const TutorialCard = ({ tutorial, onEdit, onDelete, onToggleWatched }) => {
             <FaTv className="meta-icon" />
             <span className="channel-name">{tutorial.channel}</span>
           </div>
-          
-          <button 
+
+
+          <button
             className={`watch-status-btn ${tutorial.watched ? 'watched' : 'unwatched'}`}
             onClick={() => onToggleWatched(tutorial._id)}
+            title={tutorial.watched ? "Mark as unwatched" : "Mark as watched"}
           >
             {tutorial.watched ? (
               <><FaCheck /> <span>Watched</span></>
             ) : (
               <><FaEye /> <span>Mark Watched</span></>
             )}
+          </button>
+
+          <button
+            className={`bookmark-btn ${isBookmarked ? 'bookmarked' : ''}`}
+            onClick={() => onToggleBookmark(tutorial._id)}
+            title={isBookmarked ? "Remove Bookmark" : "Bookmark Tutorial"}
+          >
+            {isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
           </button>
         </div>
 
@@ -93,9 +102,9 @@ const TutorialCard = ({ tutorial, onEdit, onDelete, onToggleWatched }) => {
         )}
 
         <div className="card-footer">
-          <a 
-            href={tutorial.url} 
-            target="_blank" 
+          <a
+            href={tutorial.url}
+            target="_blank"
             rel="noopener noreferrer"
             className="watch-link"
           >
