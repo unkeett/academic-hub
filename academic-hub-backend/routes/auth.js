@@ -8,7 +8,8 @@ const {
   updateDetails,
   updatePassword,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  deleteAccount
 } = require('../controllers/authController');
 
 const { protect } = require('../middleware/auth');
@@ -120,6 +121,22 @@ router.put('/updatedetails', protect, updateDetails);
  * description: Password updated
  */
 router.put('/updatepassword', protect, updatePassword);
+
+/**
+ * @swagger
+ * /api/auth/deleteaccount:
+ * delete:
+ * summary: Delete user account and all data
+ * tags: [Auth]
+ * security:
+ * - bearerAuth: []
+ * responses:
+ * 200:
+ * description: Account deleted
+ * 404:
+ * description: User not found
+ */
+router.delete('/deleteaccount', protect, deleteAccount);
 
 /**
  * @swagger

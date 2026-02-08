@@ -1,4 +1,3 @@
-// src/App.js 
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -14,6 +13,7 @@ import GoalsPage from './pages/GoalsPage';
 import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage';
 import SearchPage from './pages/SearchPage';
+import ProfilePage from './pages/ProfilePage';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -66,6 +66,12 @@ const AppContent = () => {
           <Route path="/search" element={
             <ProtectedRoute>
               <SearchPage />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           } />
 
