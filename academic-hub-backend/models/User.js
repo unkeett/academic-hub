@@ -10,6 +10,15 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, 'Name cannot be more than 50 characters']
   },
+  bio: {
+    type: String,
+    maxlength: [500, 'Bio cannot be more than 500 characters'],
+    default: ''
+  },
+  avatar: {
+    type: String,
+    default: ''
+  },
   email: {
     type: String,
     required: [true, 'Please add an email'],
@@ -26,7 +35,7 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false
   },
-    role: {
+  role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
@@ -38,13 +47,17 @@ const UserSchema = new mongoose.Schema({
   },
   resetPasswordExpire: {
     type: Date
-  }
+  },
+  bookmarkedTutorials: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Tutorial'
+  }]
 }, {
   timestamps: true
 });
 
 // Encrypt password using bcrypt
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -56,12 +69,12 @@ UserSchema.pre('save', async function(next) {
 
 
 // Match user entered password to hashed password in database
-UserSchema.methods.matchPassword = async function(enteredPassword) {
+UserSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
 // Generate and hash password reset token
-UserSchema.methods.getResetPasswordToken = function() {
+UserSchema.methods.getResetPasswordToken = function () {
   // Generate random token
   const resetToken = crypto.randomBytes(20).toString('hex');
 

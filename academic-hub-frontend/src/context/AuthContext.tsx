@@ -6,6 +6,7 @@ interface User {
   name: string;
   email: string;
   role: string;
+  bookmarkedTutorials?: string[];
 }
 
 interface AuthState {
@@ -196,7 +197,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       return { success: false, error: message };
     }
+
   }, []);
+
+  const updateUser = useCallback(async (userData) => {
+    try {
+      const res = await api.put('/api/auth/updatedetails', userData);
+      dispatch({
+        type: 'AUTH_SUCCESS',
+        payload: {
+          user: res.data.data,
+          token: state.token
+        }
+      });
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.response?.data?.message || 'Update failed' };
+    }
+  }, [state.token]);
+
+  const deleteAccount = useCallback(async () => {
+    try {
+      await api.delete('/api/auth/deleteaccount');
+      logout();
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.response?.data?.message || 'Delete failed' };
+    }
+  }, [logout]);
 
   const logout = useCallback(() => {
     localStorage.removeItem('token');
@@ -213,8 +241,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     login,
     logout,
     clearError,
-    loadUser
-  }), [state, register, login, logout, clearError, loadUser]);
+    loadUser,
+    updateUser,
+    deleteAccount
+  }), [state, register, login, logout, clearError, loadUser, updateUser, deleteAccount]);
 
   return (
     <AuthContext.Provider value={value}>

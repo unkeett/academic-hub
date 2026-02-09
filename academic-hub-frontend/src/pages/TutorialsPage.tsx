@@ -16,7 +16,6 @@ interface Tutorial {
   thumbnail?: string;
   watched: boolean;
   createdAt: string;
-
 }
 
 interface TutorialFormData {
@@ -24,22 +23,23 @@ interface TutorialFormData {
   title?: string;
 }
 
+type TutorialFilter = 'all' | 'watched' | 'unwatched' | 'bookmarked';
+
 const PlusIcon = FaPlus as ElementType;
 
 const TutorialsPage: React.FC = () => {
-  const { token } = useAuth();
+  const { token, user, loadUser } = useAuth();
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingTutorial, setEditingTutorial] = useState<Tutorial | null>(null);
-  const [filter, setFilter] = useState<'all' | 'watched' | 'unwatched'>('all');
+  const [filter, setFilter] = useState<TutorialFilter>('all');
 
   useEffect(() => {
     fetchTutorials();
   }, [token]);
 
   const fetchTutorials = async () => {
-    // Check if user is authenticated before making API call
     if (!token) {
       setLoading(false);
       return;
@@ -59,11 +59,13 @@ const TutorialsPage: React.FC = () => {
   const handleCreateTutorial = async (tutorialData: TutorialFormData) => {
     try {
       const response = await api.post('/api/tutorials', tutorialData);
-      setTutorials([response.data.data, ...tutorials]);
+      setTutorials((prev) => [response.data.data, ...prev]);
       setShowForm(false);
     } catch (error) {
       console.error('Error creating tutorial:', error);
-      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Error creating tutorial';
+      const message =
+        (error as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        'Error creating tutorial';
       alert(message);
     }
   };
@@ -71,9 +73,7 @@ const TutorialsPage: React.FC = () => {
   const handleUpdateTutorial = async (id: string, tutorialData: TutorialFormData) => {
     try {
       const response = await api.put(`/api/tutorials/${id}`, tutorialData);
-      setTutorials(tutorials.map(tutorial =>
-        tutorial._id === id ? response.data.data : tutorial
-      ));
+      setTutorials((prev) => prev.map((tutorial) => (tutorial._id === id ? response.data.data : tutorial)));
       setEditingTutorial(null);
     } catch (error) {
       console.error('Error updating tutorial:', error);
@@ -84,7 +84,7 @@ const TutorialsPage: React.FC = () => {
     if (window.confirm('Are you sure you want to delete this tutorial?')) {
       try {
         await api.delete(`/api/tutorials/${id}`);
-        setTutorials(tutorials.filter(tutorial => tutorial._id !== id));
+        setTutorials((prev) => prev.filter((tutorial) => tutorial._id !== id));
       } catch (error) {
         console.error('Error deleting tutorial:', error);
       }
@@ -94,21 +94,30 @@ const TutorialsPage: React.FC = () => {
   const handleToggleWatched = async (id: string) => {
     try {
       const response = await api.put(`/api/tutorials/${id}/toggle`);
-      setTutorials(tutorials.map(tutorial =>
-        tutorial._id === id ? response.data.data : tutorial
-      ));
+      setTutorials((prev) => prev.map((tutorial) => (tutorial._id === id ? response.data.data : tutorial)));
     } catch (error) {
       console.error('Error toggling tutorial:', error);
     }
   };
 
-  const filteredTutorials = tutorials.filter(tutorial => {
+  const handleToggleBookmark = async (id: string) => {
+    try {
+      await api.put(`/api/tutorials/${id}/bookmark`);
+      await loadUser();
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+    }
+  };
+
+  const filteredTutorials = tutorials.filter((tutorial) => {
     if (filter === 'watched') return tutorial.watched;
     if (filter === 'unwatched') return !tutorial.watched;
+    if (filter === 'bookmarked') return user?.bookmarkedTutorials?.includes(tutorial._id);
     return true;
   });
 
-  const watchedCount = tutorials.filter(tutorial => tutorial.watched).length;
+  const watchedCount = tutorials.filter((tutorial) => tutorial.watched).length;
+  const bookmarkedCount = user?.bookmarkedTutorials?.length || 0;
   const totalCount = tutorials.length;
 
   if (loading) {
@@ -132,7 +141,7 @@ const TutorialsPage: React.FC = () => {
               className="mini-progress-fill"
               style={{
                 width: totalCount > 0 ? `${(watchedCount / totalCount) * 100}%` : '0%',
-                backgroundColor: 'var(--secondary)'
+                backgroundColor: 'var(--secondary)',
               }}
             ></div>
           </div>
@@ -140,10 +149,7 @@ const TutorialsPage: React.FC = () => {
       </header>
 
       <div className="tutorials-filters">
-        <button
-          className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-          onClick={() => setFilter('all')}
-        >
+        <button className={`filter-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
           All ({totalCount})
         </button>
         <button
@@ -152,54 +158,48 @@ const TutorialsPage: React.FC = () => {
         >
           Unwatched ({totalCount - watchedCount})
         </button>
-        <button
-          className={`filter-btn ${filter === 'watched' ? 'active' : ''}`}
-          onClick={() => setFilter('watched')}
-        >
+        <button className={`filter-btn ${filter === 'watched' ? 'active' : ''}`} onClick={() => setFilter('watched')}>
           Watched ({watchedCount})
+        </button>
+        <button
+          className={`filter-btn ${filter === 'bookmarked' ? 'active' : ''}`}
+          onClick={() => setFilter('bookmarked')}
+        >
+          Bookmarked ({bookmarkedCount})
         </button>
       </div>
 
-      {showForm && (
-        <TutorialForm
-          onSubmit={handleCreateTutorial}
-          onCancel={() => setShowForm(false)}
-        />
-      )}
+      {showForm && <TutorialForm onSubmit={handleCreateTutorial} onCancel={() => setShowForm(false)} />}
 
       {editingTutorial && (
         <TutorialForm
           tutorial={editingTutorial}
-          onSubmit={(data: TutorialFormData) => handleUpdateTutorial(editingTutorial._id, data) as Promise<void>}
+          onSubmit={(data: TutorialFormData) => handleUpdateTutorial(editingTutorial._id, data)}
           onCancel={() => setEditingTutorial(null)}
         />
       )}
 
       <div className="tutorials-grid">
         {filteredTutorials.length > 0 ? (
-          filteredTutorials.map(tutorial => (
+          filteredTutorials.map((tutorial) => (
             <TutorialCard
               key={tutorial._id}
               tutorial={tutorial}
               onEdit={setEditingTutorial}
               onDelete={handleDeleteTutorial}
               onToggleWatched={handleToggleWatched}
+              isBookmarked={user?.bookmarkedTutorials?.includes(tutorial._id)}
+              onToggleBookmark={handleToggleBookmark}
             />
           ))
         ) : (
           <div className="empty-state">
             <h3>No tutorials found</h3>
             <p>
-              {filter === 'all'
-                ? "Add your first tutorial by pasting a YouTube URL."
-                : `No ${filter} tutorials found.`
-              }
+              {filter === 'all' ? 'Add your first tutorial by pasting a YouTube URL.' : `No ${filter} tutorials found.`}
             </p>
             {filter === 'all' && (
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowForm(true)}
-              >
+              <button className="btn btn-primary" onClick={() => setShowForm(true)}>
                 Add Your First Tutorial
               </button>
             )}
@@ -207,11 +207,7 @@ const TutorialsPage: React.FC = () => {
         )}
       </div>
 
-      <button
-        className="fab"
-        onClick={() => setShowForm(true)}
-        title="Add New Tutorial"
-      >
+      <button className="fab" onClick={() => setShowForm(true)} title="Add New Tutorial">
         <PlusIcon />
       </button>
     </div>

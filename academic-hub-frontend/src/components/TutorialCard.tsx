@@ -1,5 +1,14 @@
 import React, { ElementType } from 'react';
-import { FaEdit, FaTrash, FaYoutube, FaTv, FaEye, FaCheck } from 'react-icons/fa';
+import {
+  FaEdit,
+  FaTrash,
+  FaYoutube,
+  FaTv,
+  FaEye,
+  FaCheck,
+  FaBookmark,
+  FaRegBookmark,
+} from 'react-icons/fa';
 import './TutorialCard.css';
 
 interface Tutorial {
@@ -19,16 +28,27 @@ interface TutorialCardProps {
   onEdit: (tutorial: Tutorial) => void;
   onDelete: (id: string) => void;
   onToggleWatched: (id: string) => void;
+  isBookmarked?: boolean;
+  onToggleBookmark: (id: string) => void;
 }
 
-const YoutubeIcon = FaYoutube as ElementType;
-const TvIcon = FaTv as ElementType;
-const CheckIcon = FaCheck as ElementType;
-const EyeIcon = FaEye as ElementType;
-const EditIcon = FaEdit as ElementType;
-const TrashIcon = FaTrash as ElementType;
+const TutorialCard: React.FC<TutorialCardProps> = ({
+  tutorial,
+  onEdit,
+  onDelete,
+  onToggleWatched,
+  isBookmarked = false,
+  onToggleBookmark,
+}) => {
+  const YoutubeIcon = FaYoutube as ElementType;
+  const TvIcon = FaTv as ElementType;
+  const CheckIcon = FaCheck as ElementType;
+  const EyeIcon = FaEye as ElementType;
+  const EditIcon = FaEdit as ElementType;
+  const TrashIcon = FaTrash as ElementType;
+  const BookmarkIcon = FaBookmark as ElementType;
+  const RegBookmarkIcon = FaRegBookmark as ElementType;
 
-const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial, onEdit, onDelete, onToggleWatched }) => {
   const formatDuration = (duration?: string) => {
     if (!duration) return 'Unknown';
     return duration;
@@ -37,7 +57,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial, onEdit, onDelete,
   const getVideoId = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+    return match && match[2].length === 11 ? match[2] : null;
   };
 
   const videoId = getVideoId(tutorial.url);
@@ -46,11 +66,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial, onEdit, onDelete,
   return (
     <div className={`tutorial-card ${tutorial.watched ? 'watched' : ''}`}>
       <div className="tutorial-thumbnail">
-        <img
-          src={thumbnailUrl}
-          alt={tutorial.title}
-          className="thumbnail-image"
-        />
+        <img src={thumbnailUrl} alt={tutorial.title} className="thumbnail-image" />
         <div className="thumbnail-overlay">
           <a
             href={tutorial.url}
@@ -62,9 +78,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial, onEdit, onDelete,
             <YoutubeIcon />
           </a>
         </div>
-        <div className="duration-badge">
-          {formatDuration(tutorial.duration)}
-        </div>
+        <div className="duration-badge">{formatDuration(tutorial.duration)}</div>
         {tutorial.watched && (
           <div className="watched-status-badge">
             <CheckIcon /> <span>Watched</span>
@@ -74,20 +88,14 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial, onEdit, onDelete,
 
       <div className="tutorial-content">
         <div className="card-header">
-          <h3 className="tutorial-title" title={tutorial.title}>{tutorial.title}</h3>
+          <h3 className="tutorial-title" title={tutorial.title}>
+            {tutorial.title}
+          </h3>
           <div className="card-actions">
-            <button
-              className="action-btn edit-btn"
-              onClick={() => onEdit(tutorial)}
-              title="Edit tutorial"
-            >
+            <button className="action-btn edit-btn" onClick={() => onEdit(tutorial)} title="Edit tutorial">
               <EditIcon />
             </button>
-            <button
-              className="action-btn delete-btn"
-              onClick={() => onDelete(tutorial._id)}
-              title="Delete tutorial"
-            >
+            <button className="action-btn delete-btn" onClick={() => onDelete(tutorial._id)} title="Delete tutorial">
               <TrashIcon />
             </button>
           </div>
@@ -102,28 +110,32 @@ const TutorialCard: React.FC<TutorialCardProps> = ({ tutorial, onEdit, onDelete,
           <button
             className={`watch-status-btn ${tutorial.watched ? 'watched' : 'unwatched'}`}
             onClick={() => onToggleWatched(tutorial._id)}
+            title={tutorial.watched ? 'Mark as unwatched' : 'Mark as watched'}
           >
             {tutorial.watched ? (
-              <><CheckIcon /> <span>Watched</span></>
+              <>
+                <CheckIcon /> <span>Watched</span>
+              </>
             ) : (
-              <><EyeIcon /> <span>Mark Watched</span></>
+              <>
+                <EyeIcon /> <span>Mark Watched</span>
+              </>
             )}
+          </button>
+
+          <button
+            className={`bookmark-btn ${isBookmarked ? 'bookmarked' : ''}`}
+            onClick={() => onToggleBookmark(tutorial._id)}
+            title={isBookmarked ? 'Remove Bookmark' : 'Bookmark Tutorial'}
+          >
+            {isBookmarked ? <BookmarkIcon /> : <RegBookmarkIcon />}
           </button>
         </div>
 
-        {tutorial.description && (
-          <p className="tutorial-description">
-            {tutorial.description}
-          </p>
-        )}
+        {tutorial.description && <p className="tutorial-description">{tutorial.description}</p>}
 
         <div className="card-footer">
-          <a
-            href={tutorial.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="watch-link"
-          >
+          <a href={tutorial.url} target="_blank" rel="noopener noreferrer" className="watch-link">
             Watch on YouTube
           </a>
         </div>

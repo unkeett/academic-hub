@@ -14,6 +14,7 @@ import GoalsPage from './pages/GoalsPage';
 import TutorialsPage from './pages/TutorialsPage';
 import IdeasPage from './pages/IdeasPage';
 import SearchPage from './pages/SearchPage';
+import ProfilePage from './pages/ProfilePage';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -60,7 +61,6 @@ const AppContent = () => {
 
       <main className={`content ${isSidebarOpen && showNavAndSidebar ? 'sidebar-open' : ''} ${isLandingPage ? 'landing-content' : ''}`}>
         <Routes>
-          {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
@@ -68,27 +68,39 @@ const AppContent = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:resettoken" element={<ResetPassword />} />
 
-          {/* Protected Routes */}
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
 
-          <Route path="/search" element={
-            <ProtectedRoute>
-              <SearchPage />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="/search"
+            element={
+              <ProtectedRoute>
+                <SearchPage />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* Combined Routes (Public access, but can be protected if needed) */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/subjects" element={<SubjectsPage />} />
           <Route path="/goals" element={<GoalsPage />} />
           <Route path="/tutorials" element={<TutorialsPage />} />
           <Route path="/ideas" element={<IdeasPage />} />
 
-          {/* Catch all route - redirect to dashboard if authenticated, else landing */}
-          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} />
+          <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/'} />} />
         </Routes>
       </main>
       {!isAuthPage && <Footer />}
