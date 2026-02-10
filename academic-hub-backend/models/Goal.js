@@ -32,4 +32,8 @@ const GoalSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+// Indexes
+GoalSchema.index({ user: 1, completed: 1 });
+GoalSchema.index({ dueDate: 1 });
+
 module.exports = mongoose.model('Goal', GoalSchema);
