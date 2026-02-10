@@ -4,3 +4,105 @@
 2026-01-29 14:10:43:1043 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
 2026-01-29 14:13:10:1310 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
 2026-01-29 14:13:31:1331 [31merror[39m: [31mError: secretOrPrivateKey must have a value[39m
+2026-02-07 15:53:18:5318 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:19:5319 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:19:5319 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:20:5320 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:29:5329 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:29:5329 [31merror[39m: [31mToken verification error: jwt expired[39m
+2026-02-07 15:53:34:5334 [31merror[39m: [31mError: Something went wrong[39m
+2026-02-07 15:53:34:5334 [31merror[39m: [31mError: Not Found[39m
+2026-02-07 15:53:34:5334 [31merror[39m: [31mCastError: Cast to ObjectId failed[39m
+2026-02-07 15:53:34:5334 [31merror[39m: [31mError: Duplicate field value[39m
+2026-02-07 15:53:34:5334 [31merror[39m: [31mValidationError: Validation failed[39m
+2026-02-07 15:53:34:5334 [31merror[39m: [31mError: undefined[39m
+2026-02-07 15:53:48:5348 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:48:5348 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:48:5348 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:53:49:5349 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:51:5351 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:53:52:5352 [31merror[39m: [31mToken verification error: jwt expired[39m
+2026-02-07 15:54:03:543 [31merror[39m: [31mError: Something went wrong[39m
+2026-02-07 15:54:03:543 [31merror[39m: [31mError: Not Found[39m
+2026-02-07 15:54:03:543 [31merror[39m: [31mCastError: Cast to ObjectId failed[39m
+2026-02-07 15:54:03:543 [31merror[39m: [31mError: Duplicate field value[39m
+2026-02-07 15:54:03:543 [31merror[39m: [31mValidationError: Validation failed[39m
+2026-02-07 15:54:03:543 [31merror[39m: [31mError: undefined[39m
+2026-02-07 15:54:39:5439 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:54:39:5439 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:54:40:5440 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:54:40:5440 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:54:40:5440 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:54:40:5440 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:54:40:5440 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:54:40:5440 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:54:41:5441 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:54:41:5441 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:54:41:5441 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:54:41:5441 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:54:41:5441 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:55:56:5556 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:55:56:5556 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:55:56:5556 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:55:57:5557 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:55:57:5557 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:55:57:5557 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:55:57:5557 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:55:57:5557 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:55:58:5558 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:55:58:5558 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:55:58:5558 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:55:58:5558 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:55:58:5558 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:56:35:5635 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:56:35:5635 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:56:35:5635 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:56:36:5636 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:56:36:5636 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:56:36:5636 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:56:36:5636 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:56:36:5636 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:56:36:5636 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:56:36:5636 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:56:36:5636 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:56:36:5636 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:56:37:5637 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:58:46:5846 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:58:47:5847 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:58:47:5847 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mTypeError: option expires is invalid[39m
+2026-02-07 15:58:48:5848 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:58:50:5850 [31merror[39m: [31mToken verification error: jwt malformed[39m
+2026-02-07 15:58:50:5850 [31merror[39m: [31mToken verification error: jwt expired[39m
+2026-02-07 15:59:02:592 [31merror[39m: [31mError: Something went wrong[39m
+2026-02-07 15:59:02:592 [31merror[39m: [31mError: Not Found[39m
+2026-02-07 15:59:02:592 [31merror[39m: [31mCastError: Cast to ObjectId failed[39m
+2026-02-07 15:59:02:592 [31merror[39m: [31mError: Duplicate field value[39m
+2026-02-07 15:59:02:592 [31merror[39m: [31mValidationError: Validation failed[39m
+2026-02-07 15:59:02:592 [31merror[39m: [31mError: undefined[39m

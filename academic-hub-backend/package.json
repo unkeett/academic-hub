@@ -6,7 +6,13 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test JWT_SECRET=test-secret jest --detectOpenHandles --forceExit",
+    "test:watch": "NODE_ENV=test JWT_SECRET=test-secret jest --watch",
+    "test:coverage": "NODE_ENV=test JWT_SECRET=test-secret jest --coverage --detectOpenHandles --forceExit",
+    "test:ci": "NODE_ENV=test JWT_SECRET=test-secret jest --ci --coverage --detectOpenHandles --forceExit",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "academic",
@@ -30,7 +36,21 @@
     "winston": "^3.19.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.2.1",
+    "@types/supertest": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "eslint": "^9.39.2",
+    "jest": "^30.2.0",
     "mongodb-memory-server": "^11.0.1",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
   }
 }
