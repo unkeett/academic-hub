@@ -1,3 +1,19 @@
+// @desc    Forgot password
+// @route   POST /api/auth/forgotpassword
+// @access  Public
+exports.forgotPassword = async (req, res, next) => {
+  // TODO: Implement sending reset email with token
+  res.status(501).json({ success: false, message: 'Not implemented yet' });
+};
+
+// @desc    Reset password
+// @route   PUT /api/auth/resetpassword/:resettoken
+// @access  Public
+exports.resetPassword = async (req, res, next) => {
+  // TODO: Implement password reset using token
+  res.status(501).json({ success: false, message: 'Not implemented yet' });
+};
+// controllers/authController.js
 const User = require('../models/User');
 const Goal = require('../models/Goal');
 const Subject = require('../models/Subject');
@@ -6,9 +22,8 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
 // Generate JWT Token
-const generateToken = (/** @type {any} */ id) => {
-  const secret = process.env.JWT_SECRET || '';
-  return jwt.sign({ id }, secret, {
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '30d',
   });
 };
@@ -288,18 +303,15 @@ exports.resetPassword = async (req, res, next) => {
 };
 
 // Get token from model, create cookie and send response
-const sendTokenResponse = (/** @type {any} */ user, /** @type {number} */ statusCode, /** @type {any} */ res) => {
+const sendTokenResponse = (user, statusCode, res) => {
   // Create token
-  // @ts-ignore
   const token = generateToken(user._id);
 
   const options = {
     expires: new Date(
-      // @ts-ignore
       Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true,
-    secure: false // Default to false
+    httpOnly: true
   };
 
   if (process.env.NODE_ENV === 'production') {
@@ -312,5 +324,11 @@ const sendTokenResponse = (/** @type {any} */ user, /** @type {number} */ status
     .json({
       success: true,
       token,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
     });
 };
