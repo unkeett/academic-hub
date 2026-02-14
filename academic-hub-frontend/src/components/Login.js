@@ -9,6 +9,7 @@ const Login = () => {
     email: '',
     password: ''
   });
+  const [errors, setErrors] = useState({});
 
   const { login, isAuthenticated, error } = useAuth();
   const navigate = useNavigate();
@@ -29,22 +30,36 @@ const Login = () => {
     });
   };
 
-  const [loading, setLoading] = useState(false);
+    const onSubmit = async (e) => {
+      e.preventDefault();
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
+      const newErrors = {};
+
+      // Email validation
+      if (!email) {
+        newErrors.email = 'Email address is required';
+      } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+
+      // Password validation
+      if (!password) {
+        newErrors.password = 'Password is required';
+      }
+
+      // If validation fails, stop submission
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
+      setErrors({});
+
       const result = await login({ email, password });
       if (result.success) {
         navigate('/dashboard');
       }
-    } catch (err) {
-      console.error('Login error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   return (
     <div className="auth-container">
@@ -69,10 +84,12 @@ const Login = () => {
               name="email"
               value={email}
               onChange={onChange}
-              required
               placeholder="Enter your email"
               disabled={loading}
             />
+            {errors.email && (
+              <small className="field-error">{errors.email}</small>
+            )}
           </div>
 
           <div className="form-group">
@@ -83,10 +100,12 @@ const Login = () => {
               name="password"
               value={password}
               onChange={onChange}
-              required
               placeholder="Enter your password"
               disabled={loading}
             />
+            {errors.password && (
+              <small className="field-error">{errors.password}</small>
+            )}
           </div>
 
           <button type="submit" className="auth-button" disabled={loading}>
