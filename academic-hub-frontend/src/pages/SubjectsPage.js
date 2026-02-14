@@ -14,13 +14,12 @@ const SubjectsPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingSubject, setEditingSubject] = useState(null);
 
-  useEffect(() => {
-    fetchSubjects();
-  }, [token]);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const subjectsPerPage = 5;
 
+  useEffect(() => {
   const fetchSubjects = async () => {
-    // Check if user is authenticated before making API call
-    // Use token from context which is reactive
     if (!token) {
       setLoading(false);
       return;
@@ -36,6 +35,13 @@ const SubjectsPage = () => {
       setLoading(false);
     }
   };
+
+  fetchSubjects();
+}, [token]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [subjects.length]);
 
   const handleCreateSubject = async (subjectData) => {
     try {
@@ -106,6 +112,16 @@ const SubjectsPage = () => {
       alert(error.response?.data?.message || 'Failed to update progress');
     }
   };
+  // Pagination calculations
+  const indexOfLastSubject = currentPage * subjectsPerPage;
+  const indexOfFirstSubject = indexOfLastSubject - subjectsPerPage;
+  const currentSubjects = subjects.slice(
+    indexOfFirstSubject,
+    indexOfLastSubject
+  );
+
+  const totalPages = Math.ceil(subjects.length / subjectsPerPage);
+
 
 
   if (loading) {
@@ -142,7 +158,7 @@ const SubjectsPage = () => {
 
       <div className="subjects-grid">
         {subjects.length > 0 ? (
-          subjects.map(subject => (
+          currentSubjects.map(subject => (
             <SubjectCard
               key={subject._id}
               subject={subject}
@@ -164,7 +180,30 @@ const SubjectsPage = () => {
           </div>
         )}
       </div>
+      {subjects.length > subjectsPerPage && (
+      <div className="pagination">
+        <button
+          className="btn"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage(prev => prev - 1)}
+        >
+          Previous
+        </button>
 
+        <span className="page-info">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          className="btn"
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage(prev => prev + 1)}
+        >
+          Next
+        </button>
+      </div>
+    )}
+  
       <button
         className="fab"
         onClick={() => setShowForm(true)}
