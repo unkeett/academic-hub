@@ -33,4 +33,9 @@ const SubjectSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+// --- ADD THIS SECTION ---
+SubjectSchema.index({ user: 1 });
+SubjectSchema.index({ name: 'text', description: 'text' });
+// ------------------------
+
 module.exports = mongoose.model('Subject', SubjectSchema);

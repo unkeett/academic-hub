@@ -5,10 +5,7 @@ import api from '../utils/axiosConfig';
 import { useAuth } from '../context/AuthContext';
 import DashboardSubjects from '../components/DashboardSubjects';
 import DashboardGoals from '../components/DashboardGoals';
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell
-} from 'recharts';
+import AnalyticsSection from '../components/AnalyticsSection';
 import './DashboardPage.css';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
@@ -24,12 +21,15 @@ const DashboardPage = () => {
     completedGoals: 0,
     totalGoals: 0
   });
+  const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
 
   const { user } = useAuth();
 
   useEffect(() => {
     fetchStats();
+    fetchAnalytics();
   }, []);
 
   const fetchStats = async () => {
@@ -76,10 +76,21 @@ const DashboardPage = () => {
     }
   };
 
-  const goalData = [
-    { name: 'Completed', value: stats.completedGoals },
-    { name: 'Pending', value: stats.totalGoals - stats.completedGoals }
-  ];
+  const fetchAnalytics = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const response = await api.get('/api/stats/summary');
+        if (response.data.success) {
+          setAnalyticsData(response.data.data);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -151,49 +162,10 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="charts-section">
-        <div className="chart-container">
-          <h3>Subject Progress</h3>
-          <div className="chart-wrapper">
-            <ResponsiveContainer>
-              <BarChart data={stats.subjectStats}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="completionRate" fill="#8884d8" name="Completion %" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="chart-container">
-          <h3>Goal Completion</h3>
-          <div className="chart-wrapper">
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie
-                  data={goalData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {goalData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+      <AnalyticsSection
+        analyticsData={analyticsData}
+        loading={analyticsLoading}
+      />
 
       <div className="dashboard-widgets">
         <DashboardSubjects />

@@ -26,7 +26,7 @@ const TutorialForm = ({ tutorial, onSubmit, onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       await onSubmit(formData);
     } catch (error) {
@@ -46,7 +46,7 @@ const TutorialForm = ({ tutorial, onSubmit, onCancel }) => {
       <div className="form-modal">
         <div className="form-header">
           <h2>{tutorial ? 'Edit Tutorial' : 'Add New Tutorial'}</h2>
-          <button className="close-btn" onClick={onCancel}>×</button>
+          <button className="close-btn" onClick={onCancel} disabled={loading}>×</button>
         </div>
 
         <form onSubmit={handleSubmit} className="tutorial-form">
@@ -61,6 +61,7 @@ const TutorialForm = ({ tutorial, onSubmit, onCancel }) => {
               required
               placeholder="https://www.youtube.com/watch?v=..."
               className={formData.url && !isValidYouTubeUrl(formData.url) ? 'error' : ''}
+              disabled={loading}
             />
             {formData.url && !isValidYouTubeUrl(formData.url) && (
               <p className="error-message">Please enter a valid YouTube URL</p>
@@ -74,11 +75,11 @@ const TutorialForm = ({ tutorial, onSubmit, onCancel }) => {
           </div>
 
           <div className="form-actions">
-            <button type="button" onClick={onCancel} className="btn btn-secondary">
+            <button type="button" onClick={onCancel} className="btn btn-secondary" disabled={loading}>
               Cancel
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-primary"
               disabled={loading || !isValidYouTubeUrl(formData.url)}
             >

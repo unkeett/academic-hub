@@ -36,11 +36,6 @@ response to any behavior they deem inappropriate, threatening, offensive, or har
 This Code of Conduct applies within all project spaces, and also applies when
 an individual is officially representing the project in public spaces.
 
-## Enforcement
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported
-to the project team at **[YOUR_EMAIL_HERE]**.  
-All complaints will be reviewed and investigated promptly and fairly.
-
 ## Attribution
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org),
 version 2.1.

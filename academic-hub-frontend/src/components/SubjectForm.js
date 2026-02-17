@@ -46,9 +46,18 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    setLoading(true);
+    try {
+      await onSubmit(formData);
+    } catch (error) {
+      console.error('Submission error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const colorOptions = [
@@ -61,7 +70,7 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
       <div className="form-modal">
         <div className="form-header">
           <h2>{subject ? 'Edit Subject' : 'Add New Subject'}</h2>
-          <button className="close-btn" onClick={onCancel}>×</button>
+          <button className="close-btn" onClick={onCancel} disabled={loading}>×</button>
         </div>
 
         <form onSubmit={handleSubmit} className="subject-form">
@@ -75,6 +84,7 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
               onChange={handleChange}
               required
               placeholder="e.g., Mathematics, Physics, History"
+              disabled={loading}
             />
           </div>
 
@@ -87,6 +97,7 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
               onChange={handleChange}
               placeholder="Brief description of the subject"
               rows="3"
+              disabled={loading}
             />
           </div>
 
@@ -100,6 +111,7 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
                   className={`color-option ${formData.color === color ? 'selected' : ''}`}
                   style={{ backgroundColor: color }}
                   onClick={() => setFormData({ ...formData, color })}
+                  disabled={loading}
                 />
               ))}
             </div>
@@ -114,12 +126,13 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
                 onChange={(e) => setNewTopic(e.target.value)}
                 placeholder="Add a topic"
                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTopic())}
+                disabled={loading}
               />
-              <button type="button" onClick={handleAddTopic} className="add-topic-btn">
+              <button type="button" onClick={handleAddTopic} className="add-topic-btn" disabled={loading}>
                 Add
               </button>
             </div>
-            
+
             {formData.topics.length > 0 && (
               <div className="topics-list">
                 {formData.topics.map((topic, index) => (
@@ -129,6 +142,7 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
                       type="button"
                       onClick={() => handleRemoveTopic(index)}
                       className="remove-topic-btn"
+                      disabled={loading}
                     >
                       ×
                     </button>
@@ -139,11 +153,11 @@ const SubjectForm = ({ subject, onSubmit, onCancel }) => {
           </div>
 
           <div className="form-actions">
-            <button type="button" onClick={onCancel} className="btn btn-secondary">
+            <button type="button" onClick={onCancel} className="btn btn-secondary" disabled={loading}>
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary">
-              {subject ? 'Update Subject' : 'Create Subject'}
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? 'Loading...' : (subject ? 'Update Subject' : 'Create Subject')}
             </button>
           </div>
         </form>

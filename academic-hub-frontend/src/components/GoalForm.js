@@ -28,13 +28,22 @@ const GoalForm = ({ goal, onSubmit, onCancel }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const submitData = {
-      ...formData,
-      dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : null
-    };
-    onSubmit(submitData);
+    setLoading(true);
+    try {
+      const submitData = {
+        ...formData,
+        dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : null
+      };
+      await onSubmit(submitData);
+    } catch (error) {
+      console.error('Submission error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const priorityOptions = [
@@ -48,7 +57,7 @@ const GoalForm = ({ goal, onSubmit, onCancel }) => {
       <div className="form-modal">
         <div className="form-header">
           <h2>{goal ? 'Edit Goal' : 'Add New Goal'}</h2>
-          <button className="close-btn" onClick={onCancel}>×</button>
+          <button className="close-btn" onClick={onCancel} disabled={loading}>×</button>
         </div>
 
         <form onSubmit={handleSubmit} className="goal-form">
@@ -62,6 +71,7 @@ const GoalForm = ({ goal, onSubmit, onCancel }) => {
               onChange={handleChange}
               required
               placeholder="e.g., Complete calculus homework"
+              disabled={loading}
             />
           </div>
 
@@ -74,6 +84,7 @@ const GoalForm = ({ goal, onSubmit, onCancel }) => {
               onChange={handleChange}
               placeholder="Additional details about this goal"
               rows="3"
+              disabled={loading}
             />
           </div>
 
@@ -88,8 +99,9 @@ const GoalForm = ({ goal, onSubmit, onCancel }) => {
                     value={option.value}
                     checked={formData.priority === option.value}
                     onChange={handleChange}
+                    disabled={loading}
                   />
-                  <span 
+                  <span
                     className="priority-label"
                     style={{ color: option.color }}
                   >
@@ -108,15 +120,16 @@ const GoalForm = ({ goal, onSubmit, onCancel }) => {
               name="dueDate"
               value={formData.dueDate}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
 
           <div className="form-actions">
-            <button type="button" onClick={onCancel} className="btn btn-secondary">
+            <button type="button" onClick={onCancel} className="btn btn-secondary" disabled={loading}>
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary">
-              {goal ? 'Update Goal' : 'Create Goal'}
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? 'Loading...' : (goal ? 'Update Goal' : 'Create Goal')}
             </button>
           </div>
         </form>

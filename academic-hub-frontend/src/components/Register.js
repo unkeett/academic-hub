@@ -34,12 +34,12 @@ const Register = () => {
 
   const validateForm = () => {
     const errors = {};
-    
+
     // Email validation
     if (email && !validateEmail(email)) {
       errors.email = 'Please enter a valid email address';
     }
-    
+
     // Password confirmation validation
     if (password && confirmPassword && password !== confirmPassword) {
       setLocalError('Passwords do not match');
@@ -47,7 +47,7 @@ const Register = () => {
     } else {
       setLocalError('');
     }
-    
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -58,7 +58,7 @@ const Register = () => {
       ...formData,
       [name]: value
     });
-    
+
     // Validate email in real-time as user types
     if (name === 'email' && value.trim() !== '') {
       if (!validateEmail(value)) {
@@ -75,17 +75,19 @@ const Register = () => {
     }
   };
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Clear previous errors
     setLocalError('');
-    
+
     // Validate form before submission
     if (!validateForm()) {
       return;
     }
-    
+
     // Validate email format (redundant but kept for clarity)
     if (!validateEmail(email)) {
       setFormErrors({
@@ -94,16 +96,23 @@ const Register = () => {
       });
       return;
     }
-    
+
     // Check that all required fields are filled
     if (!name || !email || !password || !confirmPassword) {
       setLocalError('Please fill in all fields');
       return;
     }
-    
-    const result = await register({ name, email, password });
-    if (result.success) {
-      navigate('/dashboard');
+
+    setLoading(true);
+    try {
+      const result = await register({ name, email, password });
+      if (result.success) {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      console.error('Registration error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -137,6 +146,7 @@ const Register = () => {
               onChange={onChange}
               required
               placeholder="Enter your full name"
+              disabled={loading}
             />
           </div>
 
@@ -151,6 +161,7 @@ const Register = () => {
               required
               placeholder="Enter your email"
               className={formErrors.email ? 'input-error' : ''}
+              disabled={loading}
             />
             {formErrors.email && (
               <div className="field-error-message">
@@ -170,6 +181,7 @@ const Register = () => {
               required
               minLength="6"
               placeholder="Enter your password (min 6 characters)"
+              disabled={loading}
             />
           </div>
 
@@ -183,6 +195,7 @@ const Register = () => {
               onChange={onChange}
               required
               placeholder="Confirm your password"
+              disabled={loading}
             />
           </div>
 
@@ -192,8 +205,8 @@ const Register = () => {
             </div>
           )}
 
-          <button type="submit" className="auth-button">
-            Create Account
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
