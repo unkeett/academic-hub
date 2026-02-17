@@ -8,12 +8,18 @@ import DashboardGoals from '../components/DashboardGoals';
 import AnalyticsSection from '../components/AnalyticsSection';
 import './DashboardPage.css';
 
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
 const DashboardPage = () => {
   const [stats, setStats] = useState({
     subjects: 0,
     goals: 0,
     tutorials: 0,
-    ideas: 0
+    ideas: 0,
+    goalCompletionRate: 0,
+    subjectStats: [],
+    completedGoals: 0,
+    totalGoals: 0
   });
   const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,40 +34,42 @@ const DashboardPage = () => {
 
   const fetchStats = async () => {
     try {
-      // Check if user is authenticated (has token)
       const token = localStorage.getItem('token');
       if (token) {
-        // User is authenticated, fetch actual data
-        const [subjectsRes, goalsRes, tutorialsRes, ideasRes] = await Promise.all([
-          api.get('/api/subjects'),
-          api.get('/api/goals'),
-          api.get('/api/tutorials'),
-          api.get('/api/ideas')
-        ]);
-
+        const res = await api.get('/api/stats/summary');
         setStats({
-          subjects: subjectsRes.data.count,
-          goals: goalsRes.data.count,
-          tutorials: tutorialsRes.data.count,
-          ideas: ideasRes.data.count
+          subjects: res.data.data.totalSubjects,
+          goals: res.data.data.totalGoals,
+          tutorials: res.data.data.totalTutorials,
+          ideas: res.data.data.totalIdeas,
+          goalCompletionRate: res.data.data.goalCompletionRate,
+          subjectStats: res.data.data.subjectStats,
+          completedGoals: res.data.data.completedGoals,
+          totalGoals: res.data.data.totalGoals
         });
       } else {
-        // User is not authenticated, set default values
         setStats({
           subjects: 0,
           goals: 0,
           tutorials: 0,
-          ideas: 0
+          ideas: 0,
+          goalCompletionRate: 0,
+          subjectStats: [],
+          completedGoals: 0,
+          totalGoals: 0
         });
       }
     } catch (error) {
       console.error('Error fetching stats:', error);
-      // Set default values on error
       setStats({
         subjects: 0,
         goals: 0,
         tutorials: 0,
-        ideas: 0
+        ideas: 0,
+        goalCompletionRate: 0,
+        subjectStats: [],
+        completedGoals: 0,
+        totalGoals: 0
       });
     } finally {
       setLoading(false);
